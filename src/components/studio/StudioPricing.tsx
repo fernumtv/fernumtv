@@ -10,18 +10,18 @@ export function StudioPricing() {
   const plans = [
     {
       ...siteConfig.plans.launch,
-      buttonLabel: "Subscribe to Launch ($499/mo)",
+      buttonLabel: "Subscribe to Launch ($499/month)",
       highlight: false,
     },
     {
       ...siteConfig.plans.growth,
-      buttonLabel: "Subscribe to Growth ($799/mo)",
+      buttonLabel: "Subscribe to Growth ($799/month)",
       highlight: true,
       badge: "Most Popular",
     },
     {
       ...siteConfig.plans.scale,
-      buttonLabel: "Subscribe to Scale ($1,099/mo)",
+      buttonLabel: "Subscribe to Scale ($1,099/month)",
       highlight: false,
       badge: "Best Value",
     },
@@ -39,7 +39,7 @@ export function StudioPricing() {
             MONTHLY PRICING PLANS
           </h2>
           <p className="text-[17px] sm:text-lg text-[var(--page-fg)]/80 font-normal max-w-xl mx-auto leading-relaxed">
-            All ads delivered in Full HD across 9:16, 1:1, and 16:9 with 3 alternate hooks and 2 revisions. No long-term lock-in; pause or cancel anytime before renewal.
+            All ads delivered in Full HD across 9:16, 1:1, and 16:9 with 3 alternate hooks and 2 revisions. Cancel anytime. Cancellation takes effect at the end of the current billing period.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export function StudioPricing() {
                   </h3>
                   <div className="flex items-baseline gap-1">
                     <span className="font-display font-black text-4xl sm:text-5xl tracking-tighter">
-                      ${p.price}
+                      ${p.price.toLocaleString("en-US")}
                     </span>
                     <span
                       className={`text-xs font-mono font-bold uppercase ${
@@ -173,91 +173,39 @@ export function StudioPricing() {
                 </div>
               </div>
 
-              {/* Action Buttons: Clear Subscription Label & Book a Call */}
-              <div className="pt-8 space-y-3">
+              {/* Action Button: Subscribe */}
+              <div className="pt-8">
                 {(() => {
                   const checkoutUrl = getCheckoutUrl(p.slug);
                   const hasValidCheckout = Boolean(checkoutUrl && checkoutUrl.trim() !== "");
 
                   if (!hasValidCheckout) {
                     return (
-                      <div className="space-y-2">
-                        <div
-                          className={`p-2.5 text-center text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal ${
-                            p.highlight ? "bg-[var(--border)] text-[var(--block-4-fg)]" : "bg-[var(--page-bg)] text-[var(--page-fg)]"
-                          }`}
-                        >
-                          Checkout opens soon, book a call instead
-                        </div>
-                        <a
-                          href={siteConfig.bookingUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          data-cursor="book"
-                          onClick={() => trackEvent("Book a Call Click", { location: "pricing_fallback", plan: p.slug })}
-                          className="btn-squish btn-magnetic w-full h-[48px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-2-bg)] hover:text-[var(--block-2-fg)]"
-                        >
-                          <PhoneCall className="w-4 h-4 text-current" />
-                          <span>Book a Call</span>
-                        </a>
+                      <div
+                        className={`p-2.5 text-center text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal ${
+                          p.highlight ? "bg-[var(--border)] text-[var(--block-4-fg)]" : "bg-[var(--page-bg)] text-[var(--page-fg)]"
+                        }`}
+                      >
+                        Checkout opens soon
                       </div>
                     );
                   }
 
                   return (
-                    <>
-                      <a
-                        href={checkoutUrl}
-                        target="_self"
-                        data-cursor="lets-go"
-                        onClick={() => trackEvent("Subscribe Click", { plan: p.slug, price: p.price })}
-                        className={`btn-squish btn-magnetic w-full h-[50px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal ${
-                          p.highlight
-                            ? "bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-2-bg)] hover:text-[var(--block-2-fg)]"
-                            : "bg-[var(--block-4-bg)] text-[var(--block-4-fg)] hover:bg-[var(--accent)] hover:text-[var(--accent-fg)]"
-                        }`}
-                      >
-                        <span>{p.buttonLabel}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </a>
-
-                      {/* Terms & Refund Agreement note */}
-                      <div className={`text-[11px] font-mono text-center pt-0.5 ${
-                        p.highlight ? "text-[var(--block-4-fg)]/70" : "text-[var(--block-2-fg)]/70"
-                      }`}>
-                        By subscribing you agree to the{" "}
-                        <Link href="/terms" className="underline hover:text-[var(--accent)] font-bold">
-                          Terms
-                        </Link>{" "}
-                        and{" "}
-                        <Link href="/refund" className="underline hover:text-[var(--accent)] font-bold">
-                          Refund policy
-                        </Link>
-                        .
-                      </div>
-
-                      {/* Requirement: Line above Book a Call */}
-                      <div className="pt-1 text-center">
-                        <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)]/70 mb-1.5">
-                          {siteConfig.callMinutes}-minute call. Bring your product and your current ads.
-                        </div>
-                        <a
-                          href={siteConfig.bookingUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          data-cursor="book"
-                          onClick={() => trackEvent("Book a Call Click", { location: "pricing_card", plan: p.slug })}
-                          className={`btn-squish btn-magnetic w-full h-[46px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] ${
-                            p.highlight
-                              ? "bg-transparent text-[var(--block-4-fg)] hover:bg-[var(--block-4-fg)] hover:text-[var(--block-4-bg)]"
-                              : "bg-[var(--block-2-bg)] text-[var(--block-2-fg)] hover:bg-[var(--border)]/10"
-                          }`}
-                        >
-                          <PhoneCall className="w-3.5 h-3.5 text-[var(--accent)]" />
-                          <span>Book a Call</span>
-                        </a>
-                      </div>
-                    </>
+                    <a
+                      href={checkoutUrl}
+                      target="_self"
+                      data-cursor="lets-go"
+                      onClick={() => trackEvent("Subscribe Click", { plan: p.slug, price: p.price })}
+                      className={`btn-squish btn-magnetic w-full h-[50px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal ${
+                        p.highlight
+                          ? "bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-2-bg)] hover:text-[var(--block-2-fg)]"
+                          : "bg-[var(--block-4-bg)] text-[var(--block-4-fg)] hover:bg-[var(--accent)] hover:text-[var(--accent-fg)]"
+                      }`}
+                    >
+                      <span>{p.buttonLabel}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
                   );
                 })()}
               </div>
@@ -265,8 +213,29 @@ export function StudioPricing() {
           ))}
         </div>
 
-        {/* Footnote */}
-        <div className="text-center text-xs font-mono font-bold tracking-wider text-[var(--page-fg)]/80 pt-6 space-y-1.5">
+        {/* Single Book a Call Line under the plans */}
+        <div className="max-w-xl mx-auto mb-10 p-6 bg-[var(--block-2-bg)] border-2 border-[var(--border)] text-[var(--block-2-fg)] shadow-brutal text-center">
+          <div className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-1">
+            Questions before subscribing? Let's talk.
+          </div>
+          <div className="text-[11px] font-mono text-[var(--block-2-fg)]/70 mb-4">
+            {siteConfig.callMinutes}-minute call. Bring your product and your current ads.
+          </div>
+          <a
+            href={siteConfig.bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="book"
+            onClick={() => trackEvent("Book a Call Click", { location: "pricing_bottom" })}
+            className="btn-squish btn-magnetic inline-flex items-center justify-center gap-2 px-6 h-[46px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer border-2 border-[var(--border)] shadow-brutal bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-4-bg)] hover:text-[var(--block-4-fg)]"
+          >
+            <PhoneCall className="w-4 h-4 text-current" />
+            <span>Book a Call</span>
+          </a>
+        </div>
+
+        {/* Single Terms, Refund Policy and Cancellation Agreement under the plans */}
+        <div className="text-center text-xs font-mono font-bold tracking-wider text-[var(--page-fg)]/80 pt-2 space-y-2">
           <p>
             By subscribing you agree to the{" "}
             <Link href="/terms" className="underline text-[var(--accent)] hover:text-[var(--page-fg)]">
@@ -278,8 +247,8 @@ export function StudioPricing() {
             </Link>
             .
           </p>
-          <p className="text-[11px] uppercase text-[var(--page-fg)]/60">
-            Return URL after checkout is /thanks. Zero contract lock-in. Cancel or pause anytime before renewal.
+          <p className="text-[11px] text-[var(--page-fg)]/70">
+            Cancel anytime. Cancellation takes effect at the end of the current billing period.
           </p>
         </div>
       </div>

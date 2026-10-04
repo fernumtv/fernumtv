@@ -146,7 +146,7 @@ const TOPICS: TestTopic[] = [
     bullets: [
       "No guaranteed ROAS: Conversions depend on your product offer, pricing, reviews, and landing page quality.",
       "No black-hat hacks: We produce policy-compliant, high-fidelity ad creative designed to build long-term brand equity.",
-      "No agency lock-in: No 6-month retainers. Pause or cancel anytime for the upcoming billing cycle.",
+      "No agency lock-in: No 6-month retainers. Cancel anytime. Cancellation takes effect at the end of the current billing period.",
     ],
   },
 ];

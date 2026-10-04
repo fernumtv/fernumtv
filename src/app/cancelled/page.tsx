@@ -6,6 +6,22 @@ import { siteConfig } from "@/config/site";
 export const metadata = {
   title: "Checkout Cancelled | Fernum AdPass",
   description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+  alternates: {
+    canonical: "https://fernum.online/cancelled",
+  },
+  openGraph: {
+    title: "Checkout Cancelled | Fernum AdPass",
+    description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+    url: "https://fernum.online/cancelled",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Checkout Cancelled | Fernum AdPass",
+    description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+  },
 };
 
 export default function CancelledPage() {

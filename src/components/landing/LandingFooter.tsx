@@ -29,10 +29,7 @@ export function LandingFooter({ onOpenBookCall, onScrollToBrief }: LandingFooter
             <p className="text-xs text-muted-foreground max-w-md leading-relaxed">
               AI-assisted high-converting short-form video ads for D2C & e-commerce brands scaling on Meta and TikTok. 3 alternate hooks included with every ad, 100% human-reviewed before delivery.
             </p>
-            <div className="flex items-center gap-2 text-xs text-emerald-400">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Compliant with Meta & TikTok commercial advertising policies</span>
-            </div>
+
           </div>
 
           {/* Quick Links */}

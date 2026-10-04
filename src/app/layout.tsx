@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Fernum AdPass | Monthly Video Ads for D2C & E-Commerce Brands",
   description:
-    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats (9:16, 1:1, 16:9), and senior creative direction.",
+    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats (9:16, 1:1, 16:9), planned, scripted and reviewed by our team.",
   metadataBase: new URL("https://fernum.online"),
   alternates: {
     canonical: "https://fernum.online",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/mo.",
+      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
     url: "https://fernum.online",
     siteName: "Fernum AdPass",
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/mo.",
+      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
     images: ["/images/og-image.webp"],
   },
 };

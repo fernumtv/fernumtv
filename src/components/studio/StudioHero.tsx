@@ -164,18 +164,23 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
                 </div>
                 <div className="flex justify-between items-center py-1.5 border-b border-[var(--block-4-fg)]/20">
                   <span className="text-[var(--block-4-fg)]/70">Commercial Usage</span>
-                  <span className="font-bold text-[var(--block-4-fg)]">100% Owned by Brand</span>
+                  <span className="font-bold text-[var(--block-4-fg)] text-right">Commercial use of delivered ads included</span>
                 </div>
               </div>
 
               <div className="p-3.5 bg-[var(--block-4-fg)]/10 border border-[var(--block-4-fg)]/20 text-xs font-mono text-[var(--block-4-fg)]/90">
                 <div className="font-bold text-[var(--accent)] mb-1">Human Creative Direction:</div>
-                Senior creative directors oversee all scripts, pacing, voiceover synthesis, and final edits.
+                Every ad is planned, scripted and reviewed by the Fernum team before delivery.
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[var(--block-4-fg)]/20 flex items-center justify-between text-xs font-mono text-[var(--block-4-fg)]/70">
-                <span>Predictable monthly billing</span>
-                <span className="text-[var(--accent)] font-bold">✓ Cancel Anytime</span>
+              <div className="mt-6 pt-4 border-t border-[var(--block-4-fg)]/20 flex flex-col gap-1 text-xs font-mono text-[var(--block-4-fg)]/70">
+                <div className="flex items-center justify-between">
+                  <span>Predictable monthly billing</span>
+                  <span className="text-[var(--accent)] font-bold">✓ Cancel Anytime</span>
+                </div>
+                <div className="text-[11px] opacity-80 pt-1">
+                  Cancel anytime. Cancellation takes effect at the end of the current billing period.
+                </div>
               </div>
             </div>
           </div>

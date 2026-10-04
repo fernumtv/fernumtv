@@ -108,7 +108,7 @@ export default function WorkPage() {
                 Want monthly ads engineered like this?
               </h3>
               <p className="text-xs font-mono opacity-75 mt-1">
-                Plans start at $499/mo. 2 revisions per ad, 3 alternate hooks, cancel anytime.
+                Plans start at $499/month. 2 revisions per ad, 3 alternate hooks. Cancel anytime. Cancellation takes effect at the end of the current billing period.
               </p>
             </div>
             <Link

@@ -85,13 +85,6 @@ export function HeroStickerPack() {
   return (
     <div className="hidden sm:block absolute inset-0 pointer-events-none overflow-hidden select-none">
       <div className="relative w-full h-full max-w-7xl mx-auto pointer-events-auto">
-        {/* Sticker 1: uses token --sticker-1 */}
-        <DraggableSticker id="star-sticker" initialX={20} initialY={80} rotation={-8}>
-          <div className="bg-[var(--sticker-1)] text-[var(--border)] border-2 border-[var(--border)] px-3.5 py-1.5 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-brutal-sm">
-            <span>★ 100% REAL POLISH</span>
-          </div>
-        </DraggableSticker>
-
         {/* Sticker 2: uses token --sticker-2 */}
         <DraggableSticker id="smiley-sticker" initialX={380} initialY={30} rotation={12}>
           <div className="w-12 h-12 rounded-full bg-[var(--sticker-2)] text-[var(--page-bg)] border-2 border-[var(--border)] flex items-center justify-center font-black text-xl shadow-brutal-sm">

@@ -24,12 +24,12 @@ export function FaqSection() {
       a: "Once you submit your brief, our script engine delivers 3 script concepts within 24-48 hours. The moment you approve the script, the finished video ad with all 3 hooks is delivered in 48 to 72 hours—well within the 2 to 3 week delivery window of your monthly plan.",
     },
     {
-      q: "Are the videos compliant with Meta and TikTok advertising policies?",
-      a: "Yes, 100%. We strictly follow platform advertising policies. All synthetic elements are properly labeled according to Meta and TikTok's AI disclosure rules (#Ad #AI). We never use unauthorized celebrity or real person likenesses, and all music tracks and sound effects are fully cleared for commercial ad spend.",
+      q: "Do you disclose AI use?",
+      a: "Yes. Some visuals and voices in our ads are AI-generated. Every ad is planned, scripted and reviewed by the Fernum team before delivery, ensuring clean visual quality without synthetic distortions. All music tracks and sound effects are fully cleared for commercial ad spend.",
     },
     {
-      q: "Can I pause or cancel my subscription?",
-      a: "Yes. You have complete control inside your client portal. You can pause your subscription if you have enough creative running, or cancel anytime before your next billing cycle with zero penalty.",
+      q: "Can I cancel my subscription?",
+      a: "Yes. There are no long-term contracts. Cancel anytime. Cancellation takes effect at the end of the current billing period.",
     },
   ];
 

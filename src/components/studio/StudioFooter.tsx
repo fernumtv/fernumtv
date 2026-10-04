@@ -161,10 +161,6 @@ export function StudioFooter() {
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-[var(--block-4-fg)]/70">
               <span>Some visuals and voices in our ads are AI-generated.</span>
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>Compliant with Meta & TikTok policies</span>
-              </div>
             </div>
           </div>
         </div>

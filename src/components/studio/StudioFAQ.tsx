@@ -19,7 +19,7 @@ const faqs: FAQItem[] = [
   {
     question: "Who owns the videos?",
     answer:
-      "You do. Once delivered, you hold 100% full commercial rights to all finished video exports, voiceovers, and scripts. You can run them on Meta, TikTok, YouTube, or your website without expiration dates or usage royalties.",
+      "Commercial use of delivered ads is included. Once delivered and paid for, you receive full commercial rights to all finished video exports, voiceovers, and scripts for your brand's advertising without usage royalties.",
   },
   {
     question: "How do revisions work?",
@@ -29,7 +29,7 @@ const faqs: FAQItem[] = [
   {
     question: "What if I don't like the ad?",
     answer:
-      "We send written script concepts and hook angles before rendering to align on direction first. If the final cut is not a fit, you have 2 revision rounds. There are no lock-in contracts; you can cancel or pause anytime before renewal.",
+      "We send written script concepts and hook angles before rendering to align on direction first. If the final cut is not a fit, you have 2 revision rounds. There are no lock-in contracts. Cancel anytime. Cancellation takes effect at the end of the current billing period.",
   },
   {
     question: "What platforms do you format for?",
@@ -39,7 +39,7 @@ const faqs: FAQItem[] = [
   {
     question: "Do you disclose AI use?",
     answer:
-      "Yes. Some visuals and voices in our ads are AI-generated. We format and deliver files in full compliance with Meta Ads and TikTok Creative Exchange AI disclosure guidelines. Our senior creative directors verify every frame, ensuring clean visual quality without synthetic distortions or policy flags.",
+      "Yes. Some visuals and voices in our ads are AI-generated. Every ad is planned, scripted and reviewed by the Fernum team before delivery, ensuring clean visual quality without synthetic distortions.",
   },
   {
     question: "What do you not do?",

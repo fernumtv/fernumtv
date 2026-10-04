@@ -13,19 +13,19 @@ interface InhouseSubscribeModalProps {
 const PLAN_INFO: Record<string, { name: string; price: string; ads: string; perVideo: string }> = {
   "fernum-sprint": {
     name: "Fernum Sprint",
-    price: "$499/mo",
+    price: "$499/month",
     ads: "1 finished video ad per month",
     perVideo: "$500 per video",
   },
   "fernum-growth": {
     name: "Fernum Growth",
-    price: "$799/mo",
+    price: "$799/month",
     ads: "2 finished video ads per month",
     perVideo: "$400 per video",
   },
   "fernum-scale": {
     name: "Fernum Scale",
-    price: "$1,099/mo",
+    price: "$1,099/month",
     ads: "3 finished video ads per month (Campaign planning included)",
     perVideo: "$333 per video",
   },
@@ -87,7 +87,7 @@ export function InhouseSubscribeModal({
         <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-2xl mb-6 flex justify-between items-center text-xs">
           <div>
             <span className="font-bold text-neutral-950 block">{plan.name}</span>
-            <span className="text-neutral-500">Billed monthly • Pause or cancel anytime</span>
+            <span className="text-neutral-500">Billed monthly • Cancel anytime</span>
           </div>
           <div className="text-right">
             <span className="text-xl font-black text-neutral-950 block">{plan.price}</span>

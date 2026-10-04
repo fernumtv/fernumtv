@@ -7,6 +7,22 @@ import { siteConfig } from "@/config/site";
 export const metadata = {
   title: "Privacy Policy | Fernum AdPass",
   description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+  alternates: {
+    canonical: "https://fernum.online/privacy",
+  },
+  openGraph: {
+    title: "Privacy Policy | Fernum AdPass",
+    description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+    url: "https://fernum.online/privacy",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | Fernum AdPass",
+    description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+  },
 };
 
 export default function PrivacyPage() {

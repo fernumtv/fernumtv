@@ -82,11 +82,11 @@ export function StudioValueProp() {
                 Fixed Monthly Price
               </h3>
               <p className="text-sm opacity-75 leading-relaxed font-medium">
-                Predictable subscription pricing starting at $499/mo. We never take a percentage of your media spend, never trap you in multi-month retainers, and you can pause anytime.
+                Predictable subscription pricing starting at $499/month. We never take a percentage of your media spend, never trap you in multi-month retainers, and you can cancel anytime. Cancellation takes effect at the end of the current billing period.
               </p>
             </div>
             <div className="pt-6 border-t border-[var(--block-4-fg)]/15 mt-6 text-xs font-mono text-[var(--accent)] font-bold uppercase">
-              ✓ Zero Retainers, Pause Anytime
+              ✓ Zero Retainers, Cancel Anytime
             </div>
           </div>
         </div>

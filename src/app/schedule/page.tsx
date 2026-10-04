@@ -7,6 +7,22 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Schedule a Strategy Call | Fernum AdPass",
   description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+  alternates: {
+    canonical: "https://fernum.online/schedule",
+  },
+  openGraph: {
+    title: "Schedule a Strategy Call | Fernum AdPass",
+    description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+    url: "https://fernum.online/schedule",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Schedule a Strategy Call | Fernum AdPass",
+    description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+  },
 };
 
 export default function SchedulePage() {

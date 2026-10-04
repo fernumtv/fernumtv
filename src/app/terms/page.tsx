@@ -7,6 +7,22 @@ import { siteConfig } from "@/config/site";
 export const metadata = {
   title: "Terms of Service | Fernum AdPass",
   description: "Terms and conditions for Fernum video ad monthly subscription services.",
+  alternates: {
+    canonical: "https://fernum.online/terms",
+  },
+  openGraph: {
+    title: "Terms of Service | Fernum AdPass",
+    description: "Terms and conditions for Fernum video ad monthly subscription services.",
+    url: "https://fernum.online/terms",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Service | Fernum AdPass",
+    description: "Terms and conditions for Fernum video ad monthly subscription services.",
+  },
 };
 
 export default function TermsPage() {

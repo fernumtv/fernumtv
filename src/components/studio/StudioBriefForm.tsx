@@ -226,11 +226,13 @@ export function StudioBriefForm() {
             >
               {/* Hidden inputs for Netlify Forms */}
               <input type="hidden" name="form-name" value="ad-brief" />
-              <p className="hidden">
+              <p className="hidden" aria-hidden="true" style={{ display: "none" }}>
                 <label>
                   Don't fill this out if you're human:{" "}
                   <input
                     name="bot-field"
+                    tabIndex={-1}
+                    autoComplete="off"
                     value={formData["bot-field"]}
                     onChange={handleChange}
                   />
@@ -414,7 +416,7 @@ export function StudioBriefForm() {
               </div>
 
               <div className="text-center text-[11px] font-mono text-[var(--block-2-fg)]/60 pt-1">
-                🔒 Encrypted intake. Direct to studio directors. Zero spam.
+                Sent straight to our team. Zero spam.
               </div>
             </form>
           )}

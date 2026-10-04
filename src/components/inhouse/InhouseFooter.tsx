@@ -110,10 +110,7 @@ export function InhouseFooter({ onOpenPolicy, onOpenBookCall }: InhouseFooterPro
           <div>
             © {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.
           </div>
-          <div className="flex items-center gap-1.5 text-neutral-600">
-            <ShieldCheck className="w-3.5 h-3.5 text-neutral-800" />
-            <span>Compliant with Meta & TikTok AI disclosure policies</span>
-          </div>
+
         </div>
       </div>
     </footer>

@@ -7,6 +7,22 @@ import { siteConfig } from "@/config/site";
 export const metadata = {
   title: "Refund Policy | Fernum AdPass",
   description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+  alternates: {
+    canonical: "https://fernum.online/refund",
+  },
+  openGraph: {
+    title: "Refund Policy | Fernum AdPass",
+    description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+    url: "https://fernum.online/refund",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Refund Policy | Fernum AdPass",
+    description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+  },
 };
 
 export default function RefundPage() {

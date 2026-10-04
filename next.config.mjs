@@ -7,7 +7,21 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingRoot: __dirname,
-  reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.fernum.online',
+          },
+        ],
+        destination: 'https://fernum.online/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
