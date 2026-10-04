@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Send, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Zap } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { siteConfig } from "@/config/site";
 
 export function StudioBriefForm() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export function StudioBriefForm() {
     websiteUrl: "",
     productToAdvertise: "",
     offer: "",
-    planChosen: "Growth ($799/mo)",
+    planChosen: "Growth ($799/month)",
     "bot-field": "",
   });
 

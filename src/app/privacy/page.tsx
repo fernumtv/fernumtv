@@ -53,7 +53,10 @@ export default function PrivacyPage() {
                 Who is responsible.
               </h2>
               <p>
-                [fernumtv], [india], [[<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>]].
+                {siteConfig.businessName}, {siteConfig.country}. Contact:{" "}
+                <a href={`mailto:${siteConfig.contactEmail}`} className="underline font-bold text-[var(--accent)] hover:underline">
+                  {siteConfig.contactEmail}
+                </a>.
               </p>
             </section>
 
@@ -73,7 +76,10 @@ export default function PrivacyPage() {
                   Payment details: payments are handled by Dodo Payments. We do not see or store your full card number.
                 </li>
                 <li>
-                  Basic site analytics: [Plausible / Netlify Analytics], which does not use cookies. (CONFIRM what you actually installed.)
+                  Basic site analytics: Plausible Analytics, which does not use cookies and does not collect personal data.
+                </li>
+                <li>
+                  Account and portal data: your account email, login sessions, and project delivery status are stored securely with Supabase.
                 </li>
               </ul>
             </section>
@@ -94,7 +100,7 @@ export default function PrivacyPage() {
                 Who we share it with.
               </h2>
               <p>
-                Only service providers needed to run Fernum: Netlify (hosting and forms), Dodo Payments, Calendly, our analytics tool, and the AI and video tools we use to make your ads. We do not sell your data. When we use AI tools, we send only what is needed to make your ad, such as your product details and brand assets. (CONFIRM and list the tools you actually use.)
+                Only service providers needed to run Fernum: Netlify (hosting and forms), Supabase (client authentication and project status database), Dodo Payments (payment processing), Calendly (call scheduling), Plausible Analytics (cookieless site metrics){siteConfig.aiTools.length > 0 ? `, and the following AI and video production tools: ${siteConfig.aiTools.join(", ")}` : ""}. We do not sell your data. When we use AI tools, we send only what is needed to make your ad, such as your product details and brand assets.
               </p>
             </section>
 
@@ -104,7 +110,7 @@ export default function PrivacyPage() {
                 How long we keep it.
               </h2>
               <p>
-                Form and booking data: [12 months] after your last contact. Payment records: as long as the law requires.
+                Form and booking data: {siteConfig.dataRetention}. Payment records: as long as the law requires.
               </p>
             </section>
 
@@ -114,7 +120,10 @@ export default function PrivacyPage() {
                 Your rights.
               </h2>
               <p>
-                You can ask to see, correct or delete your data by emailing [<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>]. Depending on where you live (for example the EU or UK), you may have additional rights under local law.
+                You can ask to see, correct or delete your data by emailing{" "}
+                <a href={`mailto:${siteConfig.contactEmail}`} className="underline font-bold text-[var(--accent)] hover:underline">
+                  {siteConfig.contactEmail}
+                </a>. Depending on where you live (for example the EU or UK), you may have additional rights under local law.
               </p>
             </section>
 
@@ -124,7 +133,7 @@ export default function PrivacyPage() {
                 Cookies.
               </h2>
               <p>
-                [We do not use tracking cookies. / List what you use.] (CONFIRM.)
+                We do not use tracking cookies. We use Plausible Analytics, which is completely cookieless and respects visitor privacy.
               </p>
             </section>
 

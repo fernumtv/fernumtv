@@ -53,7 +53,10 @@ export default function TermsPage() {
                 1. Who we are.
               </h2>
               <p>
-                Fernum (&ldquo;we&rdquo;, &ldquo;us&rdquo;) provides monthly subscription video ad production for brands. The service is run by [YOUR FULL NAME OR BUSINESS NAME], [COUNTRY]. Contact: [<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>].
+                Fernum (&ldquo;we&rdquo;, &ldquo;us&rdquo;) provides monthly subscription video ad production for brands. The service is run by {siteConfig.businessName}, {siteConfig.country}. Contact:{" "}
+                <a href={`mailto:${siteConfig.contactEmail}`} className="underline font-bold text-[var(--accent)] hover:underline">
+                  {siteConfig.contactEmail}
+                </a>.
               </p>
             </section>
 
@@ -69,7 +72,7 @@ export default function TermsPage() {
                 <li><strong>Scale:</strong> 3 ads per month, with campaign planning included</li>
               </ul>
               <p>
-                Every ad includes script writing, AI-assisted production, editing, Full HD export, and two revisions. Delivery targets are about 3 weeks (Launch) and about 2 weeks (Growth and Scale) after your script is approved. These are targets, not guarantees. (CONFIRM these timelines are ones you can meet.)
+                Every ad includes script writing, AI-assisted production, editing, Full HD export, and two revisions. Delivery targets are about 3 weeks (Launch) and about 2 weeks (Growth and Scale) after your script is approved. These are targets, not guarantees.
               </p>
             </section>
 
@@ -129,7 +132,7 @@ export default function TermsPage() {
                 8. Ownership.
               </h2>
               <p>
-                After payment for the month, you may use the delivered videos for your own marketing. We keep the right to show them in our portfolio unless you ask us in writing not to. (CONFIRM.) Third-party tools we use may have their own licence terms.
+                After payment for the month, you may use delivered ads for your own marketing. We may show them in our portfolio unless you ask us not to. Third-party tools we use may have their own licence terms.
               </p>
             </section>
 
@@ -139,7 +142,7 @@ export default function TermsPage() {
                 9. Billing and cancellation.
               </h2>
               <p>
-                Plans renew monthly until cancelled. Payments are processed by Dodo Payments. You can cancel at any time through the customer portal link in your receipt email, or by emailing us. Cancellation takes effect at the end of the current billing period and you keep access to that period&apos;s ads. We do not charge again after cancellation. (CONFIRM what happens to ads not yet delivered.)
+                Plans renew monthly until cancelled. Payments are processed by Dodo Payments. Cancel anytime. Cancellation takes effect at the end of the current billing period and you keep access to that period&apos;s ads. We do not charge again after cancellation.
               </p>
             </section>
 
@@ -179,7 +182,7 @@ export default function TermsPage() {
                 13. Governing law.
               </h2>
               <p>
-                These terms are governed by the laws of [india / haryana]. (CONFIRM with a lawyer.)
+                These terms are governed by {siteConfig.governingLaw}.
               </p>
             </section>
           </div>

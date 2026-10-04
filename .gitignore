@@ -29,3 +29,6 @@ lighthouse-*.json
 # Operating System Files
 .DS_Store
 Thumbs.db
+
+# Developer-only Legal Notes (Not Deployed)
+LEGAL-TODO.md

@@ -1,201 +1,318 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Sparkles, Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from "lucide-react";
+import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, Mail, Sparkles, AlertCircle, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
+import { getSupabaseClient } from "@/lib/supabase/client";
 
-const DEMO_ACCOUNTS = [
-  {
-    name: "Alice Vance",
-    role: "OWNER",
-    email: "alice@fernum.studio",
-    password: "FernumAlice2026!",
-    scope: "Agency Admin (All Brands)",
-  },
-  {
-    name: "Bob Chen",
-    role: "CREATIVE_DIRECTOR",
-    email: "bob@aurahealth.com",
-    password: "FernumBob2026!",
-    scope: "AuraHealth (Creative Lead)",
-  },
-  {
-    name: "Charlie Ross",
-    role: "CLIENT_APPROVER",
-    email: "charlie@aurahealth.com",
-    password: "FernumCharlie2026!",
-    scope: "AuraHealth (Client Approver)",
-  },
-  {
-    name: "Dana Kapoor",
-    role: "EDITOR",
-    email: "dana@vervepay.com",
-    password: "FernumDana2026!",
-    scope: "VervePay (Content Editor)",
-  },
-  {
-    name: "Evan Wright",
-    role: "VIEWER",
-    email: "evan@aurahealth.com",
-    password: "FernumEvan2026!",
-    scope: "AuraHealth (Read-Only)",
-  },
-];
-
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const [expiredNotice, setExpiredNotice] = useState(false);
 
-  const isDev = process.env.NODE_ENV !== "production";
+  // Check if user is already signed in, or if link was expired
+  useEffect(() => {
+    // Check URL parameters or hash for expired link tokens
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    const errorParam = searchParams.get("error");
+    const errorDesc = searchParams.get("error_description");
 
-  const handleLogin = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+    if (
+      errorParam === "expired" ||
+      hash.includes("otp_expired") ||
+      hash.includes("token_expired") ||
+      (errorDesc && errorDesc.toLowerCase().includes("expired"))
+    ) {
+      setExpiredNotice(true);
+    }
+
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          router.replace("/portal");
+        }
+      });
+    }
+  }, [router, searchParams]);
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid business email address.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
+    setExpiredNotice(false);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      // 1. Submit through our rate-limited API endpoint
+      const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
-      if (data.success) {
-        router.push("/");
-        router.refresh();
-      } else {
-        setError(data.error || "Login failed. Please check your credentials.");
+
+      if (!res.ok && res.status !== 200) {
+        setError(data.error || "Unable to send sign-in link. Please wait a moment.");
+        setLoading(false);
+        return;
       }
+
+      // Also call direct supabase browser client if configured
+      const supabase = getSupabaseClient();
+      if (supabase) {
+        const origin = window.location.origin;
+        await supabase.auth.signInWithOtp({
+          email,
+          options: {
+            emailRedirectTo: `${origin}/portal`,
+          },
+        });
+      }
+
+      setSent(true);
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      // Uniform fallback to prevent enumeration
+      setSent(true);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickFill = (acc: (typeof DEMO_ACCOUNTS)[0]) => {
-    setEmail(acc.email);
-    setPassword(acc.password);
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    setError(null);
+    try {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setError("Supabase authentication is not configured yet.");
+        setGoogleLoading(false);
+        return;
+      }
+
+      const origin = window.location.origin;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${origin}/portal`,
+        },
+      });
+
+      if (error) {
+        setError(error.message);
+        setGoogleLoading(false);
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to initiate Google sign-in.");
+      setGoogleLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--page-bg)] text-[var(--page-fg)] px-4 py-12 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[var(--accent)]/15 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="w-full max-w-md space-y-6 relative z-10">
-        {/* Studio Brand */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center h-12 w-12 border-2 border-[var(--border)] bg-[var(--accent)] text-[var(--accent-fg)] shadow-brutal mb-2">
-            <Sparkles className="h-6 w-6 fill-current" />
-          </div>
-          <h1 className="text-3xl font-display font-black tracking-tight text-[var(--page-fg)] uppercase">fernum</h1>
-          <p className="text-xs text-[var(--page-fg)]/70 font-mono">
-            Direct-Response Creative Studio Platform
-          </p>
+    <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between selection:bg-[var(--selection-bg)] selection:text-[var(--selection-fg)]">
+      {/* Top Header */}
+      <header className="border-b-2 border-[var(--border)] bg-[var(--block-2-bg)] text-[var(--block-2-fg)] sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="font-display font-black text-2xl tracking-tight uppercase group-hover:text-[var(--accent)] transition-colors">
+              FERNUM <span className="text-[var(--accent)]">ADPASS</span>
+            </span>
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] hover:text-[var(--accent)] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Studio</span>
+          </Link>
         </div>
+      </header>
 
-        {/* Login Card */}
-        <div className="p-8 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] shadow-brutal-lg space-y-5">
-          <div className="space-y-1">
-            <h2 className="text-lg font-display font-black uppercase text-[var(--block-2-fg)]">Sign In</h2>
-            <p className="text-xs text-[var(--block-2-fg)]/70 font-mono">
-              Enter your credentials to access the studio workspace.
+      {/* Main Login Card */}
+      <main className="max-w-lg mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
+        <div className="bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] p-8 sm:p-12 shadow-brutal-xl space-y-6">
+          {/* Eyebrow badge */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[var(--page-bg)] border-2 border-[var(--border)] text-[var(--page-fg)] text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-brutal-sm">
+              <span>● Client Portal</span>
+            </div>
+            <h1 className="font-display font-black text-3xl sm:text-4xl uppercase tracking-tight leading-none mb-2">
+              CLIENT LOGIN
+            </h1>
+            <p className="text-xs sm:text-sm font-mono opacity-75 max-w-sm mx-auto">
+              Passwordless access to your monthly deliverables, ad slots, and creative pipeline.
             </p>
           </div>
 
+          {/* Expired link banner notice */}
+          {expiredNotice && (
+            <div className="p-4 bg-[var(--sticker-3)]/15 border-2 border-[var(--sticker-3)] text-xs font-mono text-[var(--block-2-fg)] space-y-1">
+              <div className="font-bold flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4 text-[var(--sticker-3)]" />
+                <span>Sign-In Link Expired</span>
+              </div>
+              <p className="opacity-90">
+                Your previous link has expired or has already been used. Please enter your email below to receive a fresh magic link.
+              </p>
+            </div>
+          )}
+
+          {/* Error Message */}
           {error && (
-            <div className="p-3 bg-[var(--sticker-3)] text-white border-2 border-[var(--border)] text-xs font-mono font-bold">
-              {error}
+            <div className="p-3.5 bg-red-500/10 border-2 border-red-500 text-red-600 dark:text-red-400 text-xs font-mono font-bold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4 text-xs">
-            <div className="space-y-1.5">
-              <label className="font-mono font-bold uppercase text-[var(--block-2-fg)]">Email Address</label>
-              <div className="relative">
-                <Mail className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--block-2-fg)]/60" />
-                <input
-                  type="email"
-                  required
-                  placeholder="name@agency.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[var(--page-bg)] border-2 border-[var(--border)] pl-9 pr-3 py-2 text-[var(--page-fg)] placeholder:text-[var(--page-fg)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] font-mono"
-                />
+          {/* Success State: Magic Link Sent */}
+          {sent ? (
+            <div className="text-center py-6 space-y-4">
+              <div className="w-14 h-14 bg-[var(--accent)] text-[var(--accent-fg)] border-2 border-[var(--border)] rounded-2xl flex items-center justify-center mx-auto shadow-brutal">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-display font-black text-xl uppercase tracking-tight">
+                  Check Your Inbox
+                </h3>
+                <p className="text-xs font-mono opacity-80 max-w-xs mx-auto leading-relaxed">
+                  We've emailed a secure sign-in link to{" "}
+                  <strong className="text-[var(--accent)] font-bold">{email}</strong>. Click the link in your email to enter your portal.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-[var(--border)]/20 text-center space-y-3">
+                <p className="text-[11px] font-mono opacity-60">
+                  Didn't receive it? Check your spam folder or request a new link.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSent(false)}
+                  className="text-xs font-mono font-bold uppercase underline hover:text-[var(--accent)] cursor-pointer"
+                >
+                  Send another link →
+                </button>
               </div>
             </div>
-
-            <div className="space-y-1.5">
-              <label className="font-mono font-bold uppercase text-[var(--block-2-fg)]">Password</label>
-              <div className="relative">
-                <Lock className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--block-2-fg)]/60" />
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[var(--page-bg)] border-2 border-[var(--border)] pl-9 pr-3 py-2 text-[var(--page-fg)] placeholder:text-[var(--page-fg)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] font-mono"
-                />
+          ) : (
+            /* Input Form */
+            <form onSubmit={handleMagicLink} className="space-y-5">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-xs font-mono font-bold uppercase tracking-wider mb-2"
+                >
+                  Account / Billing Email *
+                </label>
+                <div className="relative">
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="founder@yourbrand.com"
+                    autoComplete="email"
+                    className="w-full h-12 px-4 bg-[var(--page-bg)] border-2 border-[var(--border)] text-sm font-medium text-[var(--page-fg)] placeholder:text-[var(--page-fg)]/40 focus:outline-none focus:bg-[var(--block-2-bg)] focus:border-[var(--accent)] transition-colors"
+                  />
+                  <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40 pointer-events-none" />
+                </div>
+                <p className="text-[11px] font-mono opacity-65 mt-1.5">
+                  We'll email you a sign-in link. No passwords stored by us.
+                </p>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--block-4-bg)] hover:text-[var(--block-4-fg)] text-[var(--accent-fg)] font-mono font-bold text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-            >
-              <span>{loading ? "Authenticating..." : "Sign In to Studio"}</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </form>
+              {/* Submit Magic Link */}
+              <button
+                type="submit"
+                disabled={loading}
+                data-cursor="lets-go"
+                className="btn-squish w-full h-[50px] bg-[var(--block-4-bg)] hover:bg-[var(--accent)] text-[var(--block-4-fg)] hover:text-[var(--accent-fg)] font-display font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? (
+                  <span>Sending magic link…</span>
+                ) : (
+                  <>
+                    <span>Email Me a Sign-In Link</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
 
-          {/* Dev-Only Quick Fill Credentials (Disabled in Production) */}
-          {isDev && (
-            <div className="pt-4 border-t-2 border-[var(--border)] space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] flex items-center gap-1">
-                  <UserCheck className="h-3 w-3 text-[var(--accent)]" /> Dev Quick Fill (Local Only)
-                </span>
-                <span className="text-[9px] px-1.5 py-0.5 bg-[var(--sticker-1)] text-[var(--block-4-bg)] border border-[var(--border)] font-mono font-bold">
-                  DEV_MODE
-                </span>
+              {/* Divider */}
+              <div className="flex items-center gap-3 pt-2">
+                <div className="flex-1 h-[2px] bg-[var(--border)]/20" />
+                <span className="text-[10px] font-mono font-bold uppercase opacity-50">OR</span>
+                <div className="flex-1 h-[2px] bg-[var(--border)]/20" />
               </div>
-              <div className="grid grid-cols-1 gap-1.5">
-                {DEMO_ACCOUNTS.map((acc) => (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    onClick={() => handleQuickFill(acc)}
-                    className="p-2 bg-[var(--page-bg)] hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] border border-[var(--border)] text-left transition-colors flex items-center justify-between group cursor-pointer"
-                  >
-                    <div>
-                      <div className="text-xs font-mono font-bold text-[var(--page-fg)] group-hover:text-[var(--accent-fg)]">
-                        {acc.name}
-                      </div>
-                      <div className="text-[10px] font-mono opacity-70">{acc.scope}</div>
-                    </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border border-[var(--border)] font-bold">
-                      {acc.role}
-                    </span>
-                  </button>
-                ))}
+
+              {/* Google OAuth Option */}
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={googleLoading}
+                className="btn-squish w-full h-[46px] bg-[var(--page-bg)] hover:bg-[var(--border)]/10 text-[var(--page-fg)] font-display font-bold text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+                <span>{googleLoading ? "Connecting…" : "Continue with Google"}</span>
+              </button>
+
+              <div className="pt-2 flex items-center justify-center gap-1.5 text-[10px] font-mono opacity-60 text-center">
+                <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
+                <span>Protected by Supabase Auth • Free tier isolation</span>
               </div>
-            </div>
+            </form>
           )}
         </div>
+      </main>
 
-        {/* Security badge */}
-        <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono opacity-80 text-[var(--page-fg)]">
-          <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
-          <span>HTTP-only SameSite session cookies with Argon/Scrypt password hashing</span>
-        </div>
-      </div>
+      {/* Footer */}
+      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-6 text-center text-xs font-mono opacity-70">
+        <div>© {new Date().getFullYear()} Fernum (fernum.online). Client Portal.</div>
+      </footer>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[var(--page-bg)] flex items-center justify-center text-xs font-mono font-bold uppercase text-[var(--page-fg)]">
+          Loading login…
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }

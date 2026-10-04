@@ -6,6 +6,7 @@ import { ArrowRight, Menu, X, Calendar } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/supabase/useAuth";
 
 type VibeColor = "orange" | "green" | "purple";
 
@@ -70,6 +71,8 @@ export function StudioNavbar() {
     }
   };
 
+  const { isAuthenticated } = useAuth();
+
   const navLinks = [
     { label: "Work", href: "/work" },
     { label: "Structure", href: "/structure" },
@@ -77,6 +80,10 @@ export function StudioNavbar() {
     { label: "Pricing", href: pathname === "/" ? "#pricing" : "/#pricing" },
     { label: "FAQ", href: "/faq" },
     { label: "About", href: "/about" },
+    {
+      label: isAuthenticated ? "Portal" : "Client login",
+      href: isAuthenticated ? "/portal" : "/login",
+    },
   ];
 
   return (

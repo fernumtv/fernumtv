@@ -66,7 +66,7 @@ export default function RefundPage() {
                 An unusable ad.
               </h2>
               <p>
-                If a delivered ad cannot be used because of a technical or quality problem on our side (for example broken video, wrong format, or content that does not match the approved script), we will fix it within [5] business days. If we cannot fix it, we will refund the price of that ad. (CONFIRM.)
+                If a delivered ad cannot be used because of a technical or quality problem on our side (for example broken video, wrong format, or content that does not match the approved script), we will fix it within 5 business days. If we cannot fix it, we will refund the price of that ad.
               </p>
             </section>
 
@@ -93,7 +93,7 @@ export default function RefundPage() {
                 Cancelling.
               </h2>
               <p>
-                You can cancel any time. We do not refund a month that has already been delivered. After cancellation you are not charged again.
+                Cancel anytime. Cancellation takes effect at the end of the current billing period. We do not refund a month that has already been delivered. After cancellation you are not charged again.
               </p>
             </section>
 
@@ -102,7 +102,11 @@ export default function RefundPage() {
                 How to ask.
               </h2>
               <p>
-                Email [<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>] with your order email and what went wrong. We reply within [2] business days.
+                Email{" "}
+                <a href={`mailto:${siteConfig.contactEmail}`} className="underline font-bold text-[var(--accent)] hover:underline">
+                  {siteConfig.contactEmail}
+                </a>{" "}
+                with your order email and what went wrong. We reply within 2 business days.
               </p>
             </section>
 
@@ -111,7 +115,7 @@ export default function RefundPage() {
                 Payment processor.
               </h2>
               <p>
-                Payments are handled by Dodo Payments. Refunds are returned to your original payment method, and timing depends on your bank. (CONFIRM against Dodo&apos;s own refund rules.)
+                Payments are handled by Dodo Payments. Refunds are returned to your original payment method, and timing depends on your bank.
               </p>
             </section>
           </div>

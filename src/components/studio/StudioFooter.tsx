@@ -41,7 +41,7 @@ export function StudioFooter() {
               FERNUM <span className="text-[var(--accent)]">ADPASS</span>
             </span>
             <p className="text-sm text-[var(--block-4-fg)]/80 max-w-sm leading-relaxed font-medium">
-              We make video ads that sell for D2C brands. Delivered every month with 3 alternate hooks and human creative direction.
+              We make video ads that sell for D2C brands. Delivered every month with 3 alternate hooks, planned and reviewed by our team.
             </p>
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <a
@@ -97,6 +97,11 @@ export function StudioFooter() {
               <li>
                 <Link href="/faq" className="hover:text-[var(--accent)] transition-colors block">
                   FAQ (/faq)
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-[var(--accent)] transition-colors block font-mono text-xs uppercase tracking-wider text-[var(--accent)]">
+                  Client login →
                 </Link>
               </li>
               <li>

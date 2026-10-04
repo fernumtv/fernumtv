@@ -53,6 +53,22 @@ export const siteConfig = {
   domain: "fernum.online",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://fernum.online",
   contactEmail: "fernumtv@gmail.com",
+  businessName: "Fernum",
+  country: "India",
+  governingLaw: "the laws of India (Haryana)",
+  dataRetention: "12 months after last contact",
+  briefTurnaround: "2 business days",
+  aiTools: [] as string[],
+
+  // Admin email allowlist for the client portal
+  adminEmails: ["fernumtv@gmail.com"],
+
+  // Dodo Customer Portal link for managing subscriptions and payment methods
+  customerPortalUrl:
+    process.env.NEXT_PUBLIC_DODO_CUSTOMER_PORTAL_URL ||
+    (dodo.testMode
+      ? "https://test.checkout.dodopayments.com/customer-portal"
+      : "https://checkout.dodopayments.com/customer-portal"),
 
   // Call duration in minutes
   callMinutes: 30,
