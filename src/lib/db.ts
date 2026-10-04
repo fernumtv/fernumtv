@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "file:./dev.db";
+}
+
 // Global singleton to prevent multiple PrismaClient instances during hot-reload
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

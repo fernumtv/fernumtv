@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { requireWorkspaceAccess } from "@/lib/auth/session";
 import { prisma } from "@/lib/db";
