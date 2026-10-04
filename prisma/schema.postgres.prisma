@@ -1,0 +1,474 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  STRATEGIST
+  CREATIVE_DIRECTOR
+  EDITOR
+  CLIENT_APPROVER
+  VIEWER
+}
+
+enum CreatorType {
+  TALKING_HEAD
+  ON_LOCATION
+}
+
+enum CreatorStatus {
+  DRAFT
+  APPROVED
+  LOCKED
+}
+
+enum ContentStatus {
+  IDEA
+  SCRIPTED
+  GENERATING
+  QC_PENDING
+  QC_FAILED
+  AWAITING_APPROVAL
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  AUDIO
+  THUMBNAIL
+  CAPTION_FILE
+}
+
+enum SocialPlatform {
+  YOUTUBE
+  INSTAGRAM
+}
+
+enum ConsentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRYING
+}
+
+model Organization {
+  id           String        @id @default(uuid())
+  name         String
+  slug         String        @unique
+  planTier     String        @default("STARTER")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  workspaces   Workspace[]
+  users        Membership[]
+  auditLogs    AuditLog[]
+  usageLedger  UsageLedger[]
+}
+
+model Workspace {
+  id              String        @id @default(uuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String
+  slug            String
+  monthlyBudget   Decimal       @default(500.00) @db.Decimal(10, 2)
+  currentSpend    Decimal       @default(0.00) @db.Decimal(10, 2)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  brandBrain      BrandBrain?
+  creators        Creator[]
+  contentItems    ContentItem[]
+  auditLogs       AuditLog[]
+  memberships     Membership[]
+  consentRecords  ConsentRecord[]
+  jobs            JobQueueItem[]
+  qualityReports  QualityReport[]
+  qualityThreshold Decimal      @default(80.00) @db.Decimal(5, 2)
+  requireAiDisclosure Boolean   @default(true)
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  name          String
+  passwordHash  String?
+  avatarUrl     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  memberships   Membership[]
+  approvals     Approval[]
+  auditActions  AuditLog[]
+}
+
+model Membership {
+  id              String       @id @default(uuid())
+  userId          String
+  organizationId  String
+  workspaceId     String?
+  role            Role         @default(VIEWER)
+  createdAt       DateTime     @default(now())
+
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace       Workspace?   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, organizationId])
+  @@index([workspaceId])
+}
+
+model BrandBrain {
+  id                  String               @id @default(uuid())
+  organizationId      String
+  workspaceId         String               @unique
+  workspace           Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  version             Int                  @default(1)
+  
+  brandName           String
+  tagline             String?
+  toneOfVoice         String?
+  positioning         String?              @db.Text
+  targetAudiences     String?              @db.Text
+  primaryColors       String?
+  fontStyles          String?
+  logoAssetUrls       String?
+  approvedMessaging   String?              @db.Text
+  productsAndBenefits String?              @db.Text
+  competitorNotes     String?              @db.Text
+  prohibitedClaims    String?              @db.Text
+  prohibitedTopics    String?              @db.Text
+  legalRestrictions   String?              @db.Text
+  approvedTerminology String?              @db.Text
+  ctaRules            String?              @db.Text
+  campaignObjectives  String?              @db.Text
+
+  documents           BrandBrainDocument[]
+  versions            BrandBrainVersion[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([organizationId])
+}
+
+model BrandBrainDocument {
+  id             String      @id @default(uuid())
+  organizationId String
+  workspaceId    String
+  brandBrainId   String
+  brandBrain     BrandBrain  @relation(fields: [brandBrainId], references: [id], onDelete: Cascade)
+  title          String
+  fileUrl        String
+  mimeType       String
+  extractedText  String      @db.Text
+  tokenCount     Int         @default(0)
+  createdAt      DateTime    @default(now())
+
+  @@index([organizationId, workspaceId])
+}
+
+model BrandBrainVersion {
+  id             String      @id @default(uuid())
+  brandBrainId   String
+  brandBrain     BrandBrain  @relation(fields: [brandBrainId], references: [id], onDelete: Cascade)
+  version        Int
+  snapshotJson   String      @db.Text
+  editedByUserId String?
+  createdAt      DateTime    @default(now())
+
+  @@index([brandBrainId])
+}
+
+model Creator {
+  id               String          @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name             String
+  type             CreatorType
+  status           CreatorStatus   @default(DRAFT)
+  version          Int             @default(1)
+  
+  niche            String
+  personality      String?         @db.Text
+  tone             String?
+  vocabulary       String?         @db.Text
+  interests        String?         @db.Text
+  values           String?         @db.Text
+  behaviorRules    String?         @db.Text
+  contentPillars   String?         @db.Text
+  preferredTopics  String?         @db.Text
+  prohibitedTopics String?         @db.Text
+  
+  voiceProvider    String          @default("mock")
+  voiceModelId     String?
+  voiceSpeed       Float           @default(1.0)
+  voicePitch       Float           @default(1.0)
+  sampleAudioUrl   String?
+  
+  faceRefUrls      String?         @db.Text
+  wardrobeNotes    String?         @db.Text
+  visualStyleGuide String?         @db.Text
+  avatarUrl        String?
+  identityToken    String?
+  
+  isSynthetic      Boolean         @default(true)
+  consentRecordId  String?
+  consentRecord    ConsentRecord?  @relation(fields: [consentRecordId], references: [id])
+
+  memories         CreatorMemory[]
+  contentItems     ContentItem[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([organizationId, workspaceId])
+}
+
+model CreatorMemory {
+  id             String    @id @default(uuid())
+  organizationId String
+  workspaceId    String
+  creatorId      String
+  creator        Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  version        Int       @default(1)
+  category       String
+  fact           String    @db.Text
+  context        String?   @db.Text
+  createdAt      DateTime  @default(now())
+
+  @@index([organizationId, creatorId])
+}
+
+model ConsentRecord {
+  id               String         @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  personName       String
+  legalDocumentUrl String
+  evidenceFileUrl  String?
+  uploadedByUserId String?
+  verifiedByUserId String?
+  status           ConsentStatus  @default(PENDING)
+  notes            String?        @db.Text
+  verifiedAt       DateTime?
+  expiresAt        DateTime?
+  createdAt        DateTime       @default(now())
+
+  creators         Creator[]
+
+  @@index([organizationId, workspaceId])
+}
+
+model ContentItem {
+  id                  String               @id @default(uuid())
+  organizationId      String
+  workspaceId         String
+  workspace           Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  creatorId           String?
+  creator             Creator?             @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  
+  status              ContentStatus        @default(IDEA)
+  stageOrder          Int                  @default(0)
+  
+  topic               String
+  hookText            String?              @db.Text
+  script              String?              @db.Text
+  storyboard          String?              @db.Text
+  caption             String?              @db.Text
+  thumbnailConcept    String?              @db.Text
+  
+  selectedHookIndex   Int                  @default(0)
+  selectedScriptIndex Int                  @default(0)
+  complianceFlags     String?              @db.Text
+  
+  platform            SocialPlatform       @default(INSTAGRAM)
+  estimatedCost       Decimal              @default(0.00) @db.Decimal(10, 4)
+  targetPostDate      DateTime?
+  
+  pipelineSteps       ContentPipelineStep[]
+  assets              Asset[]
+  jobs                JobQueueItem[]
+  qualityReports      QualityReport[]
+  approvals           Approval[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([organizationId, workspaceId, status])
+  @@index([creatorId])
+}
+
+model ContentPipelineStep {
+  id              String      @id @default(uuid())
+  organizationId  String
+  workspaceId     String
+  contentItemId   String
+  contentItem     ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  step            String      // "idea", "hook", "script", "storyboard", "caption", "thumbnail"
+  version         Int         @default(1)
+  contentJson     String      @db.Text
+  chosenVariant   Int         @default(0)
+  complianceJson  String?     @db.Text
+  modelName       String?
+  costUsd         Decimal     @default(0.0000) @db.Decimal(10, 4)
+  createdByUserId String?
+  createdAt       DateTime    @default(now())
+
+  @@index([contentItemId, step])
+  @@index([workspaceId])
+}
+
+model Asset {
+  id             String          @id @default(uuid())
+  organizationId String
+  contentItemId  String
+  contentItem    ContentItem     @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  assetType      AssetType
+  url            String
+  storageKey     String?
+  version        Int             @default(1)
+  provider       String          @default("mock")
+  model          String          @default("mock-v1")
+  costEstimate   Decimal         @default(0.0000) @db.Decimal(10, 4)
+  metadata       Json?
+  qualityReports QualityReport[]
+  createdAt      DateTime        @default(now())
+
+  @@index([organizationId, contentItemId])
+}
+
+model Approval {
+  id             String         @id @default(uuid())
+  organizationId String
+  contentItemId  String
+  contentItem    ContentItem    @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  decision       String
+  comments       String?        @db.Text
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, contentItemId])
+}
+
+model AuditLog {
+  id             String         @id @default(uuid())
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspaceId    String?
+  workspace      Workspace?     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  action         String
+  targetEntity   String
+  targetId       String
+  metadata       Json?
+  ipAddress      String?
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model UsageLedger {
+  id             String         @id @default(uuid())
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspaceId    String?
+  
+  provider       String
+  model          String
+  modality       String
+  unitsConsumed  Decimal        @db.Decimal(12, 4)
+  costUsd        Decimal        @db.Decimal(10, 6)
+  latencyMs      Int
+  status         String         @default("SUCCESS")
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model JobQueueItem {
+  id               String        @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contentItemId    String
+  contentItem      ContentItem   @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId           String?
+  
+  jobType          String        @default("FULL_MEDIA_PIPELINE")
+  qualityTier      String        @default("DRAFT")
+  status           JobStatus     @default(PENDING)
+  progress         Int           @default(0)
+  currentStage     String?
+  
+  retryCount       Int           @default(0)
+  maxRetries       Int           @default(3)
+  
+  estimatedCostUsd Decimal       @default(0.0000) @db.Decimal(10, 4)
+  actualCostUsd    Decimal       @default(0.0000) @db.Decimal(10, 4)
+  
+  failureReason    String?       @db.Text
+  payload          Json?
+  resultData       Json?
+  
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([workspaceId, status])
+  @@index([contentItemId])
+  @@index([organizationId, createdAt])
+}
+
+model QualityReport {
+  id                 String       @id @default(uuid())
+  organizationId     String
+  workspaceId        String
+  workspace          Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contentItemId      String
+  contentItem        ContentItem  @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  assetId            String?
+  asset              Asset?       @relation(fields: [assetId], references: [id], onDelete: SetNull)
+
+  status             String       @default("FAILED") // "PASSED" | "FAILED" | "OVERRIDDEN"
+  overallScore       Decimal      @default(0.00) @db.Decimal(5, 2)
+  checksJson         String       @db.Text // JSON array of real and not-implemented checks
+
+  isOverridden       Boolean      @default(false)
+  overriddenByUserId String?
+  overrideReason     String?      @db.Text
+  overriddenAt       DateTime?
+
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@index([workspaceId, status])
+  @@index([contentItemId])
+  @@index([assetId])
+}

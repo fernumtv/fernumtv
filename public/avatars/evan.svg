@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="evanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="60" fill="url(#evanGrad)"/>
+  <circle cx="60" cy="46" r="22" fill="#f1f5f9"/>
+  <path d="M26 102 C26 78 40 68 60 68 C80 68 94 78 94 102 Z" fill="#f1f5f9"/>
+  <text x="60" y="52" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="middle">EW</text>
+</svg>

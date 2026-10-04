@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 1365" width="768" height="1365">
+  <defs>
+    <linearGradient id="devonBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#18181b"/>
+    </linearGradient>
+    <linearGradient id="streetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="devonSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Urban Night Background -->
+  <rect width="768" height="1365" fill="url(#devonBg)"/>
+
+  <!-- Neon Ambient Bokeh -->
+  <circle cx="200" cy="400" r="180" fill="#3b82f6" opacity="0.15" filter="blur(40px)"/>
+  <circle cx="580" cy="500" r="220" fill="#f97316" opacity="0.15" filter="blur(40px)"/>
+
+  <!-- Streetwear Hoodie Shoulders -->
+  <path d="M120 1365 C140 1020 220 890 384 890 C548 890 628 1020 648 1365 Z" fill="#27272a"/>
+  <!-- Hoodie Collar -->
+  <path d="M280 890 C320 950 448 950 488 890 Z" fill="#3f3f46"/>
+
+  <!-- Neck -->
+  <rect x="334" y="730" width="100" height="170" rx="30" fill="url(#devonSkin)"/>
+
+  <!-- Head Base -->
+  <ellipse cx="384" cy="560" rx="145" ry="185" fill="url(#devonSkin)"/>
+
+  <!-- Hair (Textured Crop) -->
+  <path d="M239 520 C230 330 320 250 384 250 C448 250 538 330 529 520 C500 380 470 320 384 320 C298 320 268 380 239 520 Z" fill="#09090b"/>
+
+  <!-- Eyes (Sharp Observant Gaze) -->
+  <ellipse cx="320" cy="540" rx="26" ry="14" fill="#ffffff"/>
+  <circle cx="320" cy="540" r="11" fill="#451a03"/>
+  <circle cx="323" cy="537" r="3.5" fill="#ffffff"/>
+
+  <ellipse cx="448" cy="540" rx="26" ry="14" fill="#ffffff"/>
+  <circle cx="448" cy="540" r="11" fill="#451a03"/>
+  <circle cx="451" cy="537" r="3.5" fill="#ffffff"/>
+
+  <!-- Eyebrows -->
+  <path d="M290 515 Q325 505 355 520" stroke="#09090b" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M413 520 Q443 505 478 515" stroke="#09090b" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M384 535 L376 610 L396 610" stroke="#78350f" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Lips (Slight Witty Smirk) -->
+  <path d="M344 670 Q384 685 428 666 Q384 675 344 670" fill="#78350f"/>
+
+  <!-- Badge Watermark: Synthetic Reference -->
+  <rect x="224" y="1250" width="320" height="48" rx="24" fill="#18181b" stroke="#f97316" stroke-width="2"/>
+  <text x="384" y="1281" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#fdba74" text-anchor="middle" letter-spacing="2">
+    SYNTHETIC CREATOR: DEVON MILES
+  </text>
+</svg>

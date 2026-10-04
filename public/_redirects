@@ -1,0 +1,18 @@
+https://www.fernum.online/*  https://fernum.online/:splat  301!
+http://www.fernum.online/*   https://fernum.online/:splat  301!
+http://fernum.online/*       https://fernum.online/:splat  301!
+
+# Direct link routes for Netlify static deployments
+/terms        /terms.html       200
+/refund       /refund.html      200
+/privacy      /privacy.html     200
+/work         /work.html        200
+/structure    /structure.html   200
+/how-we-test  /how-we-test.html 200
+/faq          /faq.html         200
+/about        /about.html       200
+/thanks       /thanks.html      200
+/schedule     /schedule.html    200
+
+# Netlify SPA fallback rule
+/*            /index.html       200

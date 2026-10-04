@@ -1,0 +1,379 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   ONE TOKEN SYSTEM: THREE VIBES (ORANGE, GREEN, PURPLE)
+   Palette:
+   orange: #F14A0A | green: #16C846 | red: #F33418 | black: #111111 |
+   cream: #F7F3EB  | purple: #6C3BF5 | yellow: #FFD400
+   ========================================================================== */
+
+:root,
+[data-vibe="orange"] {
+  --swatch-orange: #F14A0A;
+  --swatch-green: #16C846;
+  --swatch-purple: #6C3BF5;
+
+  --page-bg: #F7F3EB;
+  --page-fg: #111111;
+
+  /* Blocks rotate: orange, cream, green, black */
+  --block-1-bg: #F14A0A;
+  --block-1-fg: #111111;
+  --block-2-bg: #F7F3EB;
+  --block-2-fg: #111111;
+  --block-3-bg: #16C846;
+  --block-3-fg: #111111;
+  --block-4-bg: #111111;
+  --block-4-fg: #F7F3EB;
+
+  /* Accent: orange */
+  --accent: #F14A0A;
+  --accent-fg: #111111;
+
+  /* Thick borders & offset shadows */
+  --border: #111111;
+  --shadow-color: #111111;
+
+  /* Stickers: yellow, purple, green */
+  --sticker-1: #FFD400;
+  --sticker-2: #6C3BF5;
+  --sticker-3: #16C846;
+
+  /* Marquee */
+  --marquee-bg: #F14A0A;
+  --marquee-fg: #111111;
+
+  /* Cursor, Focus, Selection */
+  --cursor-color: #F14A0A;
+  --focus-ring: #F14A0A;
+  --selection-bg: #F14A0A;
+  --selection-fg: #111111;
+
+  /* Helper aliases */
+  --accent-text: var(--accent-fg);
+  --paper: var(--page-bg);
+  --black: var(--page-fg);
+}
+
+[data-vibe="green"] {
+  --page-bg: #F7F3EB;
+  --page-fg: #111111;
+
+  /* Blocks rotate: green, cream, purple, black */
+  --block-1-bg: #16C846;
+  --block-1-fg: #111111;
+  --block-2-bg: #F7F3EB;
+  --block-2-fg: #111111;
+  --block-3-bg: #6C3BF5;
+  --block-3-fg: #F7F3EB;
+  --block-4-bg: #111111;
+  --block-4-fg: #F7F3EB;
+
+  /* Accent: green */
+  --accent: #16C846;
+  --accent-fg: #111111;
+
+  /* Thick borders & offset shadows */
+  --border: #111111;
+  --shadow-color: #111111;
+
+  /* Stickers: yellow, orange, red */
+  --sticker-1: #FFD400;
+  --sticker-2: #F14A0A;
+  --sticker-3: #F33418;
+
+  /* Marquee */
+  --marquee-bg: #16C846;
+  --marquee-fg: #111111;
+
+  /* Cursor, Focus, Selection */
+  --cursor-color: #16C846;
+  --focus-ring: #16C846;
+  --selection-bg: #16C846;
+  --selection-fg: #111111;
+
+  --accent-text: var(--accent-fg);
+  --paper: var(--page-bg);
+  --black: var(--page-fg);
+}
+
+[data-vibe="purple"] {
+  --page-bg: #F7F3EB;
+  --page-fg: #111111;
+
+  /* Blocks rotate: purple, cream, orange, black */
+  --block-1-bg: #6C3BF5;
+  --block-1-fg: #F7F3EB;
+  --block-2-bg: #F7F3EB;
+  --block-2-fg: #111111;
+  --block-3-bg: #F14A0A;
+  --block-3-fg: #111111;
+  --block-4-bg: #111111;
+  --block-4-fg: #F7F3EB;
+
+  /* Accent: purple (uses cream text for contrast) */
+  --accent: #6C3BF5;
+  --accent-fg: #F7F3EB;
+
+  /* Thick borders & offset shadows */
+  --border: #111111;
+  --shadow-color: #111111;
+
+  /* Stickers: yellow, green, red */
+  --sticker-1: #FFD400;
+  --sticker-2: #16C846;
+  --sticker-3: #F33418;
+
+  /* Marquee */
+  --marquee-bg: #6C3BF5;
+  --marquee-fg: #F7F3EB;
+
+  /* Cursor, Focus, Selection */
+  --cursor-color: #6C3BF5;
+  --focus-ring: #6C3BF5;
+  --selection-bg: #6C3BF5;
+  --selection-fg: #F7F3EB;
+
+  --accent-text: var(--accent-fg);
+  --paper: var(--page-bg);
+  --black: var(--page-fg);
+}
+
+/* ==========================================================================
+   SMOOTH COLOR TRANSITIONS (250ms, disabled under prefers-reduced-motion)
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  transition-property: background-color, color, border-color, fill, stroke, box-shadow;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--page-bg);
+  color: var(--page-fg);
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--page-fg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* Grotesque Display Type */
+.font-display {
+  font-family: 'Bricolage Grotesque', 'Archivo Black', 'Arial Black', sans-serif;
+  letter-spacing: -0.04em;
+}
+
+/* Brutalist Hard Offset Shadows using CSS tokens */
+.shadow-brutal {
+  box-shadow: 4px 4px 0px var(--shadow-color);
+}
+
+.shadow-brutal-sm {
+  box-shadow: 2px 2px 0px var(--shadow-color);
+}
+
+.shadow-brutal-lg {
+  box-shadow: 6px 6px 0px var(--shadow-color);
+}
+
+.shadow-brutal-xl {
+  box-shadow: 8px 8px 0px var(--shadow-color);
+}
+
+.shadow-brutal-accent {
+  box-shadow: 5px 5px 0px var(--accent);
+}
+
+/* Tactile Button Squish on Press */
+.btn-squish {
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.btn-squish:hover {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 2.5px 2.5px 0px var(--shadow-color);
+}
+.btn-squish:active {
+  transform: scale(0.96) translate(3px, 3px);
+  box-shadow: 0px 0px 0px var(--shadow-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-squish {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* Halftone Dot Matrix Patterns */
+.bg-halftone {
+  background-image: radial-gradient(var(--border) 1.2px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+.bg-halftone-accent {
+  background-image: radial-gradient(var(--accent) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+
+.bg-halftone-white {
+  background-image: radial-gradient(rgba(247, 243, 235, 0.22) 1.2px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+/* Marquee Keyframes using GPU Transform only */
+@keyframes marquee-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-right 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 24s linear infinite;
+  will-change: transform;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee-left,
+  .animate-marquee-right,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+  .rotate-on-hover,
+  .tilt-card,
+  .btn-squish {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--page-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Gen Z Cursor Hiding */
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor summary,
+  body.has-custom-cursor .cursor-pointer {
+    cursor: none !important;
+  }
+
+  body.has-custom-cursor input,
+  body.has-custom-cursor textarea,
+  body.has-custom-cursor select,
+  body.has-custom-cursor [contenteditable="true"],
+  body.has-custom-cursor .calendly-inline-widget,
+  body.has-custom-cursor iframe {
+    cursor: auto !important;
+  }
+}
+
+/* Cursor Particle Burst */
+@keyframes cursor-burst-particle {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.2) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+.cursor-burst-shape {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  user-select: none;
+  animation: cursor-burst-particle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Marquee slow on cursor hover */
+[data-cursor="marquee"]:hover .animate-marquee-left,
+[data-cursor="marquee"]:hover .animate-marquee-right {
+  animation-duration: 68s !important;
+}
+
+/* Magnetic button smooth return transition */
+.btn-magnetic {
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}

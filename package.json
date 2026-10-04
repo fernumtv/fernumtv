@@ -1,0 +1,52 @@
+{
+  "name": "fernum",
+  "version": "1.0.0",
+  "description": "Fernum - AI-native B2B Virtual Creator Studio",
+  "scripts": {
+    "dev": "tsx scripts/bootstrap.ts && next dev -H 0.0.0.0 -p 3100",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0 -p 3100",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:sync-schema": "tsx scripts/sync-schema.ts",
+    "test": "tsx tests/tenant-isolation.test.ts",
+    "test:http": "tsx tests/http-tenant-isolation.test.ts",
+    "test:phase2": "tsx tests/phase2-http.test.ts",
+    "test:phase3": "tsx tests/phase3-http.test.ts",
+    "test:phase4": "tsx tests/phase4-http.test.ts",
+    "test:phase5": "tsx tests/phase5-http.test.ts",
+    "test:postgres": "tsx scripts/test-postgres.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1144.0",
+    "@aws-sdk/s3-request-presigner": "^3.1144.0",
+    "@electric-sql/pglite": "^0.5.8",
+    "@prisma/client": "5.22.0",
+    "bullmq": "^6.3.11",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.3",
+    "ioredis": "^6.0.0",
+    "lucide-react": "^1.49.0",
+    "next": "^15.1.0",
+    "pg": "^8.23.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.11",
+    "postcss": "^8.4.49",
+    "prisma": "5.22.0",
+    "puppeteer-core": "^25.12.0",
+    "tailwindcss": "^3.4.16",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

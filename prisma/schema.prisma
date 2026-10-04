@@ -1,0 +1,683 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   OWNER
+//   ADMIN
+//   STRATEGIST
+//   CREATIVE_DIRECTOR
+//   EDITOR
+//   CLIENT_APPROVER
+//   VIEWER
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   TALKING_HEAD
+//   ON_LOCATION
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   DRAFT
+//   APPROVED
+//   LOCKED
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   IDEA
+//   SCRIPTED
+//   GENERATING
+//   QC_PENDING
+//   QC_FAILED
+//   AWAITING_APPROVAL
+//   APPROVED
+//   SCHEDULED
+//   PUBLISHED
+//   ARCHIVED
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   IMAGE
+//   VIDEO
+//   AUDIO
+//   THUMBNAIL
+//   CAPTION_FILE
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   YOUTUBE
+//   INSTAGRAM
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   PENDING
+//   VERIFIED
+//   REJECTED
+//   EXPIRED
+// }
+
+// Enum String mapped to String in SQLite
+// enum String {
+//   PENDING
+//   PROCESSING
+//   COMPLETED
+//   FAILED
+//   CANCELLED
+//   RETRYING
+// }
+
+model Organization {
+  id           String        @id @default(uuid())
+  name         String
+  slug         String        @unique
+  planTier     String        @default("STARTER")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  workspaces   Workspace[]
+  users        Membership[]
+  auditLogs    AuditLog[]
+  usageLedger  UsageLedger[]
+}
+
+model Workspace {
+  id              String        @id @default(uuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String
+  slug            String
+  monthlyBudget   Float       @default(500.00) 
+  currentSpend    Float       @default(0.00) 
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  brandBrain      BrandBrain?
+  creators        Creator[]
+  contentItems    ContentItem[]
+  auditLogs       AuditLog[]
+  memberships     Membership[]
+  consentRecords  ConsentRecord[]
+  jobs            JobQueueItem[]
+  qualityReports  QualityReport[]
+  qualityThreshold Float      @default(80.00) 
+  requireAiDisclosure Boolean   @default(true)
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  name          String
+  passwordHash  String?
+  avatarUrl     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  memberships   Membership[]
+  approvals     Approval[]
+  auditActions  AuditLog[]
+}
+
+model Membership {
+  id              String       @id @default(uuid())
+  userId          String
+  organizationId  String
+  workspaceId     String?
+  role            String         @default("VIEWER")
+  createdAt       DateTime     @default(now())
+
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace       Workspace?   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, organizationId])
+  @@index([workspaceId])
+}
+
+model BrandBrain {
+  id                  String               @id @default(uuid())
+  organizationId      String
+  workspaceId         String               @unique
+  workspace           Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  version             Int                  @default(1)
+  
+  brandName           String
+  tagline             String?
+  toneOfVoice         String?
+  positioning         String?              
+  targetAudiences     String?              
+  primaryColors       String?
+  fontStyles          String?
+  logoAssetUrls       String?
+  approvedMessaging   String?              
+  productsAndBenefits String?              
+  competitorNotes     String?              
+  prohibitedClaims    String?              
+  prohibitedTopics    String?              
+  legalRestrictions   String?              
+  approvedTerminology String?              
+  ctaRules            String?              
+  campaignObjectives  String?              
+
+  documents           BrandBrainDocument[]
+  versions            BrandBrainVersion[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([organizationId])
+}
+
+model BrandBrainDocument {
+  id             String      @id @default(uuid())
+  organizationId String
+  workspaceId    String
+  brandBrainId   String
+  brandBrain     BrandBrain  @relation(fields: [brandBrainId], references: [id], onDelete: Cascade)
+  title          String
+  fileUrl        String
+  mimeType       String
+  extractedText  String      
+  tokenCount     Int         @default(0)
+  createdAt      DateTime    @default(now())
+
+  @@index([organizationId, workspaceId])
+}
+
+model BrandBrainVersion {
+  id             String      @id @default(uuid())
+  brandBrainId   String
+  brandBrain     BrandBrain  @relation(fields: [brandBrainId], references: [id], onDelete: Cascade)
+  version        Int
+  snapshotJson   String      
+  editedByUserId String?
+  createdAt      DateTime    @default(now())
+
+  @@index([brandBrainId])
+}
+
+model Creator {
+  id               String          @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name             String
+  type             String
+  status           String   @default("DRAFT")
+  version          Int             @default(1)
+  
+  niche            String
+  personality      String?         
+  tone             String?
+  vocabulary       String?         
+  interests        String?         
+  values           String?         
+  behaviorRules    String?         
+  contentPillars   String?         
+  preferredTopics  String?         
+  prohibitedTopics String?         
+  
+  voiceProvider    String          @default("mock")
+  voiceModelId     String?
+  voiceSpeed       Float           @default(1.0)
+  voicePitch       Float           @default(1.0)
+  sampleAudioUrl   String?
+  
+  faceRefUrls      String?         
+  wardrobeNotes    String?         
+  visualStyleGuide String?         
+  avatarUrl        String?
+  identityToken    String?
+  
+  isSynthetic      Boolean         @default(true)
+  consentRecordId  String?
+  consentRecord    ConsentRecord?  @relation(fields: [consentRecordId], references: [id])
+
+  memories         CreatorMemory[]
+  contentItems     ContentItem[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([organizationId, workspaceId])
+}
+
+model CreatorMemory {
+  id             String    @id @default(uuid())
+  organizationId String
+  workspaceId    String
+  creatorId      String
+  creator        Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  version        Int       @default(1)
+  category       String
+  fact           String    
+  context        String?   
+  createdAt      DateTime  @default(now())
+
+  @@index([organizationId, creatorId])
+}
+
+model ConsentRecord {
+  id               String         @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  personName       String
+  legalDocumentUrl String
+  evidenceFileUrl  String?
+  uploadedByUserId String?
+  verifiedByUserId String?
+  status           String  @default("PENDING")
+  notes            String?        
+  verifiedAt       DateTime?
+  expiresAt        DateTime?
+  createdAt        DateTime       @default(now())
+
+  creators         Creator[]
+
+  @@index([organizationId, workspaceId])
+}
+
+model ContentItem {
+  id                  String               @id @default(uuid())
+  organizationId      String
+  workspaceId         String
+  workspace           Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  creatorId           String?
+  creator             Creator?             @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  
+  status              String        @default("IDEA")
+  stageOrder          Int                  @default(0)
+  
+  topic               String
+  hookText            String?              
+  script              String?              
+  storyboard          String?              
+  caption             String?              
+  thumbnailConcept    String?              
+  
+  selectedHookIndex   Int                  @default(0)
+  selectedScriptIndex Int                  @default(0)
+  complianceFlags     String?              
+  
+  platform            String       @default("INSTAGRAM")
+  estimatedCost       Float              @default(0.00) 
+  targetPostDate      DateTime?
+  
+  pipelineSteps       ContentPipelineStep[]
+  assets              Asset[]
+  jobs                JobQueueItem[]
+  qualityReports      QualityReport[]
+  approvals           Approval[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([organizationId, workspaceId, status])
+  @@index([creatorId])
+}
+
+model ContentPipelineStep {
+  id              String      @id @default(uuid())
+  organizationId  String
+  workspaceId     String
+  contentItemId   String
+  contentItem     ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  step            String      // "idea", "hook", "script", "storyboard", "caption", "thumbnail"
+  version         Int         @default(1)
+  contentJson     String      
+  chosenVariant   Int         @default(0)
+  complianceJson  String?     
+  modelName       String?
+  costUsd         Float     @default(0.0000) 
+  createdByUserId String?
+  createdAt       DateTime    @default(now())
+
+  @@index([contentItemId, step])
+  @@index([workspaceId])
+}
+
+model Asset {
+  id             String          @id @default(uuid())
+  organizationId String
+  contentItemId  String
+  contentItem    ContentItem     @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  assetType      String
+  url            String
+  storageKey     String?
+  version        Int             @default(1)
+  provider       String          @default("mock")
+  model          String          @default("mock-v1")
+  costEstimate   Float         @default(0.0000) 
+  metadata       String?
+  qualityReports QualityReport[]
+  createdAt      DateTime        @default(now())
+
+  @@index([organizationId, contentItemId])
+}
+
+model Approval {
+  id             String         @id @default(uuid())
+  organizationId String
+  contentItemId  String
+  contentItem    ContentItem    @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  decision       String
+  comments       String?        
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, contentItemId])
+}
+
+model AuditLog {
+  id             String         @id @default(uuid())
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspaceId    String?
+  workspace      Workspace?     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  action         String
+  targetEntity   String
+  targetId       String
+  metadata       String?
+  ipAddress      String?
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model UsageLedger {
+  id             String         @id @default(uuid())
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspaceId    String?
+  
+  provider       String
+  model          String
+  modality       String
+  unitsConsumed  Float        
+  costUsd        Float        
+  latencyMs      Int
+  status         String         @default("SUCCESS")
+  createdAt      DateTime       @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model JobQueueItem {
+  id               String        @id @default(uuid())
+  organizationId   String
+  workspaceId      String
+  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contentItemId    String
+  contentItem      ContentItem   @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId           String?
+  
+  jobType          String        @default("FULL_MEDIA_PIPELINE")
+  qualityTier      String        @default("DRAFT")
+  status           String     @default("PENDING")
+  progress         Int           @default(0)
+  currentStage     String?
+  
+  retryCount       Int           @default(0)
+  maxRetries       Int           @default(3)
+  
+  estimatedCostUsd Float       @default(0.0000) 
+  actualCostUsd    Float       @default(0.0000) 
+  
+  failureReason    String?       
+  payload          String?
+  resultData       String?
+  
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([workspaceId, status])
+  @@index([contentItemId])
+  @@index([organizationId, createdAt])
+}
+
+model QualityReport {
+  id                 String       @id @default(uuid())
+  organizationId     String
+  workspaceId        String
+  workspace          Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contentItemId      String
+  contentItem        ContentItem  @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  assetId            String?
+  asset              Asset?       @relation(fields: [assetId], references: [id], onDelete: SetNull)
+
+  status             String       @default("FAILED") // "PASSED" | "FAILED" | "OVERRIDDEN"
+  overallScore       Float      @default(0.00) 
+  checksJson         String        // JSON array of real and not-implemented checks
+
+  isOverridden       Boolean      @default(false)
+  overriddenByUserId String?
+  overrideReason     String?      
+  overriddenAt       DateTime?
+
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@index([workspaceId, status])
+  @@index([contentItemId])
+  @@index([assetId])
+}
+
+// ==========================================
+// Fernum Ad Production Service Data Model
+// ==========================================
+
+model Client {
+  id                String         @id @default(uuid())
+  email             String         @unique
+  name              String
+  companyName       String
+  website           String?
+  stripeCustomerId  String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  brandKits         BrandKit[]
+  subscriptions     Subscription[]
+  adSlots           AdSlot[]
+}
+
+model BrandKit {
+  id              String      @id @default(uuid())
+  clientId        String
+  client          Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  brandName       String
+  website         String?
+  primaryColors   String?     // e.g. JSON ["#ff4500", "#1a1a1a"]
+  fontStyle       String?
+  voiceTone       String?     // e.g. "Direct, punchy, problem-agitation"
+  guidelines      String?
+  competitorNotes String?
+  logoUrl         String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  adSlots         AdSlot[]
+
+  @@index([clientId])
+}
+
+model Plan {
+  id                String         @id @default(uuid())
+  name              String         // "Fernum Sprint", "Fernum Growth", "Fernum Scale"
+  slug              String         @unique
+  priceUsd          Int            // 499, 799, 1099
+  perAdPrice        Int            // 499, 400, 333
+  adsPerMonth       Int            // 1, 2, 3
+  revisions         Int            @default(2)
+  turnaroundWeeks   Int            // 3, 2, 2
+  campaignPlanning  Boolean        @default(false)
+  description       String?
+  featuresJson      String?
+  active            Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+
+  subscriptions     Subscription[]
+}
+
+model Subscription {
+  id                 String       @id @default(uuid())
+  clientId           String
+  client             Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               Plan         @relation(fields: [planId], references: [id])
+  status             String       @default("active") // "active", "trialing", "cancelled", "past_due"
+  stripeSubId        String?
+  currentPeriodStart DateTime     @default(now())
+  currentPeriodEnd   DateTime
+  adSlotsUsed        Int          @default(0)
+  totalAdSlots       Int          @default(1)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  adSlots            AdSlot[]
+
+  @@index([clientId])
+  @@index([planId])
+}
+
+model AdSlot {
+  id              String        @id @default(uuid())
+  clientId        String
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  subscriptionId  String?
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  brandKitId      String?
+  brandKit        BrandKit?     @relation(fields: [brandKitId], references: [id], onDelete: SetNull)
+
+  title           String
+  status          String        @default("briefed") // "briefed", "script_pending", "script_approved", "generating", "in_review", "delivered", "revision"
+  
+  // Brief Intake data
+  productName     String
+  targetAudience  String
+  problemSolved   String
+  offerDetails    String?
+  tone            String?
+  referenceUrls   String?
+  channelFocus    String?       // "Meta", "TikTok", "Both"
+  formatRatio     String        @default("9:16")
+
+  budgetCapUsd    Float         @default(10.00) // $10 hard-stop per ad slot
+  currentSpendUsd Float         @default(0.00)
+
+  scripts         Script[]
+  shots           Shot[]
+  deliverables    Deliverable[]
+  costEvents      CostEvent[]
+  revisions       Revision[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+}
+
+model Script {
+  id               String       @id @default(uuid())
+  adSlotId         String
+  adSlot           AdSlot       @relation(fields: [adSlotId], references: [id], onDelete: Cascade)
+  version          Int          @default(1)
+  conceptTitle     String
+  hookVariantsJson String       // JSON array of 3 hooks
+  scriptBody       String
+  shotListJson     String?      // Expanded 15-30s shot list
+  status           String       @default("pending") // "pending", "approved", "rejected", "revised"
+  feedback         String?
+  approvedAt       DateTime?
+  createdAt        DateTime     @default(now())
+
+  @@index([adSlotId])
+}
+
+model Shot {
+  id           String    @id @default(uuid())
+  adSlotId     String
+  adSlot       AdSlot    @relation(fields: [adSlotId], references: [id], onDelete: Cascade)
+  shotIndex    Int
+  prompt       String
+  model        String    // e.g. "luma-ray2", "kling", "svd", "runway-gen3"
+  costUsd      Float     @default(0.0000)
+  assetUrl     String?
+  status       String    @default("pending") // "pending", "generating", "approved", "failed"
+  durationSec  Float     @default(4.0)
+  createdAt    DateTime  @default(now())
+
+  @@index([adSlotId])
+}
+
+model Deliverable {
+  id          String   @id @default(uuid())
+  adSlotId    String
+  adSlot      AdSlot   @relation(fields: [adSlotId], references: [id], onDelete: Cascade)
+  format      String   // "9:16", "1:1", "16:9"
+  url         String
+  captionUrl  String?
+  resolution  String   @default("1080x1920")
+  durationSec Float    @default(25.0)
+  createdAt   DateTime @default(now())
+
+  @@index([adSlotId])
+}
+
+model CostEvent {
+  id         String   @id @default(uuid())
+  adSlotId   String
+  adSlot     AdSlot   @relation(fields: [adSlotId], references: [id], onDelete: Cascade)
+  provider   String   // "openai", "fal", "elevenlabs", "runway", "luma"
+  model      String?
+  amountUsd  Float
+  timestamp  DateTime @default(now())
+
+  @@index([adSlotId])
+}
+
+model Revision {
+  id               String   @id @default(uuid())
+  adSlotId         String
+  adSlot           AdSlot   @relation(fields: [adSlotId], references: [id], onDelete: Cascade)
+  revisionNumber   Int      @default(1)
+  requestedChanges String
+  status           String   @default("pending") // "pending", "in_progress", "completed"
+  createdAt        DateTime @default(now())
+
+  @@index([adSlotId])
+}
+
+model CallBooking {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  brandName      String
+  website        String?
+  monthlyAdSpend String?  // "<$5k", "$5k-$20k", "$20k-$100k", "$100k+"
+  notes          String?
+  status         String   @default("confirmed")
+  scheduledTime  String?
+  createdAt      DateTime @default(now())
+}
+

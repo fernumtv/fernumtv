@@ -1,0 +1,122 @@
+/**
+ * Fernum Site & Payments Configuration
+ * Central config for all external payment links, Cal.com booking URL, and studio contact points.
+ */
+
+export interface FernumPlanConfig {
+  name: string;
+  slug: string;
+  price: number;
+  period: string;
+  totalAds: string;
+  pricePerVideo: string;
+  revisionsTimeline: string;
+  campaignPlanning: string;
+  campaignPlanningIncluded: boolean;
+  whatsIncluded: string;
+  highlight?: boolean;
+  badge?: string;
+  checkoutUrl: string;
+}
+
+export const dodo = {
+  testMode: process.env.NEXT_PUBLIC_DODO_TEST_MODE === "false" ? false : true,
+  productIds: {
+    launch: "pdt_0Np0EXGaTu2UEGkGu0xkl",
+    growth: "pdt_0Np0EpJAh7cZI2hPkksbJ",
+    scale:  "pdt_0Np0EyHDpQJiTsocHDcds"
+  },
+  checkoutBaseLive: "https://checkout.dodopayments.com/buy/",
+  checkoutBaseTest: "https://test.checkout.dodopayments.com/buy/",
+  redirectUrl: "https://fernum.online/thanks"
+};
+
+/**
+ * Returns the full Dodo checkout URL for a given plan slug (launch, growth, scale).
+ * If the product ID is empty or contains "PASTE", returns empty string so UI can show fallback.
+ */
+export function getCheckoutUrl(plan: string | { slug?: string; name?: string }): string {
+  const rawKey = typeof plan === "string" ? plan : (plan?.slug || plan?.name || "");
+  const planKey = rawKey.toLowerCase().trim() as keyof typeof dodo.productIds;
+  const productId = dodo.productIds[planKey];
+
+  if (!productId || productId.trim() === "" || productId.toUpperCase().includes("PASTE")) {
+    return "";
+  }
+
+  const base = dodo.testMode ? dodo.checkoutBaseTest : dodo.checkoutBaseLive;
+  return `${base}${productId}?redirect_url=${encodeURIComponent(dodo.redirectUrl)}`;
+}
+
+export const siteConfig = {
+  name: "Fernum AdPass",
+  domain: "fernum.online",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://fernum.online",
+  contactEmail: "fernumtv@gmail.com",
+
+  // Call duration in minutes
+  callMinutes: 30,
+
+  // Last updated date for legal documents (/terms, /refund, /privacy)
+  lastUpdated: "October 4, 2026",
+
+  // Booking link: Calendly link (opens in modal or new tab)
+  bookingUrl:
+    process.env.NEXT_PUBLIC_BOOKING_URL ||
+    "https://calendly.com/hardikapp12/30min?hide_event_type_details=1&hide_gdpr_banner=1",
+
+  // Return URL after payment
+  returnUrl: "/thanks",
+
+  // Dodo Payments configuration
+  dodo,
+
+  // Pricing plans with dynamic checkout URLs via getCheckoutUrl
+  plans: {
+    launch: {
+      name: "Launch",
+      slug: "launch",
+      price: 499,
+      period: "/month",
+      totalAds: "1 ad per month",
+      pricePerVideo: "$500 per video",
+      revisionsTimeline: "2 Revisions • About 3 Weeks",
+      campaignPlanning: "Excluded",
+      campaignPlanningIncluded: false,
+      whatsIncluded: "Writing, AI Production, Editing, Full HD",
+      highlight: false,
+      checkoutUrl: getCheckoutUrl("launch"),
+    },
+    growth: {
+      name: "Growth",
+      slug: "growth",
+      price: 799,
+      period: "/month",
+      totalAds: "2 ads per month",
+      pricePerVideo: "$400 per video",
+      revisionsTimeline: "2 Revisions • About 2 Weeks",
+      campaignPlanning: "Excluded",
+      campaignPlanningIncluded: false,
+      whatsIncluded: "Writing, AI Production, Editing, Full HD",
+      highlight: true,
+      badge: "Most Popular",
+      checkoutUrl: getCheckoutUrl("growth"),
+    },
+    scale: {
+      name: "Scale",
+      slug: "scale",
+      price: 1099,
+      period: "/month",
+      totalAds: "3 ads per month",
+      pricePerVideo: "$333 per video",
+      revisionsTimeline: "2 Revisions • About 2 Weeks",
+      campaignPlanning: "Included",
+      campaignPlanningIncluded: true,
+      whatsIncluded: "Campaign Planning, Writing, AI Production, Editing, Full HD",
+      highlight: false,
+      badge: "Best Value",
+      checkoutUrl: getCheckoutUrl("scale"),
+    },
+  } as Record<string, FernumPlanConfig>,
+};
+

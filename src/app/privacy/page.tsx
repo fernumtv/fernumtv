@@ -1,0 +1,151 @@
+import React from "react";
+import Link from "next/link";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
+import { siteConfig } from "@/config/site";
+
+export const metadata = {
+  title: "Privacy Policy | Fernum AdPass",
+  description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+};
+
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
+      <StudioNavbar />
+
+      <main className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+        <article className="max-w-[70ch] mx-auto bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] p-8 sm:p-14 shadow-brutal-xl">
+          {/* Header */}
+          <div className="border-b-2 border-[var(--border)]/15 pb-8 mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--page-bg)] border-2 border-[var(--border)] text-[var(--page-fg)] text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-brutal-sm">
+              <span>● Privacy Policy</span>
+            </div>
+            <h1 className="font-display font-black text-3xl sm:text-5xl tracking-tight uppercase leading-[0.95] mb-4">
+              PRIVACY POLICY
+            </h1>
+            <p className="text-xs font-mono font-bold uppercase tracking-wider opacity-60">
+              Last updated: {siteConfig.lastUpdated}
+            </p>
+          </div>
+
+          {/* Body Content: 17px body font, generous spacing, max ~70ch line length */}
+          <div className="space-y-10 text-[17px] leading-relaxed opacity-90 font-normal">
+            {/* Section 1 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Who is responsible.
+              </h2>
+              <p>
+                [fernumtv], [india], [[<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>]].
+              </p>
+            </section>
+
+            {/* Section 2 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                What we collect.
+              </h2>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>
+                  Details you give us in forms: name, email, brand name, website, product, offer.
+                </li>
+                <li>
+                  Booking details when you book a call through Calendly.
+                </li>
+                <li>
+                  Payment details: payments are handled by Dodo Payments. We do not see or store your full card number.
+                </li>
+                <li>
+                  Basic site analytics: [Plausible / Netlify Analytics], which does not use cookies. (CONFIRM what you actually installed.)
+                </li>
+              </ul>
+            </section>
+
+            {/* Section 3 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                What we use it for.
+              </h2>
+              <p>
+                To make your ads, answer you, bill you, run calls, and improve the site.
+              </p>
+            </section>
+
+            {/* Section 4 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Who we share it with.
+              </h2>
+              <p>
+                Only service providers needed to run Fernum: Netlify (hosting and forms), Dodo Payments, Calendly, our analytics tool, and the AI and video tools we use to make your ads. We do not sell your data. When we use AI tools, we send only what is needed to make your ad, such as your product details and brand assets. (CONFIRM and list the tools you actually use.)
+              </p>
+            </section>
+
+            {/* Section 5 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                How long we keep it.
+              </h2>
+              <p>
+                Form and booking data: [12 months] after your last contact. Payment records: as long as the law requires.
+              </p>
+            </section>
+
+            {/* Section 6 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Your rights.
+              </h2>
+              <p>
+                You can ask to see, correct or delete your data by emailing [<a href="mailto:fernumtv@gmail.com" className="underline font-bold text-[var(--accent)] hover:underline">fernumtv@gmail.com</a>]. Depending on where you live (for example the EU or UK), you may have additional rights under local law.
+              </p>
+            </section>
+
+            {/* Section 7 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Cookies.
+              </h2>
+              <p>
+                [We do not use tracking cookies. / List what you use.] (CONFIRM.)
+              </p>
+            </section>
+
+            {/* Section 8 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Children.
+              </h2>
+              <p>
+                Our service is for businesses and is not for people under 18.
+              </p>
+            </section>
+
+            {/* Section 9 */}
+            <section className="space-y-3">
+              <h2 className="font-display font-black text-xl uppercase tracking-wide">
+                Changes.
+              </h2>
+              <p>
+                We will update this page when something changes. The date at the top shows the latest version.
+              </p>
+            </section>
+          </div>
+
+          {/* Quick Cross-Links */}
+          <div className="mt-12 pt-8 border-t-2 border-[var(--border)]/15 flex flex-wrap items-center justify-between gap-4 text-xs font-mono font-bold uppercase tracking-wider">
+            <Link href="/terms" className="text-[var(--accent)] hover:underline">
+              Terms of Service →
+            </Link>
+            <Link href="/refund" className="opacity-70 hover:opacity-100">
+              Refund Policy →
+            </Link>
+          </div>
+        </article>
+      </main>
+
+      <StudioFooter />
+    </div>
+  );
+}
