@@ -1,63 +1,57 @@
 "use client";
 
 import React from "react";
-import { FernumNavbar } from "@/components/fernum/FernumNavbar";
-import { FernumHero } from "@/components/fernum/FernumHero";
-import { FernumMarquee } from "@/components/fernum/FernumMarquee";
-import { FernumProblemSection } from "@/components/fernum/FernumProblemSection";
-import { FernumProductDemo } from "@/components/fernum/FernumProductDemo";
-import { FernumBeforeAfter } from "@/components/fernum/FernumBeforeAfter";
-import { FernumHowItWorks } from "@/components/fernum/FernumHowItWorks";
-import { FernumSafetySection } from "@/components/fernum/FernumSafetySection";
-import { FernumFeatureGrid } from "@/components/fernum/FernumFeatureGrid";
-import { FernumRealProblems } from "@/components/fernum/FernumRealProblems";
-import { FernumDownloadCTA } from "@/components/fernum/FernumDownloadCTA";
-import { FernumFAQ } from "@/components/fernum/FernumFAQ";
-import { FernumFooter } from "@/components/fernum/FernumFooter";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioHero } from "@/components/studio/StudioHero";
+import { MarqueeBand } from "@/components/studio/MarqueeBand";
+import { HomeWorkPreview } from "@/components/studio/HomeWorkPreview";
+import { HomeProcessTeaser } from "@/components/studio/HomeProcessTeaser";
+import { StudioPricing } from "@/components/studio/StudioPricing";
+import { StudioBriefForm } from "@/components/studio/StudioBriefForm";
+import { StudioFooter } from "@/components/studio/StudioFooter";
+import { BackToTop } from "@/components/studio/BackToTop";
 
-export default function FernumHomePage() {
+export default function FernumLandingPage() {
   return (
-    <div className="min-h-screen bg-[#0A0B0F] text-[#F5F7FA] font-sans selection:bg-[#B6FF33] selection:text-[#0A0B0F]">
-      {/* 1. Sticky Navigation with Windows 10 & 11 Compatibility Badge */}
-      <FernumNavbar />
+    <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans selection:bg-[var(--selection-bg)] selection:text-[var(--selection-fg)]">
+      {/* 1. Nav: Logo, Links (Work, Structure, How we test, Pricing, FAQ, About), Vibe, Book a Call */}
+      <StudioNavbar />
 
       <main>
-        {/* 2. Command-Center Hero Section with Interactive Storage Gauge */}
-        <FernumHero />
+        {/* 2. Hero: 5-Second Clarity, Book a Call, See our work button */}
+        <StudioHero />
 
-        {/* 3. Ticker Marquee Strip */}
-        <FernumMarquee />
+        {/* 3. Marquee Strip */}
+        <MarqueeBand
+          direction="left"
+          phrases={[
+            "1 TO 3 ADS EVERY MONTH",
+            "3 ALTERNATE HOOKS PER AD",
+            "FULL HD 9:16 + 1:1 + 16:9",
+            "2 REVISIONS INCLUDED",
+            "TEST YOUR FIRST 3 SECONDS",
+            "NO LONG-TERM CONTRACTS",
+          ]}
+        />
 
-        {/* 4. Problem Section: The Usual Suspects */}
-        <FernumProblemSection />
+        {/* 4. "Our work" preview (3 video cards plus a "See our work" button) */}
+        <HomeWorkPreview />
 
-        {/* 5. Central Product Demo: Command Center Explorer & Treemap */}
-        <FernumProductDemo />
+        {/* 5. 3-step process teaser with a "See our structure" button */}
+        <HomeProcessTeaser />
 
-        {/* 6. Interactive Before & After: Storage Panic to Breathing Room */}
-        <FernumBeforeAfter />
+        {/* 6. Pricing: Launch ($499), Growth ($799), Scale ($1,099) */}
+        <StudioPricing />
 
-        {/* 7. How It Works: Three Steps. Zero Guesswork */}
-        <FernumHowItWorks />
-
-        {/* 8. Safety & Control Section: System Immunity & Safe Review */}
-        <FernumSafetySection />
-
-        {/* 9. Product Capabilities & Feature Grid */}
-        <FernumFeatureGrid />
-
-        {/* 10. Real-World Moments & Scenarios */}
-        <FernumRealProblems />
-
-        {/* 11. Full-Screen Download Command Center CTA */}
-        <FernumDownloadCTA />
-
-        {/* 12. Frequently Asked Questions */}
-        <FernumFAQ />
+        {/* 7. Final Call-To-Action (Intake Brief Form / Strategy Call) */}
+        <StudioBriefForm />
       </main>
 
-      {/* 13. Clean Dark Windows Utility Footer */}
-      <FernumFooter />
+      {/* 8. Footer */}
+      <StudioFooter />
+
+      {/* Back to top sticker button */}
+      <BackToTop />
     </div>
   );
 }

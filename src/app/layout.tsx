@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fernum | Windows 10 & 11 Storage Command Center & Disk Cleanup",
+  title: "Fernum AdPass | Monthly Video Ads for D2C & E-Commerce Brands",
   description:
-    "Fernum turns confusing disk space into a clear visual map—so you can find huge files, forgotten folders, and storage clutter without guessing what is safe to remove.",
+    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats (9:16, 1:1, 16:9), planned, scripted and reviewed by our team.",
   metadataBase: new URL("https://fernum.online"),
   alternates: {
     canonical: "https://fernum.online",
@@ -17,21 +17,34 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
   },
   openGraph: {
-    title: "Fernum | Windows 10 & 11 Storage Command Center & Disk Cleanup",
+    title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "Map your disk space, spot oversized space hogs, and reclaim gigabytes safely. Built for Windows 10 & 11.",
+      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
     url: "https://fernum.online",
-    siteName: "Fernum Storage Command Center",
+    siteName: "Fernum AdPass",
+    images: [
+      {
+        url: "/images/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Fernum AdPass Creative Studio",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fernum | Windows 10 & 11 Storage Command Center",
+    title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "Map your disk space, spot oversized space hogs, and reclaim gigabytes safely. Built for Windows 10 & 11.",
+      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
+    images: ["/images/og-image.webp"],
   },
 };
+
+import Script from "next/script";
+import { CustomCursor } from "@/components/studio/CustomCursor";
+import { TestModeBanner } from "@/components/studio/TestModeBanner";
 
 export default function RootLayout({
   children,
@@ -39,18 +52,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" data-vibe="orange" suppressHydrationWarning>
       <head>
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-        <meta name="theme-color" content="#0A0B0F" />
-        {/* Enforce HTTPS */}
+        <meta name="theme-color" content="#F14A0A" id="fernum-theme-color" />
+        {/* Force HTTPS and apply saved vibe before first paint */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(window.location.protocol==="http:"&&!window.location.hostname.includes("localhost")&&!window.location.hostname.includes("127.0.0.1")){window.location.replace(window.location.href.replace(/^http:/,"https:"));}}catch(e){}})();`,
+            __html: `(function(){try{if(window.location.protocol==="http:"&&!window.location.hostname.includes("localhost")&&!window.location.hostname.includes("127.0.0.1")){window.location.replace(window.location.href.replace(/^http:/,"https:"));return;}var s=localStorage.getItem("fernum_vibe");var v=(s==="green"||s==="purple")?s:"orange";document.documentElement.setAttribute("data-vibe",v);var tc={orange:"#F14A0A",green:"#16C846",purple:"#6C3BF5"};var m=document.getElementById("fernum-theme-color");if(m)m.setAttribute("content",tc[v]);}catch(e){}})();`,
           }}
         />
+        {/* Privacy-friendly cookieless analytics */}
+        <Script
+          defer
+          data-domain="fernum.online"
+          src="https://plausible.io/js/script.tagged-events.js"
+          strategy="afterInteractive"
+        />
       </head>
-      <body className="min-h-screen bg-[#0A0B0F] text-[#F5F7FA] antialiased selection:bg-[#B6FF33] selection:text-[#0A0B0F]">
+      <body className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] antialiased">
+        <TestModeBanner />
+        <CustomCursor />
         {children}
       </body>
     </html>
