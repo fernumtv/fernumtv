@@ -10,30 +10,43 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
-    if (!supabase) {
+    let unsubscribe: (() => void) | undefined;
+    try {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+
+      // Get current active session
+      supabase.auth
+        .getSession()
+        .then(({ data }) => {
+          setSession(data?.session ?? null);
+          setUser(data?.session?.user ?? null);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+
+      // Listen for auth state changes
+      const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        setLoading(false);
+      });
+      unsubscribe = () => {
+        try {
+          data?.subscription?.unsubscribe();
+        } catch {}
+      };
+    } catch {
       setLoading(false);
-      return;
     }
 
-    // Get current active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    // Listen for auth state changes (magic link click, token refresh, sign out)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
     return () => {
-      subscription.unsubscribe();
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 
