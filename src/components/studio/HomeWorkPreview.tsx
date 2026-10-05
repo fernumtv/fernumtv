@@ -45,6 +45,14 @@ export function HomeWorkPreview() {
     setActiveUnmutedId((prev) => (prev === id ? null : id));
   };
 
+  const [selectedFormat, setSelectedFormat] = useState<"9:16" | "1:1" | "16:9">("9:16");
+
+  const FORMAT_DESCRIPTIONS = {
+    "9:16": "TikTok, Instagram Reels & YouTube Shorts • Full-screen mobile immersive",
+    "1:1": "Meta In-Feed, Instagram Carousel & Explore • Maximum square screen real estate",
+    "16:9": "Desktop, YouTube Pre-Roll & Landscape Feeds • Cinematic widescreen pitch",
+  };
+
   return (
     <section id="work-preview" className="relative bg-[var(--block-3-bg)] text-[var(--block-3-fg)] py-20 sm:py-28 overflow-hidden border-t-2 border-[var(--border)] transition-colors">
       {/* Background Halftone Pattern */}
@@ -52,7 +60,7 @@ export function HomeWorkPreview() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--block-2-bg)] border-2 border-[var(--border)] text-[var(--block-2-fg)] text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-brutal">
               <span>● Production Creative</span>
@@ -61,7 +69,7 @@ export function HomeWorkPreview() {
               OUR WORK
             </h2>
             <p className="text-[17px] text-[var(--block-3-fg)]/85 font-normal max-w-xl">
-              Vertical video ads formatted for paid feeds. Each card autoplays on screen without clicks. Tap speaker to unmute.
+              Vertical video ads formatted for paid feeds. Every ad is delivered in all 3 formats.
             </p>
           </div>
 
@@ -72,6 +80,33 @@ export function HomeWorkPreview() {
             <span>See our work</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+
+        {/* Interactive Aspect Ratio Switcher */}
+        <div className="mb-10 p-4 bg-[var(--page-bg)] border-2 border-[var(--border)] shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase">
+            <span className="text-[var(--accent)]">FORMAT ENGINE:</span>
+            <span className="text-[var(--page-fg)]/80 text-[11px] hidden md:inline">
+              {FORMAT_DESCRIPTIONS[selectedFormat]}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
+            {(["9:16", "1:1", "16:9"] as const).map((fmt) => (
+              <button
+                key={fmt}
+                type="button"
+                onClick={() => setSelectedFormat(fmt)}
+                className={`px-3 py-1.5 border-2 border-[var(--border)] font-mono font-bold text-xs uppercase transition-all cursor-pointer ${
+                  selectedFormat === fmt
+                    ? "bg-[var(--accent)] text-[var(--accent-fg)] shadow-brutal"
+                    : "bg-[var(--block-2-bg)] text-[var(--block-2-fg)] hover:bg-[var(--border)]/15"
+                }`}
+              >
+                {fmt === "9:16" ? "9:16 Vertical" : fmt === "1:1" ? "1:1 Square" : "16:9 Wide"}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 3 Video Cards Grid */}

@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, Menu, X, Calendar } from "lucide-react";
+import { ArrowRight, Menu, X, Calendar, Volume2, VolumeX } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/supabase/useAuth";
+import { isSoundEnabled, setSoundEnabled, playSuccessSound, playPopSound } from "@/lib/interactive/sound";
 
 type VibeColor = "orange" | "green" | "purple";
 
@@ -22,6 +23,27 @@ export function StudioNavbar() {
   const [currentVibe, setCurrentVibe] = useState<VibeColor>("orange");
   const [announcement, setAnnouncement] = useState<string>("");
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [soundOn, setSoundOn] = useState(false);
+
+  useEffect(() => {
+    setSoundOn(isSoundEnabled());
+  }, []);
+
+  const handleToggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setSoundEnabled(next);
+    if (next) {
+      setTimeout(() => playSuccessSound(), 50);
+    }
+  };
+
+  const handleLogoClick = () => {
+    playPopSound();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("fernum-logo-burst"));
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -98,6 +120,7 @@ export function StudioNavbar() {
         <div className="flex items-center gap-2 select-none">
           <Link
             href="/"
+            onClick={handleLogoClick}
             aria-label="FERNUM AdPass"
             className="flex items-center gap-2 group text-left focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:outline-none"
           >
@@ -168,6 +191,22 @@ export function StudioNavbar() {
               );
             })}
           </div>
+
+          {/* SFX Sound Toggle Button */}
+          <button
+            type="button"
+            onClick={handleToggleSound}
+            title={soundOn ? "Mute UI sounds" : "Enable tactile UI sounds"}
+            aria-label={soundOn ? "Mute UI sounds" : "Enable tactile UI sounds"}
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 border-2 border-[var(--border)] font-mono font-bold uppercase text-[10px] tracking-wider transition-colors cursor-pointer ${
+              soundOn
+                ? "bg-[var(--accent)] text-[var(--accent-fg)] shadow-brutal-sm"
+                : "bg-[var(--page-bg)] text-[var(--page-fg)] hover:bg-[var(--border)]/10"
+            }`}
+          >
+            {soundOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 opacity-60" />}
+            <span>{soundOn ? "SFX: ON" : "SFX: OFF"}</span>
+          </button>
 
           {/* Book a Call Button */}
           <a

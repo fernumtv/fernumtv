@@ -45,6 +45,7 @@ export const metadata: Metadata = {
 import Script from "next/script";
 import { CustomCursor } from "@/components/studio/CustomCursor";
 import { TestModeBanner } from "@/components/studio/TestModeBanner";
+import { EasterEggOverlay } from "@/components/studio/EasterEggOverlay";
 
 export default function RootLayout({
   children,
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] antialiased">
         <TestModeBanner />
         <CustomCursor />
+        <EasterEggOverlay />
         {children}
       </body>
     </html>

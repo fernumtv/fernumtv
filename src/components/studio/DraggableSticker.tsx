@@ -28,6 +28,14 @@ export function DraggableSticker({
     initialY: 0,
   });
 
+  React.useEffect(() => {
+    const handleReset = () => {
+      setPosition({ x: initialX, y: initialY });
+    };
+    window.addEventListener("fernum-reset-stickers", handleReset);
+    return () => window.removeEventListener("fernum-reset-stickers", handleReset);
+  }, [initialX, initialY]);
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     // Only drag with primary mouse button or touch
     if (e.button !== 0) return;
