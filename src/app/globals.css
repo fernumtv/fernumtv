@@ -1,146 +1,164 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ==========================================================================
-   ONE TOKEN SYSTEM: THREE VIBES (ORANGE, GREEN, PURPLE)
+   FERNUM: WINDOWS STORAGE COMMAND CENTER
    Palette:
-   orange: #F14A0A | green: #16C846 | red: #F33418 | black: #111111 |
-   cream: #F7F3EB  | purple: #6C3BF5 | yellow: #FFD400
+   - Deep background: #0A0B0F
+   - Charcoal surface: #15171D
+   - Elevated card: #1E2129
+   - Soft white text: #F5F7FA
+   - Muted gray text: #A5ABB8
+   - Lime action: #B6FF33 (success, free space, primary CTA)
+   - Electric blue: #48C8FF (scanning, analysis, intelligence)
+   - Digital purple: #8E5CFF (advanced tooling, gaming accents)
+   - Hot pink: #FF4FCD (rare highlight detail)
+   - Signal orange: #FF8A34 (storage pressure, huge files)
+   - Alert red: #FF4B4B (critical storage warning)
    ========================================================================== */
 
-:root,
-[data-vibe="orange"] {
-  --swatch-orange: #F14A0A;
-  --swatch-green: #16C846;
-  --swatch-purple: #6C3BF5;
+:root {
+  --bg-deep: #0A0B0F;
+  --surface-charcoal: #15171D;
+  --card-elevated: #1E2129;
+  --border-subtle: #2A2F3D;
+  --border-glow: #384052;
 
-  --page-bg: #F7F3EB;
-  --page-fg: #111111;
+  --text-main: #F5F7FA;
+  --text-muted: #A5ABB8;
+  --text-dim: #6B7280;
 
-  /* Blocks rotate: orange, cream, green, black */
-  --block-1-bg: #F14A0A;
-  --block-1-fg: #111111;
-  --block-2-bg: #F7F3EB;
-  --block-2-fg: #111111;
-  --block-3-bg: #16C846;
-  --block-3-fg: #111111;
-  --block-4-bg: #111111;
-  --block-4-fg: #F7F3EB;
+  --lime-action: #B6FF33;
+  --lime-glow: rgba(182, 255, 51, 0.25);
 
-  /* Accent: orange */
-  --accent: #F14A0A;
-  --accent-fg: #111111;
+  --electric-blue: #48C8FF;
+  --blue-glow: rgba(72, 200, 255, 0.25);
 
-  /* Thick borders & offset shadows */
-  --border: #111111;
-  --shadow-color: #111111;
+  --digital-purple: #8E5CFF;
+  --purple-glow: rgba(142, 92, 255, 0.25);
 
-  /* Stickers: yellow, purple, green */
-  --sticker-1: #FFD400;
-  --sticker-2: #6C3BF5;
-  --sticker-3: #16C846;
+  --hot-pink: #FF4FCD;
+  --signal-orange: #FF8A34;
+  --alert-red: #FF4B4B;
 
-  /* Marquee */
-  --marquee-bg: #F14A0A;
-  --marquee-fg: #111111;
-
-  /* Cursor, Focus, Selection */
-  --cursor-color: #F14A0A;
-  --focus-ring: #F14A0A;
-  --selection-bg: #F14A0A;
-  --selection-fg: #111111;
-
-  /* Helper aliases */
-  --accent-text: var(--accent-fg);
-  --paper: var(--page-bg);
-  --black: var(--page-fg);
+  /* Legacy mapping aliases for components */
+  --page-bg: #0A0B0F;
+  --page-fg: #F5F7FA;
+  --accent: #B6FF33;
+  --accent-fg: #0A0B0F;
+  --border: #2A2F3D;
 }
 
-[data-vibe="green"] {
-  --page-bg: #F7F3EB;
-  --page-fg: #111111;
-
-  /* Blocks rotate: green, cream, purple, black */
-  --block-1-bg: #16C846;
-  --block-1-fg: #111111;
-  --block-2-bg: #F7F3EB;
-  --block-2-fg: #111111;
-  --block-3-bg: #6C3BF5;
-  --block-3-fg: #F7F3EB;
-  --block-4-bg: #111111;
-  --block-4-fg: #F7F3EB;
-
-  /* Accent: green */
-  --accent: #16C846;
-  --accent-fg: #111111;
-
-  /* Thick borders & offset shadows */
-  --border: #111111;
-  --shadow-color: #111111;
-
-  /* Stickers: yellow, orange, red */
-  --sticker-1: #FFD400;
-  --sticker-2: #F14A0A;
-  --sticker-3: #F33418;
-
-  /* Marquee */
-  --marquee-bg: #16C846;
-  --marquee-fg: #111111;
-
-  /* Cursor, Focus, Selection */
-  --cursor-color: #16C846;
-  --focus-ring: #16C846;
-  --selection-bg: #16C846;
-  --selection-fg: #111111;
-
-  --accent-text: var(--accent-fg);
-  --paper: var(--page-bg);
-  --black: var(--page-fg);
+body {
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  selection-background-color: var(--lime-action);
+  selection-color: var(--bg-deep);
 }
 
-[data-vibe="purple"] {
-  --page-bg: #F7F3EB;
-  --page-fg: #111111;
+::selection {
+  background: var(--lime-action);
+  color: #0A0B0F;
+}
 
-  /* Blocks rotate: purple, cream, orange, black */
-  --block-1-bg: #6C3BF5;
-  --block-1-fg: #F7F3EB;
-  --block-2-bg: #F7F3EB;
-  --block-2-fg: #111111;
-  --block-3-bg: #F14A0A;
-  --block-3-fg: #111111;
-  --block-4-bg: #111111;
-  --block-4-fg: #F7F3EB;
+/* Monospace data and headings */
+.font-mono-data {
+  font-family: 'JetBrains Mono', monospace;
+}
 
-  /* Accent: purple (uses cream text for contrast) */
-  --accent: #6C3BF5;
-  --accent-fg: #F7F3EB;
+.font-display {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-  /* Thick borders & offset shadows */
-  --border: #111111;
-  --shadow-color: #111111;
+/* Background Cyber Grid */
+.bg-command-grid {
+  background-image: 
+    linear-gradient(to right, rgba(42, 47, 61, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 47, 61, 0.3) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
 
-  /* Stickers: yellow, green, red */
-  --sticker-1: #FFD400;
-  --sticker-2: #16C846;
-  --sticker-3: #F33418;
+.bg-dot-matrix {
+  background-image: radial-gradient(circle, #252A36 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
 
-  /* Marquee */
-  --marquee-bg: #6C3BF5;
-  --marquee-fg: #F7F3EB;
+/* Radar Scan Line Animation */
+@keyframes radarSweep {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0.2;
+  }
+}
 
-  /* Cursor, Focus, Selection */
-  --cursor-color: #6C3BF5;
-  --focus-ring: #6C3BF5;
-  --selection-bg: #6C3BF5;
-  --selection-fg: #F7F3EB;
+.animate-radar-sweep {
+  animation: radarSweep 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
 
-  --accent-text: var(--accent-fg);
-  --paper: var(--page-bg);
-  --black: var(--page-fg);
+/* Glowing Command Borders */
+.border-hud {
+  border: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.border-hud::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--lime-action);
+  border-left: 2px solid var(--lime-action);
+  pointer-events: none;
+}
+
+.border-hud::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--lime-action);
+  border-right: 2px solid var(--lime-action);
+  pointer-events: none;
+}
+
+/* Pulse Glows */
+.glow-lime {
+  box-shadow: 0 0 24px var(--lime-glow);
+}
+
+.glow-blue {
+  box-shadow: 0 0 24px var(--blue-glow);
+}
+
+.glow-purple {
+  box-shadow: 0 0 24px var(--purple-glow);
+}
+
+/* Core font classes */
+.font-display {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.font-mono,
+.font-mono-data {
+  font-family: 'JetBrains Mono', monospace;
 }
 
 /* ==========================================================================

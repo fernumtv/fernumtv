@@ -49,18 +49,21 @@ export function getCheckoutUrl(plan: string | { slug?: string; name?: string }):
 }
 
 export const siteConfig = {
-  name: "Fernum AdPass",
+  name: "Fernum",
+  tagline: "Windows 10 & 11 Storage Command Center",
   domain: "fernum.online",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://fernum.online",
   contactEmail: "fernumtv@gmail.com",
+  version: "v1.2.4",
+  downloadUrl: "/download/FernumSetup.exe",
+  compatibility: "Windows 10 & Windows 11 (64-bit)",
+  installerSize: "42.8 MB",
   businessName: "Fernum",
   country: "India",
   governingLaw: "the laws of India (Haryana)",
   dataRetention: "12 months after last contact",
   briefTurnaround: "2 business days",
   aiTools: [] as string[],
-
-  // Admin email allowlist for the client portal
   adminEmails: ["fernumtv@gmail.com"],
 
   // Dodo Customer Portal link for managing subscriptions and payment methods
