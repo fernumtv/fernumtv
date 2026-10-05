@@ -3,18 +3,34 @@
 import React, { useEffect, useState } from "react";
 import { playSuccessSound } from "@/lib/interactive/sound";
 
-interface EmojiParticle {
+interface ConfettiBadge {
   id: number;
-  emoji: string;
+  text: string;
   x: number;
   y: number;
-  size: number;
+  bg: string;
+  fg: string;
   rotation: number;
-  velocity: number;
+  scale: number;
 }
 
+const BADGES = [
+  { text: "FERNUM", bg: "var(--accent)", fg: "var(--accent-fg)" },
+  { text: "0:03 HOOK", bg: "var(--block-4-bg)", fg: "var(--block-4-fg)" },
+  { text: "RENT FREE", bg: "var(--sticker-2)", fg: "#ffffff" },
+  { text: "3 HOOKS / AD", bg: "var(--sticker-1)", fg: "#000000" },
+  { text: "COOKED", bg: "var(--accent)", fg: "var(--accent-fg)" },
+  { text: "NO CAP", bg: "var(--sticker-1)", fg: "#000000" },
+  { text: "9:16 VERTICAL", bg: "var(--block-2-bg)", fg: "var(--block-2-fg)" },
+  { text: "REC ●", bg: "#EF4444", fg: "#ffffff" },
+  { text: "✦", bg: "var(--block-4-bg)", fg: "var(--accent)" },
+  { text: "HIGH RETENTION", bg: "var(--sticker-3)", fg: "#000000" },
+  { text: "★", bg: "var(--accent)", fg: "var(--accent-fg)" },
+  { text: "1:1 SQUARE", bg: "var(--block-4-bg)", fg: "var(--block-4-fg)" },
+];
+
 export function EasterEggOverlay() {
-  const [particles, setParticles] = useState<EmojiParticle[]>([]);
+  const [badges, setBadges] = useState<ConfettiBadge[]>([]);
   const [isActive, setIsActive] = useState(false);
 
   const triggerBurst = () => {
@@ -25,25 +41,28 @@ export function EasterEggOverlay() {
     playSuccessSound();
     setIsActive(true);
 
-    const emojis = ["⚡", "🔥", "🚀", "💥", "🎬", "✨", "🎯", "💰", "★", "☻"];
-    const count = 30;
+    const count = 28;
     const width = window.innerWidth;
 
-    const newParticles: EmojiParticle[] = Array.from({ length: count }, (_, i) => ({
-      id: Date.now() + i,
-      emoji: emojis[Math.floor(Math.random() * emojis.length)],
-      x: Math.random() * (width - 60) + 30,
-      y: -50 - Math.random() * 200,
-      size: Math.random() * 20 + 24, // 24px - 44px
-      rotation: (Math.random() - 0.5) * 60,
-      velocity: Math.random() * 400 + 450, // fall speed
-    }));
+    const newBadges: ConfettiBadge[] = Array.from({ length: count }, (_, i) => {
+      const template = BADGES[i % BADGES.length];
+      return {
+        id: Date.now() + i,
+        text: template.text,
+        bg: template.bg,
+        fg: template.fg,
+        x: Math.random() * (width - 120) + 20,
+        y: -40 - Math.random() * 200,
+        rotation: (Math.random() - 0.5) * 50,
+        scale: Math.random() * 0.3 + 0.85,
+      };
+    });
 
-    setParticles(newParticles);
+    setBadges(newBadges);
 
     setTimeout(() => {
       setIsActive(false);
-      setParticles([]);
+      setBadges([]);
     }, 3200);
   };
 
@@ -51,7 +70,6 @@ export function EasterEggOverlay() {
     let keyBuffer = "";
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input or textarea
       const target = e.target as HTMLElement | null;
       if (
         target &&
@@ -84,39 +102,40 @@ export function EasterEggOverlay() {
     };
   }, []);
 
-  if (!isActive || particles.length === 0) return null;
+  if (!isActive || badges.length === 0) return null;
 
   return (
     <div
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-[99999] overflow-hidden"
     >
-      {particles.map((p) => (
+      {badges.map((b) => (
         <div
-          key={p.id}
+          key={b.id}
           style={{
-            left: `${p.x}px`,
-            fontSize: `${p.size}px`,
-            animation: `fallDown 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`,
-            transform: `rotate(${p.rotation}deg)`,
+            left: `${b.x}px`,
+            backgroundColor: b.bg,
+            color: b.fg,
+            animation: `badgeFall 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`,
+            transform: `rotate(${b.rotation}deg) scale(${b.scale})`,
           }}
-          className="absolute select-none"
+          className="absolute px-3 py-1 border-2 border-[var(--border)] shadow-brutal text-xs font-mono font-black uppercase tracking-wider select-none whitespace-nowrap"
         >
-          {p.emoji}
+          {b.text}
         </div>
       ))}
 
       <style jsx>{`
-        @keyframes fallDown {
+        @keyframes badgeFall {
           0% {
             transform: translateY(-80px) rotate(0deg) scale(0.6);
             opacity: 1;
           }
-          70% {
+          75% {
             opacity: 1;
           }
           100% {
-            transform: translateY(${typeof window !== "undefined" ? window.innerHeight + 100 : 1000}px) rotate(360deg) scale(1.1);
+            transform: translateY(${typeof window !== "undefined" ? window.innerHeight + 120 : 1000}px) rotate(380deg) scale(1);
             opacity: 0;
           }
         }

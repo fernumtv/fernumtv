@@ -260,8 +260,9 @@ export default function HowWeTestPage() {
                     <span className="px-2 py-0.5 bg-[var(--block-1-bg)]/20 border border-[var(--border)] text-[10px] font-mono font-bold uppercase opacity-80">
                       {topic.badge}
                     </span>
-                    <span className="text-2xl group-hover:scale-125 transition-transform">
-                      {topic.emoji}
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--accent)] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span>OPEN SPEC</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
 
