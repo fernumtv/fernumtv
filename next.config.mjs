@@ -13,6 +13,10 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
@@ -22,7 +26,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob: https://*.supabase.co; media-src 'self' https: blob:; connect-src 'self' https://calendly.com https://*.calendly.com https://plausible.io https://test.dodopayments.com https://app.dodopayments.com https://*.supabase.co; frame-src 'self' https://calendly.com https://*.calendly.com https://test.dodopayments.com https://app.dodopayments.com;",
+            value: "upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob: https://*.supabase.co; media-src 'self' https: blob:; connect-src 'self' https://calendly.com https://*.calendly.com https://plausible.io https://test.dodopayments.com https://app.dodopayments.com https://*.supabase.co; frame-src 'self' https://calendly.com https://*.calendly.com https://test.dodopayments.com https://app.dodopayments.com;",
           },
         ],
       },
