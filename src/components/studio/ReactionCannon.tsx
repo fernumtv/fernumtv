@@ -9,7 +9,7 @@ import {
   playSuccessSound,
 } from "@/lib/interactive/sound";
 
-type StickerKind = "camera" | "clapper" | "face" | "filmstrip" | "reticle" | "starburst";
+type StickerKind = "camera" | "clapper" | "face" | "filmstrip" | "reticle";
 
 interface StampedSticker {
   id: string;
@@ -20,12 +20,11 @@ interface StampedSticker {
 }
 
 const DOCK_BUTTONS: { kind: StickerKind; label: string; icon: string }[] = [
-  { kind: "camera", label: "CAM 4K", icon: "📷" },
+  { kind: "camera", label: "CAM 1080p", icon: "📷" },
   { kind: "clapper", label: "SLATE", icon: "🎬" },
   { kind: "face", label: "HOOK FACE", icon: "😱" },
   { kind: "filmstrip", label: "FILM STRIP", icon: "🎞️" },
   { kind: "reticle", label: "9:16 SAFE", icon: "🎯" },
-  { kind: "starburst", label: "3.8x ROAS", icon: "★" },
 ];
 
 export function ReactionCannon() {
@@ -155,14 +154,14 @@ export function ReactionCannon() {
               <X className="w-3 h-3" />
             </button>
 
-            {/* Shape 1: Cinema Camera 4K */}
+            {/* Shape 1: Cinema Camera 1080p */}
             {s.kind === "camera" && (
               <div className="relative bg-[#18181B] text-white border-2 border-[var(--border)] p-2.5 shadow-brutal w-[155px] rounded-sm">
                 <div className="absolute -top-2.5 left-4 w-7 h-2.5 bg-[#27272A] border-2 border-b-0 border-[var(--border)] rounded-t-xs" />
                 <div className="flex items-center justify-between mb-1.5 px-0.5">
                   <div className="flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                    <span className="text-[9px] font-mono font-black text-red-400">REC ● 4K</span>
+                    <span className="text-[9px] font-mono font-black text-red-400">REC ● 1080p</span>
                   </div>
                   <span className="text-[8px] font-mono opacity-60">60FPS</span>
                 </div>
@@ -270,25 +269,6 @@ export function ReactionCannon() {
                 <div className="flex justify-between items-end text-[7px] font-mono">
                   <span className="opacity-70">SAFE ZONE</span>
                   <span className="text-[var(--accent)] font-bold">9:16 TIKTOK</span>
-                </div>
-              </div>
-            )}
-
-            {/* Shape 6: Starburst 3.8x ROAS Seal */}
-            {s.kind === "starburst" && (
-              <div className="w-20 h-20 relative flex items-center justify-center select-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[2px_2px_0px_#000]">
-                  <polygon
-                    points="50,0 63,18 85,15 82,37 100,50 82,63 85,85 63,82 50,100 37,82 15,85 18,63 0,50 18,37 15,15 37,18"
-                    fill="var(--sticker-1)"
-                    stroke="var(--border)"
-                    strokeWidth="3"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center font-display font-black text-black leading-none">
-                  <span className="text-[12px] uppercase">3.8x</span>
-                  <span className="text-[8px] uppercase tracking-wider">ROAS</span>
-                  <span className="text-[6px] font-mono opacity-80 uppercase mt-0.5">WINNING CUT</span>
                 </div>
               </div>
             )}

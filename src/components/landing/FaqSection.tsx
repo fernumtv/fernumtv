@@ -21,7 +21,7 @@ export function FaqSection() {
     },
     {
       q: "What is your delivery speed and timeline?",
-      a: "Once you submit your brief, our script engine delivers 3 script concepts within 24-48 hours. The moment you approve the script, the finished video ad with all 3 hooks is delivered in 48 to 72 hours—well within the 2 to 3 week delivery window of your monthly plan.",
+      a: "Once you submit your brief, our script engine delivers 3 script concepts within 2 business days. The moment you approve the script, the finished video ad with all 3 hooks is delivered in 48 to 72 hours—well within the 2 to 3 week delivery window of your monthly plan.",
     },
     {
       q: "Do you disclose AI use?",

@@ -31,7 +31,7 @@ export function StudioValueProp() {
 
         {/* Supporting Proposition Paragraph */}
         <p className="text-base sm:text-2xl opacity-80 font-medium max-w-3xl leading-relaxed mb-16">
-          Traditional agencies charge $6,000+ retainers for 2 slow videos a month and take a cut of your ad spend. We built an AI-assisted creative pipeline that tests 3 hooks per ad, ships in 48-72 hours, and costs a fraction of an in-house hire.
+          Traditional agencies rely on lengthy turnaround times for a couple of videos a month and take a cut of your ad spend. We built an AI-assisted creative pipeline that tests 3 hooks per ad, ships in 48-72 hours, and avoids agency retainer bloat.
         </p>
 
         {/* 3 Value Columns */}

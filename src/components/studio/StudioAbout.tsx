@@ -27,18 +27,20 @@ export function StudioAbout() {
             <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tight leading-[0.95]">
               WHO MAKES THE ADS & WHY
             </h2>
-            <div className="text-sm font-mono font-bold uppercase text-[var(--accent)] tracking-wide">
-              Founded & Directed by [Founder Name]
-            </div>
+            {siteConfig.founderName ? (
+              <div className="text-sm font-mono font-bold uppercase text-[var(--accent)] tracking-wide">
+                Founded & Directed by {siteConfig.founderName}
+              </div>
+            ) : null}
           </div>
 
           {/* Two Honest Lines */}
           <div className="space-y-4 text-base sm:text-lg opacity-90 font-medium leading-relaxed border-t-2 border-[var(--border)]/15 pt-6">
             <p>
-              Fernum was built because traditional agencies charge $5,000+ retainers for bloated communication, while generic automated AI tools pump out robotic, unhinged junk that gets ignored in feeds.
+              Fernum was built because traditional agencies rely on slow communication cycles and heavy retainers, while generic automated AI tools pump out robotic, unhinged junk that gets ignored in feeds.
             </p>
             <p>
-              We are experienced motion editors and direct-response creative directors who direct, write, cut, and QA every ad by hand—using generative AI tools for visual speed so D2C brands can test winning variations every month without agency overhead.
+              Every ad is planned, scripted and reviewed by the Fernum team before delivery—using generative AI tools for visual speed so D2C brands can test winning variations every month without agency overhead.
             </p>
           </div>
 
@@ -46,7 +48,7 @@ export function StudioAbout() {
           <div className="p-4 bg-[var(--page-bg)] border-2 border-[var(--border)] rounded-none flex items-start sm:items-center gap-3 text-xs font-mono text-[var(--page-fg)]">
             <ShieldCheck className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5 sm:mt-0" />
             <span>
-              <strong>Transparency guarantee:</strong> Some visuals and voices in our ads are AI-generated. Human creative directors personally refine every script, caption timing, sound effect, and final color grade.
+              <strong>Transparency guarantee:</strong> Some visuals and voices in our ads are AI-generated. A person reviews every script, caption and final cut.
             </span>
           </div>
 

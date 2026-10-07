@@ -14,11 +14,13 @@ export const metadata = {
     siteName: "Fernum AdPass",
     locale: "en_US",
     type: "website",
+    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Order Confirmed | Fernum AdPass",
     description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief to get started.",
+    images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 

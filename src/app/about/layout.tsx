@@ -13,11 +13,13 @@ export const metadata: Metadata = {
     siteName: "Fernum AdPass",
     locale: "en_US",
     type: "website",
+    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "About Fernum | Direct-Response Video Ads",
     description: "Who makes the ads, why we built Fernum, and our transparent AI disclosure policy.",
+    images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 

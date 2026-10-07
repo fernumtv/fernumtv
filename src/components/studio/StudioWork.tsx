@@ -22,7 +22,7 @@ const SHOWCASE_REELS: ReelItem[] = [
     videoSrc: "/samples/fernum-reel.mp4",
     posterSrc: "/samples/fernum-reel-poster.jpg",
     breakdown:
-      "Hand-curated 3D product environments, synthetic procedural cameras, and high-velocity pacing. Built for brands needing premium retention assets without a $30k production crew.",
+      "Hand-curated 3D product environments, synthetic procedural cameras, and high-velocity pacing. Built for brands needing premium retention assets without heavy production crew overhead.",
   },
   {
     id: "reel-animation",

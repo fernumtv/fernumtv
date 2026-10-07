@@ -7,7 +7,7 @@ export function PositioningSection() {
   const forPoints = [
     "D2C & e-commerce brand founders who already spend $2k+ per month on Meta or TikTok ads.",
     "Brands experiencing creative fatigue where winning ads have started burning out.",
-    "Teams looking for a steady stream of 3-hook variations without paying $5k+ agency retainers.",
+    "Teams looking for a steady stream of 3-hook variations without multi-month agency retainers.",
     "Operators who understand that paid media success requires disciplined, weekly creative testing.",
   ];
 

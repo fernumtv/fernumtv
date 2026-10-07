@@ -38,7 +38,7 @@ export function ExpectationsSection() {
     },
     {
       title: "2 revision rounds per ad slot",
-      desc: "Pacing adjustments, caption tweaks, audio swaps, or cut refinements completed within 24 hours of receiving your notes.",
+      desc: "Pacing adjustments, caption tweaks, audio swaps, or cut refinements completed promptly upon receiving your notes.",
     },
   ];
 
@@ -139,7 +139,7 @@ export function ExpectationsSection() {
 
             <div className="mt-8 pt-6 border-t border-[var(--block-4-fg)]/20 text-xs font-mono opacity-80 flex items-center justify-between">
               <span>Delivery Time: 2 to 3 weeks based on plan</span>
-              <span className="text-[var(--accent)]">✓ 100% Commercial Rights</span>
+              <span className="text-[var(--accent)]">✓ Commercial use of delivered ads included</span>
             </div>
           </div>
         </div>

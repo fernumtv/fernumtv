@@ -154,7 +154,7 @@ export function StudioBriefForm() {
             SUBMIT YOUR AD BRIEF
           </h2>
           <p className="text-sm sm:text-base text-[var(--page-fg)]/75 font-medium">
-            Fill in your brand and product details. We'll turn it into 3 conversion-tested script concepts and hook angles within 24 hours.
+            Fill in your brand and product details. We'll turn it into 3 conversion-tested script concepts and hook angles within {siteConfig.briefTurnaround}.
           </p>
 
           {/* Prefilled alert toast */}
@@ -184,13 +184,13 @@ export function StudioBriefForm() {
                   We've logged your brand kit and brief for{" "}
                   <span className="font-bold text-[var(--accent)]">{formData.brandName}</span>.
                   You'll receive 3 tailored script concepts via{" "}
-                  <span className="font-bold text-[var(--block-2-fg)]">{formData.email}</span> within 24 hours.
+                  <span className="font-bold text-[var(--block-2-fg)]">{formData.email}</span> within {siteConfig.briefTurnaround}.
                 </p>
               </div>
 
               <div className="p-4 bg-[var(--page-bg)] border-2 border-[var(--border)] max-w-md mx-auto text-left text-xs font-mono space-y-1 text-[var(--page-fg)]">
                 <div className="font-bold uppercase">Timeline:</div>
-                <div className="opacity-70">1. Creative director script review (24h)</div>
+                <div className="opacity-70">1. Script and concept review ({siteConfig.briefTurnaround})</div>
                 <div className="opacity-70">2. Approve your favorite hook angle</div>
                 <div className="opacity-70">3. Video generated & shipped in Full HD (48-72h)</div>
               </div>

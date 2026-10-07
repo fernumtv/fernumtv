@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowRight, FileText, CheckCircle, Rocket } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export function StudioProcess() {
   const blocks = [
@@ -18,7 +19,7 @@ export function StudioProcess() {
     {
       num: "02",
       title: "SCRIPT AND APPROVE",
-      shortLine: "Review 3 conversion-tested script concepts and hook angles within 24 hours.",
+      shortLine: `Review 3 conversion-tested script concepts and hook angles within ${siteConfig.briefTurnaround}.`,
       bg: "bg-[var(--block-3-bg)]",
       textColor: "text-[var(--block-3-fg)]",
       borderColor: "border-[var(--border)]",

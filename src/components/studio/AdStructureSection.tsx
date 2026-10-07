@@ -212,7 +212,6 @@ export function AdStructureSection() {
 
               <div className="pt-4 border-t border-[var(--block-4-fg)]/20 flex items-center justify-between text-xs font-mono opacity-80">
                 <span>Scripting Rule: One clear idea per segment</span>
-                <span className="text-[var(--accent)]">✓ Tested</span>
               </div>
             </div>
           </div>

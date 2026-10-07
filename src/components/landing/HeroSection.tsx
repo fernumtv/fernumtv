@@ -29,7 +29,7 @@ export function HeroSection({
 
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-5xl mx-auto mb-6">
-          Stop Paying $5,000/mo For{" "}
+          Stop Paying Heavy Retainers For{" "}
           <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300 bg-clip-text text-transparent">
             Slow Video Agencies.
           </span>
@@ -39,7 +39,7 @@ export function HeroSection({
         <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
           Get finished, high-converting short-form video ads tailored to your product. Every ad ships in{" "}
           <span className="text-white font-medium">9:16, 1:1, and 16:9</span> with{" "}
-          <span className="text-white font-medium">3 alternate hooks</span> to crush creative fatigue—reviewed by human creative directors before delivery.
+          <span className="text-white font-medium">3 alternate hooks</span> to crush creative fatigue—reviewed by the Fernum team before delivery.
         </p>
 
         {/* CTA Button Group */}

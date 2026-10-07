@@ -17,11 +17,13 @@ export const metadata = {
     siteName: "Fernum AdPass",
     locale: "en_US",
     type: "website",
+    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Refund Policy | Fernum AdPass",
     description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+    images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 

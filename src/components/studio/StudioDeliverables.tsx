@@ -27,19 +27,19 @@ export function StudioDeliverables() {
       icon: <Type className="w-6 h-6 text-[var(--accent)]" />,
       title: "Dynamic Captions & Motion",
       subtitle: "Sound-off engagement",
-      desc: "80% of mobile users browse with sound off. Every ad includes animated, on-brand dynamic subtitles and kinetic text cards to stop the scroll instantly.",
+      desc: "Many mobile users browse with sound off. Every ad includes animated, on-brand dynamic subtitles and kinetic text cards to stop the scroll.",
     },
     {
       icon: <RefreshCw className="w-6 h-6 text-[var(--accent)]" />,
       title: "2 Revisions Included",
       subtitle: "Per ad slot, every month",
-      desc: "Need pacing sped up, music changed, or a specific caption adjusted? Every slot includes 2 revision rounds executed within 24 hours.",
+      desc: "Need pacing sped up, music changed, or a specific caption adjusted? Every slot includes 2 revision rounds executed within 2 business days.",
     },
     {
       icon: <CheckSquare className="w-6 h-6 text-current" />,
-      title: "100% Human Polish",
-      subtitle: "Senior creative QA",
-      desc: "AI produces speed, but experienced creative directors review every frame, audio sync point, and transition before delivery. Zero synthetic glitches.",
+      title: "Human Quality Review",
+      subtitle: "Dedicated team QA",
+      desc: "AI produces speed, but our team reviews every frame, audio sync point, and transition before delivery. Zero synthetic glitches.",
     },
   ];
 

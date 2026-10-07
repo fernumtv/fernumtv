@@ -46,7 +46,7 @@ export default function StructurePage() {
                 Start with a 30-minute creative strategy call
               </h3>
               <p className="text-xs font-mono opacity-75 mt-1">
-                Bring your product and current ads. We’ll review your hooks live.
+                We'll go through your product and ads on the call.
               </p>
             </div>
             <Link

@@ -127,7 +127,7 @@ export function HeroStickerPack() {
             <div className="flex items-center justify-between mb-1.5 px-0.5">
               <div className="flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                <span className="text-[9px] font-mono font-black text-red-400">REC ● 4K</span>
+                <span className="text-[9px] font-mono font-black text-red-400">REC ● 1080p</span>
               </div>
               <span className="text-[8px] font-mono opacity-60">60FPS</span>
             </div>
@@ -253,25 +253,6 @@ export function HeroStickerPack() {
             </div>
           </div>
         </DraggableSticker>
-
-        {/* Sticker 7: 12-Point Jagged Starburst ROAS Seal */}
-        <DraggableSticker id="starburst-sticker" initialX={590} initialY={55} rotation={-8}>
-          <div className="w-20 h-20 relative flex items-center justify-center hover:scale-105 transition-transform select-none">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[2px_2px_0px_#000]">
-              <polygon
-                points="50,0 63,18 85,15 82,37 100,50 82,63 85,85 63,82 50,100 37,82 15,85 18,63 0,50 18,37 15,15 37,18"
-                fill="var(--sticker-1)"
-                stroke="var(--border)"
-                strokeWidth="3"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center font-display font-black text-black leading-none">
-              <span className="text-[12px] uppercase">3.8x</span>
-              <span className="text-[8px] uppercase tracking-wider">ROAS</span>
-              <span className="text-[6px] font-mono opacity-80 uppercase mt-0.5">WINNING CUT</span>
-            </div>
-          </div>
-        </DraggableSticker>
       </div>
     </div>
   );
@@ -296,7 +277,7 @@ export function PricingStickerPack() {
         {/* Pricing Sticker 2: Camera Lens Circle */}
         <DraggableSticker id="pricing-lens" initialX={1120} initialY={90} rotation={9}>
           <div className="w-16 h-16 rounded-full bg-[#18181B] text-white border-2 border-[var(--border)] flex flex-col items-center justify-center shadow-brutal hover:scale-105 transition-transform">
-            <span className="text-red-500 text-[8px] font-mono font-black">● 4K</span>
+            <span className="text-red-500 text-[8px] font-mono font-black">● 1080p</span>
             <span className="text-[8px] font-mono font-black text-[var(--accent)]">3 HOOKS</span>
           </div>
         </DraggableSticker>

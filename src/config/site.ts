@@ -58,6 +58,8 @@ export const siteConfig = {
   governingLaw: "the laws of India (Haryana)",
   dataRetention: "12 months after last contact",
   briefTurnaround: "2 business days",
+  founderName: "",
+  comparisonClaims: false,
   aiTools: [] as string[],
 
   // Admin email allowlist for the client portal

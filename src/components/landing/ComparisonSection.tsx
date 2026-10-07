@@ -8,13 +8,13 @@ export function ComparisonSection() {
     {
       feature: "Cost Per Ad",
       fernum: "$333 – $499 / ad (Flat fixed plans)",
-      agency: "$1,500 – $3,500 / ad ($5k+ monthly retainer)",
+      agency: "Variable per ad (with multi-month retainer)",
       freelancer: "$250 – $600 / ad (Hit-or-miss quality)",
     },
     {
       feature: "Alternate Hooks Included",
       fernum: "3 Alternate Hooks with EVERY ad",
-      agency: "1 single hook (costs $300+ extra per variant)",
+      agency: "1 single hook (extra fees for variations)",
       freelancer: "Rarely included, charges per revision",
     },
     {
@@ -32,7 +32,7 @@ export function ComparisonSection() {
     {
       feature: "Revisions Included",
       fernum: "2 Revisions included on all plans",
-      agency: "1 or billed at $150/hr change order",
+      agency: "1 or billed hourly for changes",
       freelancer: "Often resists feedback",
     },
     {
@@ -61,7 +61,7 @@ export function ComparisonSection() {
             Why High-Growth D2C Brands Switch to Fernum
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Get the creative agility of an in-house studio without the $150,000 payroll or agency retainer drag.
+            Get the creative agility of an in-house studio without full-time payroll or agency retainer drag.
           </p>
         </div>
 
