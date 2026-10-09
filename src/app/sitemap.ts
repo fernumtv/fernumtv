@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://fernum.online";
-  const lastModified = new Date("2026-10-04");
+  const lastModified = new Date("2026-10-09");
 
   return [
     {
@@ -51,31 +51,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/terms`,
       lastModified,
       changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/refund`,
       lastModified,
       changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy`,
       lastModified,
       changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/thanks`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/cancelled`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.3,
+      priority: 0.5,
     },
   ];
 }

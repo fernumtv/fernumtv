@@ -3,8 +3,10 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Mail, Sparkles, AlertCircle, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
+import { Mail, Sparkles, AlertCircle, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
 
 function LoginContent() {
   const router = useRouter();
@@ -122,23 +124,7 @@ function LoginContent() {
 
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between selection:bg-[var(--selection-bg)] selection:text-[var(--selection-fg)]">
-      {/* Top Header */}
-      <header className="border-b-2 border-[var(--border)] bg-[var(--block-2-bg)] text-[var(--block-2-fg)] sticky top-0 z-30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-display font-black text-2xl tracking-tight uppercase group-hover:text-[var(--accent)] transition-colors">
-              FERNUM <span className="text-[var(--accent)]">ADPASS</span>
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] hover:text-[var(--accent)] transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Studio</span>
-          </Link>
-        </div>
-      </header>
+      <StudioNavbar />
 
       {/* Main Login Card */}
       <main className="max-w-lg mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
@@ -184,9 +170,9 @@ function LoginContent() {
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-display font-black text-xl uppercase tracking-tight">
+                <h2 className="font-display font-black text-xl uppercase tracking-tight">
                   Check Your Inbox
-                </h3>
+                </h2>
                 <p className="text-xs font-mono opacity-80 max-w-xs mx-auto leading-relaxed">
                   We've emailed a secure sign-in link to{" "}
                   <strong className="text-[var(--accent)] font-bold">{email}</strong>. Click the link in your email to enter your portal.
@@ -295,10 +281,7 @@ function LoginContent() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-6 text-center text-xs font-mono opacity-70">
-        <div>© {new Date().getFullYear()} Fernum (fernum.online). Client Portal.</div>
-      </footer>
+      <StudioFooter />
     </div>
   );
 }

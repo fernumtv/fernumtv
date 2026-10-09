@@ -1,18 +1,26 @@
-import React from "react";
 import Link from "next/link";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Terms of Service", url: "https://fernum.online/terms" },
+];
 
 export const metadata = {
   title: "Terms of Service | Fernum AdPass",
-  description: "Terms and conditions for Fernum video ad monthly subscription services.",
+  description:
+    "Terms and conditions for Fernum video ad subscription services. Plain-English policies on ad delivery, revision limits, licensing, and governing law.",
   alternates: {
     canonical: "https://fernum.online/terms",
   },
   openGraph: {
     title: "Terms of Service | Fernum AdPass",
-    description: "Terms and conditions for Fernum video ad monthly subscription services.",
+    description:
+      "Terms and conditions for Fernum video ad subscription services. Plain-English policies on ad delivery, revision limits, licensing, and governing law.",
     url: "https://fernum.online/terms",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -22,14 +30,18 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Terms of Service | Fernum AdPass",
-    description: "Terms and conditions for Fernum video ad monthly subscription services.",
+    description:
+      "Terms and conditions for Fernum video ad subscription services. Plain-English policies on ad delivery, revision limits, licensing, and governing law.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 
 export default function TermsPage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">

@@ -350,6 +350,9 @@ export function CreatorStudioView({ workspaceId, currentUser }: CreatorStudioVie
                 <img
                   src={c.avatarUrl || "/avatars/placeholder.svg"}
                   alt={c.name}
+                  width={48}
+                  height={48}
+                  loading="lazy"
                   className="h-12 w-12 rounded-lg object-cover border border-border"
                 />
                 <div className="flex-1 min-w-0 space-y-1">
@@ -398,6 +401,9 @@ export function CreatorStudioView({ workspaceId, currentUser }: CreatorStudioVie
                   <img
                     src={selectedCreator.avatarUrl}
                     alt={selectedCreator.name}
+                    width={64}
+                    height={64}
+                    loading="lazy"
                     className="h-16 w-16 rounded-xl object-cover border-2 border-purple-500/30 shadow-md"
                   />
                   <div>

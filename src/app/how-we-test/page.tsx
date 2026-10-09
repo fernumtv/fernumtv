@@ -19,6 +19,13 @@ import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { HookBattle } from "@/components/studio/HookBattle";
 import { BackToTop } from "@/components/studio/BackToTop";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "How We Test", url: "https://fernum.online/how-we-test" },
+];
 
 interface TestTopic {
   id: string;
@@ -222,8 +229,11 @@ export default function HowWeTestPage() {
     };
   }, [activeTopicIndex]);
 
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">

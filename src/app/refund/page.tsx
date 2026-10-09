@@ -1,18 +1,24 @@
-import React from "react";
 import Link from "next/link";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Refund Policy", url: "https://fernum.online/refund" },
+];
 
 export const metadata = {
   title: "Refund Policy | Fernum AdPass",
-  description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+  description: "Transparent refund and cancellation policy for Fernum video ad monthly plans. Full details on our satisfaction standards and payment processor guidelines.",
   alternates: {
     canonical: "https://fernum.online/refund",
   },
   openGraph: {
     title: "Refund Policy | Fernum AdPass",
-    description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+    description: "Transparent refund and cancellation policy for Fernum video ad monthly plans. Full details on our satisfaction standards and payment processor guidelines.",
     url: "https://fernum.online/refund",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -22,14 +28,17 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Refund Policy | Fernum AdPass",
-    description: "Refund and cancellation policy for Fernum monthly video ad subscription plans.",
+    description: "Transparent refund and cancellation policy for Fernum video ad monthly plans. Full details on our satisfaction standards and payment processor guidelines.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 
 export default function RefundPage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">

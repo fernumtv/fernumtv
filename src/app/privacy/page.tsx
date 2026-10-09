@@ -1,18 +1,26 @@
-import React from "react";
 import Link from "next/link";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Privacy Policy", url: "https://fernum.online/privacy" },
+];
 
 export const metadata = {
   title: "Privacy Policy | Fernum AdPass",
-  description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+  description:
+    "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
   alternates: {
     canonical: "https://fernum.online/privacy",
   },
   openGraph: {
     title: "Privacy Policy | Fernum AdPass",
-    description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+    description:
+      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
     url: "https://fernum.online/privacy",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -22,14 +30,18 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Privacy Policy | Fernum AdPass",
-    description: "Privacy policy and data handling principles for Fernum video ad subscriptions.",
+    description:
+      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 
 export default function PrivacyPage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">

@@ -20,7 +20,7 @@ const SHOWCASE_REELS: ReelItem[] = [
     tabLabel: "3D Synthetic Reel",
     title: "Fernum Synthetic Direct-Response Reel",
     videoSrc: "/samples/fernum-reel.mp4",
-    posterSrc: "/samples/fernum-reel-poster.jpg",
+    posterSrc: "/samples/fernum-reel-poster.webp",
     breakdown:
       "Hand-curated 3D product environments, synthetic procedural cameras, and high-velocity pacing. Built for brands needing premium retention assets without heavy production crew overhead.",
   },
@@ -30,7 +30,7 @@ const SHOWCASE_REELS: ReelItem[] = [
     tabLabel: "2D Character Comedy",
     title: "Office Dialogue Direct-Response Story",
     videoSrc: "/samples/fernum-animation.mp4",
-    posterSrc: "/samples/fernum-animation-poster.jpg",
+    posterSrc: "/samples/fernum-animation-poster.webp",
     breakdown:
       "Humorous character dialogue dramatizing customer frustration with outdated tools before introducing the upgrade. High-retention narrative angle.",
   },
@@ -39,19 +39,43 @@ const SHOWCASE_REELS: ReelItem[] = [
 export function StudioWork() {
   const [selectedReelIndex, setSelectedReelIndex] = useState(0);
   const masterVideoRef = useRef<HTMLVideoElement>(null);
-  const [isMasterPlaying, setIsMasterPlaying] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMasterPlaying, setIsMasterPlaying] = useState(false);
   const [isMasterAudioOn, setIsMasterAudioOn] = useState(false);
 
   const activeReel = SHOWCASE_REELS[selectedReelIndex];
+
+  // IntersectionObserver to only autoplay when video container is visible in viewport
+  useEffect(() => {
+    const video = masterVideoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video
+              .play()
+              .then(() => setIsMasterPlaying(true))
+              .catch(() => setIsMasterPlaying(false));
+          } else {
+            video.pause();
+            setIsMasterPlaying(false);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [selectedReelIndex]);
 
   // When switching reels, load and play new video
   useEffect(() => {
     if (masterVideoRef.current) {
       masterVideoRef.current.load();
-      masterVideoRef.current
-        .play()
-        .then(() => setIsMasterPlaying(true))
-        .catch(() => setIsMasterPlaying(false));
     }
   }, [selectedReelIndex]);
 
@@ -139,16 +163,18 @@ export function StudioWork() {
 
           {/* 16:9 Video Canvas */}
           <div
+            ref={containerRef}
             data-cursor="video"
             onClick={toggleMasterPlay}
             className="relative aspect-video w-full overflow-hidden bg-black border-2 border-[var(--border)] cursor-pointer select-none"
           >
             <video
               ref={masterVideoRef}
-              autoPlay
+              aria-label={activeReel.title}
               muted={!isMasterAudioOn}
               loop
               playsInline
+              preload="metadata"
               poster={activeReel.posterSrc}
               className="w-full h-full object-cover"
               onPlay={() => setIsMasterPlaying(true)}

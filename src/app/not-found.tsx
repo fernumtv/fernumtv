@@ -1,33 +1,23 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertTriangle, ArrowRight, Mail } from "lucide-react";
+import { AlertTriangle, ArrowRight, Mail } from "lucide-react";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
 
 export const metadata = {
   title: "404 Page Not Found | Fernum AdPass",
-  description: "The page or video asset you requested could not be located.",
+  description: "The requested page or video asset could not be located on the Fernum server. Return to our creative studio home or contact support for help.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
-      {/* Top Header */}
-      <header className="border-b-2 border-[var(--border)] bg-[var(--block-2-bg)] text-[var(--block-2-fg)] sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-display font-black text-2xl tracking-tight uppercase">
-              FERNUM <span className="text-[var(--accent)]">ADPASS</span>
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] hover:text-[var(--accent)] transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Studio</span>
-          </Link>
-        </div>
-      </header>
+      <StudioNavbar />
 
       {/* Main 404 Card */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full my-auto">
@@ -68,13 +58,7 @@ export default function NotFound() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-6">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono opacity-80">
-          <div>© {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.</div>
-          <div className="text-[var(--accent)] font-bold">● STUDIO SYSTEMS ACTIVE</div>
-        </div>
-      </footer>
+      <StudioFooter />
     </div>
   );
 }

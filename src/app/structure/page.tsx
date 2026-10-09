@@ -9,10 +9,20 @@ import { AdStructureSection } from "@/components/studio/AdStructureSection";
 import { ExpectationsSection } from "@/components/studio/ExpectationsSection";
 import { PositioningSection } from "@/components/studio/PositioningSection";
 import { BackToTop } from "@/components/studio/BackToTop";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Ad Structure", url: "https://fernum.online/structure" },
+];
 
 export default function StructurePage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-12 sm:py-16">
@@ -42,9 +52,9 @@ export default function StructurePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
           <div className="p-8 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-display font-black text-2xl uppercase tracking-tight">
+              <h2 className="font-display font-black text-2xl uppercase tracking-tight">
                 Start with a 30-minute creative strategy call
-              </h3>
+              </h2>
               <p className="text-xs font-mono opacity-75 mt-1">
                 We'll go through your product and ads on the call.
               </p>

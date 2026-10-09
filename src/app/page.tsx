@@ -13,10 +13,15 @@ import { StudioBriefForm } from "@/components/studio/StudioBriefForm";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { BackToTop } from "@/components/studio/BackToTop";
 import { ReactionCannon } from "@/components/studio/ReactionCannon";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getHomeSchema } from "@/lib/seo/schema";
 
 export default function FernumLandingPage() {
+  const homeSchema = getHomeSchema();
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans selection:bg-[var(--selection-bg)] selection:text-[var(--selection-fg)]">
+      <JsonLd schema={homeSchema} />
       {/* 1. Nav: Logo, Links (Work, Structure, How we test, Pricing, FAQ, About), Vibe, Book a Call */}
       <StudioNavbar />
 

@@ -154,11 +154,12 @@ export function DirectVideoCard({
           {!hasError ? (
             <video
               ref={videoRef}
+              aria-label={card.title}
               autoPlay={!prefersReducedMotion}
               muted={!isUnmuted}
               loop
               playsInline
-              preload="metadata"
+              preload={card.adNumber === 1 ? "metadata" : "none"}
               poster={card.posterSrc}
               onError={() => setHasError(true)}
               onPlay={() => setIsPlaying(true)}
@@ -174,6 +175,9 @@ export function DirectVideoCard({
                 <img
                   src={card.posterSrc}
                   alt={card.title}
+                  width={540}
+                  height={960}
+                  loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover opacity-30"
                 />
               )}

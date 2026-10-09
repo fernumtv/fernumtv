@@ -8,10 +8,20 @@ import { StudioFooter } from "@/components/studio/StudioFooter";
 import { StudioAbout } from "@/components/studio/StudioAbout";
 import { BackToTop } from "@/components/studio/BackToTop";
 import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "About", url: "https://fernum.online/about" },
+];
 
 export default function AboutPage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-12 sm:py-16">
@@ -35,9 +45,9 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
           <div className="p-8 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-display font-black text-2xl uppercase tracking-tight">
+              <h2 className="font-display font-black text-2xl uppercase tracking-tight">
                 Ready to partner with Fernum?
-              </h3>
+              </h2>
               <p className="text-xs font-mono opacity-75 mt-1">
                 30-minute intro call. Bring your product and your current ads.
               </p>

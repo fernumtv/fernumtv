@@ -159,6 +159,9 @@ export function Navbar({
                 <img
                   src={currentUser.avatarUrl}
                   alt={currentUser.name}
+                  width={28}
+                  height={28}
+                  loading="lazy"
                   className="h-full w-full object-cover"
                 />
               ) : (

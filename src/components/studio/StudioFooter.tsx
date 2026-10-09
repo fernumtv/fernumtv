@@ -70,9 +70,9 @@ export function StudioFooter() {
 
           {/* Navigation */}
           <div className="md:col-span-3 space-y-3">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--accent)]">
+            <p className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--accent)]">
               Studio Navigation
-            </h3>
+            </p>
             <ul className="space-y-2.5 text-sm font-bold text-[var(--block-4-fg)]/90">
               <li>
                 <Link href="/work" className="hover:text-[var(--accent)] transition-colors block">
@@ -124,9 +124,9 @@ export function StudioFooter() {
 
           {/* Policies & Legal */}
           <div className="md:col-span-3 space-y-3">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--accent)]">
+            <p className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--accent)]">
               Policies & Legal
-            </h3>
+            </p>
             <ul className="space-y-2.5 text-sm font-bold text-[var(--block-4-fg)]/90">
               <li>
                 <Link href="/terms" className="hover:text-[var(--accent)] transition-colors block">

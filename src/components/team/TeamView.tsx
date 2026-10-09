@@ -92,6 +92,9 @@ export function TeamView() {
                 <img
                   src={member.avatar}
                   alt={member.name}
+                  width={40}
+                  height={40}
+                  loading="lazy"
                   className="h-10 w-10 rounded-full object-cover border border-purple-500/30"
                 />
                 <div>

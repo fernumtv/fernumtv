@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | Fernum",
-  description: "Direct answers about monthly deliverables, revisions, timelines, licensing, and AI tools.",
+  description:
+    "Direct answers about monthly deliverables, revisions, timelines, licensing, and generative tools. Everything you need to know about our subscription.",
   alternates: {
     canonical: "https://fernum.online/faq",
   },
   openGraph: {
     title: "Frequently Asked Questions | Fernum",
-    description: "Direct answers about monthly deliverables, revisions, timelines, licensing, and AI tools.",
+    description:
+      "Direct answers about monthly deliverables, revisions, timelines, licensing, and generative tools. Everything you need to know about our subscription.",
     url: "https://fernum.online/faq",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -18,7 +20,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Frequently Asked Questions | Fernum",
-    description: "Direct answers about monthly deliverables, revisions, timelines, licensing, and AI tools.",
+    description:
+      "Direct answers about monthly deliverables, revisions, timelines, licensing, and generative tools. Everything you need to know about our subscription.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };

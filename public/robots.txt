@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /portal
+Disallow: /thanks
+Disallow: /cancelled
 
 Sitemap: https://fernum.online/sitemap.xml

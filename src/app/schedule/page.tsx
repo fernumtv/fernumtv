@@ -1,18 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft, Calendar, ShieldCheck, Sparkles } from "lucide-react";
+import { Calendar, ShieldCheck, Sparkles } from "lucide-react";
 import { CalendlyWidget } from "@/components/studio/CalendlyWidget";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
+
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Schedule", url: "https://fernum.online/schedule" },
+];
 
 export const metadata: Metadata = {
-  title: "Schedule a Strategy Call | Fernum AdPass",
-  description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+  title: "Schedule a Strategy Call | Fernum",
+  description: "Book a 30-minute creative strategy call with Fernum. Bring your product and current ads for live review of hooks and monthly production options.",
   alternates: {
     canonical: "https://fernum.online/schedule",
   },
   openGraph: {
-    title: "Schedule a Strategy Call | Fernum AdPass",
-    description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+    title: "Schedule a Strategy Call | Fernum",
+    description: "Book a 30-minute creative strategy call with Fernum. Bring your product and current ads for live review of hooks and monthly production options.",
     url: "https://fernum.online/schedule",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -21,39 +29,19 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Schedule a Strategy Call | Fernum AdPass",
-    description: `Book a ${siteConfig.callMinutes}-minute video ad strategy session with Fernum Creative Direction.`,
+    title: "Schedule a Strategy Call | Fernum",
+    description: "Book a 30-minute creative strategy call with Fernum. Bring your product and current ads for live review of hooks and monthly production options.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 
 export default function SchedulePage() {
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
+
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
-      {/* Top Header */}
-      <header className="border-b-2 border-[var(--border)] bg-[var(--block-2-bg)] text-[var(--block-2-fg)] sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2 group text-left focus:outline-none"
-          >
-            <span className="font-display font-black text-2xl sm:text-3xl tracking-tight uppercase group-hover:text-[var(--accent)] transition-colors">
-              FERNUM
-            </span>
-            <span className="bg-[var(--accent)] text-[var(--accent-fg)] text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 border border-[var(--border)] shadow-sm">
-              AdPass
-            </span>
-          </Link>
-
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--accent)] text-[var(--page-fg)] hover:text-[var(--accent-fg)] border-2 border-[var(--border)] text-xs font-mono font-bold uppercase tracking-wider shadow-sm transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Studio</span>
-          </Link>
-        </div>
-      </header>
+      <JsonLd schema={breadcrumbSchema} />
+      <StudioNavbar />
 
       {/* Main Content Area */}
       <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -89,23 +77,7 @@ export default function SchedulePage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono opacity-80">
-          <div>© {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.</div>
-          <div className="flex items-center gap-4">
-            <Link href="/terms" className="hover:underline transition-colors">
-              Terms
-            </Link>
-            <Link href="/privacy" className="hover:underline transition-colors">
-              Privacy
-            </Link>
-            <a href={`mailto:${siteConfig.contactEmail}`} className="hover:underline transition-colors">
-              {siteConfig.contactEmail}
-            </a>
-          </div>
-        </div>
-      </footer>
+      <StudioFooter />
     </div>
   );
 }

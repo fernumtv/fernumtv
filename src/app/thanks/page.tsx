@@ -3,13 +3,17 @@ import { ThanksContent } from "@/components/studio/ThanksContent";
 
 export const metadata = {
   title: "Order Confirmed | Fernum AdPass",
-  description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief to get started.",
+  description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief and brand assets to begin script writing and video production.",
   alternates: {
     canonical: "https://fernum.online/thanks",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: "Order Confirmed | Fernum AdPass",
-    description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief to get started.",
+    description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief and brand assets to begin script writing and video production.",
     url: "https://fernum.online/thanks",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -19,7 +23,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Order Confirmed | Fernum AdPass",
-    description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief to get started.",
+    description: "Thank you for subscribing to Fernum AdPass. Submit your creative brief and brand assets to begin script writing and video production.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };

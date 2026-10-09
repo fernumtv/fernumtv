@@ -1,17 +1,23 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, PhoneCall, AlertCircle, ArrowRight, Mail } from "lucide-react";
+import { PhoneCall, AlertCircle, ArrowRight } from "lucide-react";
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
 import { siteConfig } from "@/config/site";
 
 export const metadata = {
   title: "Checkout Cancelled | Fernum AdPass",
-  description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+  description: "Your checkout session was cancelled with zero charges made. Schedule a 30-minute strategy call to discuss custom options for your product ads.",
   alternates: {
     canonical: "https://fernum.online/cancelled",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: "Checkout Cancelled | Fernum AdPass",
-    description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+    description: "Your checkout session was cancelled with zero charges made. Schedule a 30-minute strategy call to discuss custom options for your product ads.",
     url: "https://fernum.online/cancelled",
     siteName: "Fernum AdPass",
     locale: "en_US",
@@ -21,7 +27,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Checkout Cancelled | Fernum AdPass",
-    description: "Checkout session was cancelled. No charge was made. Book a 30-minute strategy call to discuss your creative needs.",
+    description: "Your checkout session was cancelled with zero charges made. Schedule a 30-minute strategy call to discuss custom options for your product ads.",
     images: ["https://fernum.online/images/og-image.webp"],
   },
 };
@@ -29,23 +35,7 @@ export const metadata = {
 export default function CancelledPage() {
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans flex flex-col justify-between">
-      {/* Top Header */}
-      <header className="border-b-2 border-[var(--border)] bg-[var(--block-2-bg)] text-[var(--block-2-fg)] sticky top-0 z-30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-display font-black text-2xl tracking-tight uppercase">
-              FERNUM <span className="text-[var(--accent)]">ADPASS</span>
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] hover:text-[var(--accent)] transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Studio</span>
-          </Link>
-        </div>
-      </header>
+      <StudioNavbar />
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
@@ -101,12 +91,7 @@ export default function CancelledPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center text-xs font-mono opacity-80">
-          © {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.
-        </div>
-      </footer>
+      <StudioFooter />
     </div>
   );
 }

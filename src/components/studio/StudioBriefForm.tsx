@@ -154,7 +154,7 @@ export function StudioBriefForm() {
             SUBMIT YOUR AD BRIEF
           </h2>
           <p className="text-sm sm:text-base text-[var(--page-fg)]/75 font-medium">
-            Fill in your brand and product details. We'll turn it into 3 conversion-tested script concepts and hook angles within {siteConfig.briefTurnaround}.
+            Fill in your brand and product details. We'll turn it into 3 tailored script concepts and hook angles within {siteConfig.briefTurnaround}.
           </p>
 
           {/* Prefilled alert toast */}

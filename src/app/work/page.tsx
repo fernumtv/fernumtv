@@ -8,6 +8,8 @@ import { StudioFooter } from "@/components/studio/StudioFooter";
 import { StudioWork } from "@/components/studio/StudioWork";
 import { DirectVideoCard, VideoCardData } from "@/components/studio/DirectVideoCard";
 import { BackToTop } from "@/components/studio/BackToTop";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/seo/schema";
 
 const DIRECT_FEED_CARDS: VideoCardData[] = [
   {
@@ -17,7 +19,7 @@ const DIRECT_FEED_CARDS: VideoCardData[] = [
     title: "Spatial Kinetic Artifact",
     caption: "High-velocity 3D product visuals cutting into macro textures and dynamic lighting transitions.",
     videoSrc: "/videos/ad-1.mp4",
-    posterSrc: "/videos/ad-1.jpg",
+    posterSrc: "/videos/ad-1.webp",
     rotation: "-rotate-1",
   },
   {
@@ -27,7 +29,7 @@ const DIRECT_FEED_CARDS: VideoCardData[] = [
     title: "Office Dialogue Direct Response",
     caption: "Comedic 2D narrative dramatizing relatable customer friction before introducing the upgrade.",
     videoSrc: "/videos/ad-animation.mp4",
-    posterSrc: "/videos/ad-animation.jpg",
+    posterSrc: "/videos/ad-animation.webp",
     rotation: "rotate-1",
   },
   {
@@ -37,7 +39,7 @@ const DIRECT_FEED_CARDS: VideoCardData[] = [
     title: "Modular Geometry Reveal",
     caption: "Dynamic camera sweep highlighting structural form in under 15 seconds.",
     videoSrc: "/videos/ad-2.mp4",
-    posterSrc: "/videos/ad-2.jpg",
+    posterSrc: "/videos/ad-2.webp",
     rotation: "-rotate-1",
   },
   {
@@ -47,13 +49,19 @@ const DIRECT_FEED_CARDS: VideoCardData[] = [
     title: "Precision Spatial Lighting",
     caption: "Clean minimal aesthetic designed to stop feed scrollers on TikTok and Meta.",
     videoSrc: "/videos/ad-3.mp4",
-    posterSrc: "/videos/ad-3.jpg",
+    posterSrc: "/videos/ad-3.webp",
     rotation: "rotate-0.5",
   },
 ];
 
+const breadcrumbData = [
+  { name: "Home", url: "https://fernum.online" },
+  { name: "Our Work", url: "https://fernum.online/work" },
+];
+
 export default function WorkPage() {
   const [activeUnmutedId, setActiveUnmutedId] = useState<string | null>(null);
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
 
   const handleToggleMute = (id: string) => {
     setActiveUnmutedId((prev) => (prev === id ? null : id));
@@ -61,6 +69,7 @@ export default function WorkPage() {
 
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans">
+      <JsonLd schema={breadcrumbSchema} />
       <StudioNavbar />
 
       <main className="py-12 sm:py-16">

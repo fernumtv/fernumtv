@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fernum AdPass | Monthly Video Ads for D2C & E-Commerce Brands",
+  title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
   description:
-    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats (9:16, 1:1, 16:9), planned, scripted and reviewed by our team.",
+    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
   metadataBase: new URL("https://fernum.online"),
   alternates: {
     canonical: "https://fernum.online",
@@ -19,12 +19,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
+      "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
     url: "https://fernum.online",
     siteName: "Fernum AdPass",
     images: [
       {
-        url: "/images/og-image.webp",
+        url: "https://fernum.online/images/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Fernum AdPass Creative Studio",
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
     description:
-      "1 to 3 monthly video ads for Meta and TikTok. Each ad delivered with 3 alternate opening hooks in Full HD formats (9:16, 1:1, 16:9). Plans from $499/month.",
-    images: ["/images/og-image.webp"],
+      "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
+    images: ["https://fernum.online/images/og-image.webp"],
   },
 };
 
@@ -55,6 +55,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-vibe="orange" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <meta name="theme-color" content="#F14A0A" id="fernum-theme-color" />
         {/* Force HTTPS and apply saved vibe before first paint */}

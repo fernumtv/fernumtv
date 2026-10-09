@@ -69,7 +69,7 @@ export function StudioFAQ({ hideHeader = false }: { hideHeader?: boolean }) {
               <span>Honest Answers</span>
             </div>
             <h2 className="font-display font-black text-4xl sm:text-6xl text-[var(--page-fg)] tracking-tight uppercase leading-[0.95] mb-4">
-              FREQUENTLY ASKED QUESTIONS
+              STRAIGHT ANSWERS
             </h2>
             <p className="text-[17px] sm:text-lg text-[var(--page-fg)]/80 font-normal leading-relaxed">
               Straightforward terms, plain answers, and zero agency hype.

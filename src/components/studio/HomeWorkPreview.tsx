@@ -13,7 +13,7 @@ const PREVIEW_CARDS: VideoCardData[] = [
     title: "Spatial Kinetic Artifact",
     caption: "High-velocity 3D product visual cutting into macro textures and dynamic lighting.",
     videoSrc: "/videos/ad-1.mp4",
-    posterSrc: "/videos/ad-1.jpg",
+    posterSrc: "/videos/ad-1.webp",
     rotation: "-rotate-1",
   },
   {
@@ -23,7 +23,7 @@ const PREVIEW_CARDS: VideoCardData[] = [
     title: "Office Dialogue Direct Response",
     caption: "Humorous character dialogue dramatizing old vs new product pain points.",
     videoSrc: "/videos/ad-animation.mp4",
-    posterSrc: "/videos/ad-animation.jpg",
+    posterSrc: "/videos/ad-animation.webp",
     rotation: "rotate-1",
   },
   {
@@ -33,7 +33,7 @@ const PREVIEW_CARDS: VideoCardData[] = [
     title: "Modular Geometry Reveal",
     caption: "Dynamic camera sweep highlighting structural form in under 15 seconds.",
     videoSrc: "/videos/ad-2.mp4",
-    posterSrc: "/videos/ad-2.jpg",
+    posterSrc: "/videos/ad-2.webp",
     rotation: "-rotate-0.5",
   },
 ];
@@ -54,7 +54,7 @@ export function HomeWorkPreview() {
   };
 
   return (
-    <section id="work-preview" className="relative bg-[var(--block-3-bg)] text-[var(--block-3-fg)] py-20 sm:py-28 overflow-hidden border-t-2 border-[var(--border)] transition-colors">
+    <section id="work" className="relative bg-[var(--block-3-bg)] text-[var(--block-3-fg)] py-20 sm:py-28 overflow-hidden border-t-2 border-[var(--border)] transition-colors">
       {/* Background Halftone Pattern */}
       <div className="absolute inset-0 bg-halftone opacity-10 pointer-events-none z-0" />
 

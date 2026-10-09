@@ -6,6 +6,9 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle2, FileText, Mail, ShieldCheck } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
+import { StudioNavbar } from "@/components/studio/StudioNavbar";
+import { StudioFooter } from "@/components/studio/StudioFooter";
+
 function ThanksInner() {
   const searchParams = useSearchParams();
   // Safe extraction of query parameters
@@ -18,27 +21,7 @@ function ThanksInner() {
 
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] font-sans selection:bg-[var(--selection-bg)] selection:text-[var(--selection-fg)] flex flex-col justify-between">
-      {/* Top Header */}
-      <header className="border-b-2 border-[var(--border)] bg-[var(--page-bg)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-display font-black text-2xl sm:text-3xl text-[var(--page-fg)] tracking-tight flex items-center gap-2">
-              FERNUM
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--accent)] text-[var(--accent-fg)] px-2 py-0.5 rounded-full border border-[var(--border)]">
-                AdPass
-              </span>
-            </span>
-          </Link>
-
-          <a
-            href={`mailto:${siteConfig.contactEmail}`}
-            className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--page-fg)] hover:text-[var(--accent)] transition-colors flex items-center gap-1.5"
-          >
-            <Mail className="w-3.5 h-3.5" />
-            <span>{siteConfig.contactEmail}</span>
-          </a>
-        </div>
-      </header>
+      <StudioNavbar />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 w-full">
@@ -94,9 +77,9 @@ function ThanksInner() {
               <div className="text-xs font-mono font-bold text-[var(--accent)] uppercase mb-1">
                 Step 1: Immediate
               </div>
-              <h3 className="font-display font-black text-lg uppercase mb-2">
+              <h2 className="font-display font-black text-lg uppercase mb-2">
                 Submit Your Brief
-              </h3>
+              </h2>
               <p className="text-xs font-medium opacity-75 leading-relaxed">
                 Provide your store URL, key product, and current promotion or offer using our brief form.
               </p>
@@ -107,9 +90,9 @@ function ThanksInner() {
               <div className="text-xs font-mono font-bold text-[var(--accent)] uppercase mb-1">
                 Step 2: 24 Hours
               </div>
-              <h3 className="font-display font-black text-lg uppercase mb-2">
+              <h2 className="font-display font-black text-lg uppercase mb-2">
                 Approve Script Concepts
-              </h3>
+              </h2>
               <p className="text-xs font-medium opacity-75 leading-relaxed">
                 We synthesize 3 high-converting script concepts and hook angles for you to review and approve.
               </p>
@@ -120,9 +103,9 @@ function ThanksInner() {
               <div className="text-xs font-mono font-bold uppercase mb-1 opacity-70">
                 Step 3: 48–72 Hours
               </div>
-              <h3 className="font-display font-black text-lg uppercase mb-2">
+              <h2 className="font-display font-black text-lg uppercase mb-2">
                 Full HD Ad Delivery
-              </h3>
+              </h2>
               <p className="text-xs font-medium opacity-75 leading-relaxed">
                 Finished ads delivered in 9:16, 1:1, and 16:9 with 3 hooks and human creative director QA.
               </p>
@@ -156,12 +139,7 @@ function ThanksInner() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-[var(--border)] bg-[var(--block-4-bg)] text-[var(--block-4-fg)] py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs font-mono opacity-70">
-          © {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.
-        </div>
-      </footer>
+      <StudioFooter />
     </div>
   );
 }
