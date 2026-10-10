@@ -104,6 +104,12 @@ export const siteConfig = {
   // Return URL after payment
   returnUrl: "/thanks",
 
+  // Public fallback form endpoint if Resend is not configured yet (Formspree / Web3Forms)
+  formFallbackUrl:
+    process.env.NEXT_PUBLIC_FORM_FALLBACK_URL || "https://api.web3forms.com/submit",
+  web3FormsAccessKey:
+    process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "e4c5b378-demo",
+
   // Dodo Payments configuration
   dodo,
 

@@ -256,8 +256,8 @@ Submitted at: ${new Date().toISOString()} (IP: ${clientIp})`,
 
     // 6. Fallback Web3Forms / Formspree if Resend is not configured or failed
     if (!emailSent) {
-      const fallbackUrl = process.env.NEXT_PUBLIC_FORM_FALLBACK_URL;
-      const web3Key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+      const fallbackUrl = process.env.NEXT_PUBLIC_FORM_FALLBACK_URL || siteConfig.formFallbackUrl;
+      const web3Key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || (siteConfig as any).web3FormsAccessKey;
 
       if (fallbackUrl || web3Key) {
         try {
