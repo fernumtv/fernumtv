@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /portal
+Disallow: /login
 Disallow: /thanks
 Disallow: /cancelled
 

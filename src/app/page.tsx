@@ -10,6 +10,7 @@ import { StudioPricing } from "@/components/studio/StudioPricing";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomeSchema } from "@/lib/seo/schema";
+import { siteConfig } from "@/config/site";
 
 import { ClientPageWidgets } from "@/components/studio/ClientPageWidgets";
 
@@ -56,8 +57,8 @@ export const metadata: Metadata = {
     images: ["https://fernum.online/images/og-image.jpg"],
   },
   robots: {
-    index: false,
-    follow: false,
+    index: siteConfig.indexingEnabled,
+    follow: siteConfig.indexingEnabled,
   },
 };
 

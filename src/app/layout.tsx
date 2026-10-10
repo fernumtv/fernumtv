@@ -68,8 +68,8 @@ export const metadata: Metadata = {
     images: ["https://fernum.online/images/og-image.jpg"],
   },
   robots: {
-    index: false,
-    follow: false,
+    index: siteConfig.indexingEnabled,
+    follow: siteConfig.indexingEnabled,
   },
 };
 

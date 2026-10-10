@@ -42,6 +42,11 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: "upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob: https://*.supabase.co; media-src 'self' https: blob:; connect-src 'self' https://calendly.com https://*.calendly.com https://plausible.io https://test.dodopayments.com https://app.dodopayments.com https://checkout.dodopayments.com https://*.supabase.co; frame-src 'self' https://calendly.com https://*.calendly.com https://test.dodopayments.com https://app.dodopayments.com https://checkout.dodopayments.com;",
           },
+        ],
+      },
+      {
+        source: '/:path(login|portal|portal/.*|thanks|cancelled|404)',
+        headers: [
           {
             key: 'X-Robots-Tag',
             value: 'noindex, nofollow',

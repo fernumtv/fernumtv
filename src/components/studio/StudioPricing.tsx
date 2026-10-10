@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, PhoneCall, Check } from "lucide-react";
-import { siteConfig, getCheckoutUrl } from "@/config/site";
+import { siteConfig, getCheckoutUrl, isCheckoutEnabled } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
 import { PricingStickerPack } from "./DraggableSticker";
 
@@ -180,17 +180,33 @@ export function StudioPricing() {
               {/* Action Button: Subscribe */}
               <div className="pt-8">
                 {(() => {
-                  const checkoutUrl = getCheckoutUrl(p.slug);
-                  const hasValidCheckout = Boolean(checkoutUrl && checkoutUrl.trim() !== "");
+                  const checkoutUrl = p.checkoutUrl || getCheckoutUrl(p.slug);
+                  const isEnabled = p.checkoutEnabled !== false && isCheckoutEnabled(p.slug);
 
-                  if (!hasValidCheckout) {
+                  if (!isEnabled) {
                     return (
-                      <div
-                        className={`p-2.5 text-center text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal ${
-                          p.highlight ? "bg-[var(--border)] text-[var(--block-4-fg)]" : "bg-[var(--page-bg)] text-[var(--page-fg)]"
-                        }`}
-                      >
-                        Checkout opens soon
+                      <div className="space-y-2.5">
+                        <div
+                          className={`p-2.5 text-center text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal-sm ${
+                            p.highlight ? "bg-[var(--border)] text-[var(--block-4-fg)]" : "bg-[var(--page-bg)] text-[var(--page-fg)]"
+                          }`}
+                        >
+                          Checkout opens soon, book a call instead
+                        </div>
+                        <a
+                          href={siteConfig.bookingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-cursor="book"
+                          className={`btn-squish btn-magnetic w-full h-[50px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal ${
+                            p.highlight
+                              ? "bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-2-bg)] hover:text-[var(--block-2-fg)]"
+                              : "bg-[var(--block-4-bg)] text-[var(--block-4-fg)] hover:bg-[var(--accent)] hover:text-[var(--accent-fg)]"
+                          }`}
+                        >
+                          <span>Book a Call</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </a>
                       </div>
                     );
                   }

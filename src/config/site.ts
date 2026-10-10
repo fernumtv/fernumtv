@@ -17,14 +17,15 @@ export interface FernumPlanConfig {
   highlight?: boolean;
   badge?: string;
   checkoutUrl: string;
+  checkoutEnabled?: boolean;
 }
 
 export const dodo = {
-  testMode: process.env.NEXT_PUBLIC_DODO_TEST_MODE === "false" ? false : true,
+  testMode: process.env.NEXT_PUBLIC_DODO_TEST_MODE === "true" ? true : false,
   productIds: {
-    launch: "pdt_0Np0EXGaTu2UEGkGu0xkl",
-    growth: "pdt_0Np0EpJAh7cZI2hPkksbJ",
-    scale:  "pdt_0Np0EyHDpQJiTsocHDcds"
+    launch: "pdt_PASTE",
+    growth: "pdt_PASTE",
+    scale:  "pdt_PASTE"
   },
   checkoutBaseLive: "https://checkout.dodopayments.com/buy/",
   checkoutBaseTest: "https://test.checkout.dodopayments.com/buy/",
@@ -32,15 +33,29 @@ export const dodo = {
 };
 
 /**
+ * Checks whether live checkout is enabled for a given plan.
+ * Returns false if product ID contains 'PASTE' or is empty.
+ */
+export function isCheckoutEnabled(plan: string | { slug?: string; name?: string }): boolean {
+  const rawKey = typeof plan === "string" ? plan : (plan?.slug || plan?.name || "");
+  const planKey = rawKey.toLowerCase().trim() as keyof typeof dodo.productIds;
+  const productId = dodo.productIds[planKey];
+
+  if (!productId || productId.trim() === "" || productId.toUpperCase().includes("PASTE")) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Returns the full Dodo checkout URL for a given plan slug (launch, growth, scale).
- * If the product ID is empty or contains "PASTE", returns empty string so UI can show fallback.
  */
 export function getCheckoutUrl(plan: string | { slug?: string; name?: string }): string {
   const rawKey = typeof plan === "string" ? plan : (plan?.slug || plan?.name || "");
   const planKey = rawKey.toLowerCase().trim() as keyof typeof dodo.productIds;
   const productId = dodo.productIds[planKey];
 
-  if (!productId || productId.trim() === "" || productId.toUpperCase().includes("PASTE")) {
+  if (!productId || productId.trim() === "") {
     return "";
   }
 
@@ -83,8 +98,8 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_BOOKING_URL ||
     "https://calendly.com/hardikapp12/30min?hide_event_type_details=1",
 
-  // Search indexing toggle (false while TEST MODE is active, set NEXT_PUBLIC_INDEXING_ENABLED=true upon launch)
-  indexingEnabled: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" ? true : false,
+  // Search indexing toggle (true for production, can be disabled via NEXT_PUBLIC_INDEXING_ENABLED=false)
+  indexingEnabled: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "false" ? false : true,
 
   // Return URL after payment
   returnUrl: "/thanks",
@@ -107,6 +122,7 @@ export const siteConfig = {
       whatsIncluded: "Writing, AI Production, Editing, Full HD",
       highlight: false,
       checkoutUrl: getCheckoutUrl("launch"),
+      checkoutEnabled: isCheckoutEnabled("launch"),
     },
     growth: {
       name: "Growth",
@@ -122,6 +138,7 @@ export const siteConfig = {
       highlight: true,
       badge: "Most Popular",
       checkoutUrl: getCheckoutUrl("growth"),
+      checkoutEnabled: isCheckoutEnabled("growth"),
     },
     scale: {
       name: "Scale",
@@ -137,6 +154,7 @@ export const siteConfig = {
       highlight: false,
       badge: "Best Value",
       checkoutUrl: getCheckoutUrl("scale"),
+      checkoutEnabled: isCheckoutEnabled("scale"),
     },
   } as Record<string, FernumPlanConfig>,
 };
