@@ -78,10 +78,13 @@ export const siteConfig = {
   // Last updated date for legal documents (/terms, /refund, /privacy)
   lastUpdated: "October 4, 2026",
 
-  // Booking link: Calendly link (opens in modal or new tab)
+  // Booking link: Calendly link (opens in modal or new tab) - GDPR banner enabled
   bookingUrl:
     process.env.NEXT_PUBLIC_BOOKING_URL ||
-    "https://calendly.com/hardikapp12/30min?hide_event_type_details=1&hide_gdpr_banner=1",
+    "https://calendly.com/hardikapp12/30min?hide_event_type_details=1",
+
+  // Search indexing toggle (false while TEST MODE is active, set NEXT_PUBLIC_INDEXING_ENABLED=true upon launch)
+  indexingEnabled: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" ? true : false,
 
   // Return URL after payment
   returnUrl: "/thanks",

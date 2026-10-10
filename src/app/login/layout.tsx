@@ -16,14 +16,14 @@ export const metadata: Metadata = {
     description:
       "Secure magic link access to your Fernum creative portal, active reels, revision requests, and monthly brand asset library.",
     url: "https://fernum.online/login",
-    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
+    images: [{ url: "https://fernum.online/images/og-image.jpg", width: 1200, height: 630, alt: "Fernum AdPass Creative Studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Client Login | Fernum AdPass",
     description:
       "Secure magic link access to your Fernum creative portal, active reels, revision requests, and monthly brand asset library.",
-    images: ["https://fernum.online/images/og-image.webp"],
+    images: ["https://fernum.online/images/og-image.jpg"],
   },
 };
 

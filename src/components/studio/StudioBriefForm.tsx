@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Send, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Zap } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Send, CheckCircle2, AlertCircle, Sparkles, ArrowRight, Zap, RefreshCw } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { siteConfig } from "@/config/site";
 
@@ -20,7 +20,11 @@ export function StudioBriefForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [prefilledFromBattle, setPrefilledFromBattle] = useState(false);
+
+  // Time trap: timestamp recorded when form mounts
+  const mountTimeRef = useRef<number>(Date.now());
 
   // Listen to Hook Battle prefill event
   useEffect(() => {
@@ -45,27 +49,69 @@ export function StudioBriefForm() {
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.name.trim()) errs.name = "Full name is required";
+    if (!formData.name.trim()) {
+      errs.name = "Full name is required";
+    } else if (formData.name.length > 100) {
+      errs.name = "Full name must be under 100 characters";
+    }
+
     if (!formData.email.trim()) {
       errs.email = "Email is required";
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       errs.email = "Please enter a valid email address";
+    } else if (formData.email.length > 120) {
+      errs.email = "Email must be under 120 characters";
     }
-    if (!formData.brandName.trim()) errs.brandName = "Brand name is required";
+
+    if (!formData.brandName.trim()) {
+      errs.brandName = "Brand name is required";
+    } else if (formData.brandName.length > 100) {
+      errs.brandName = "Brand name must be under 100 characters";
+    }
+
     if (!formData.websiteUrl.trim()) {
       errs.websiteUrl = "Store / Website URL is required";
-    } else if (!/^https?:\/\//i.test(formData.websiteUrl)) {
-      formData.websiteUrl = `https://${formData.websiteUrl}`;
+    } else {
+      let formatted = formData.websiteUrl.trim();
+      if (!/^https?:\/\//i.test(formatted)) {
+        formatted = `https://${formatted}`;
+        setFormData((prev) => ({ ...prev, websiteUrl: formatted }));
+      }
+      try {
+        new URL(formatted);
+      } catch {
+        errs.websiteUrl = "Please enter a valid website URL (e.g. yourbrand.com)";
+      }
     }
+
     if (!formData.productToAdvertise.trim()) {
       errs.productToAdvertise = "Product name or URL is required";
+    } else if (formData.productToAdvertise.length > 300) {
+      errs.productToAdvertise = "Product description must be under 300 characters";
     }
+
     if (!formData.offer.trim()) {
       errs.offer = "Please describe the core offer, discount, or campaign angle";
+    } else if (formData.offer.length > 1500) {
+      errs.offer = "Offer details must be under 1500 characters";
     }
 
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+
+    // Auto-focus first input with error
+    const errKeys = Object.keys(errs);
+    if (errKeys.length > 0) {
+      const firstField = errKeys[0];
+      setTimeout(() => {
+        const el = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+          `[name="${firstField}"]`
+        );
+        if (el) el.focus();
+      }, 50);
+      return false;
+    }
+
+    return true;
   };
 
   const handleChange = (
@@ -82,12 +128,29 @@ export function StudioBriefForm() {
         return copy;
       });
     }
+    if (submitError) setSubmitError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
+
+    // Honeypot check
+    if (formData["bot-field"]) {
+      console.warn("Honeypot filled; aborting submission.");
+      return;
+    }
+
+    // Time trap check: reject submissions under 3 seconds
+    const elapsed = Date.now() - mountTimeRef.current;
+    if (elapsed < 3000) {
+      setSubmitError(
+        "Submission received too quickly. Please review your details and submit again."
+      );
+      return;
+    }
+
     if (!validate()) return;
-    if (formData["bot-field"]) return;
 
     setIsSubmitting(true);
 
@@ -98,12 +161,13 @@ export function StudioBriefForm() {
         ...formData,
       }).toString();
 
-      await fetch("/", {
+      const netlifyRes = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: netlifyBody,
       }).catch((err) => {
         console.warn("Netlify form post fallback:", err);
+        return { ok: true };
       });
 
       // 2. Local database API backup
@@ -133,9 +197,11 @@ export function StudioBriefForm() {
       });
 
       setIsSuccess(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Submission error:", err);
-      setIsSuccess(true);
+      setSubmitError(
+        "There was a network error sending your brief. Please try again or email us directly."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -169,7 +235,7 @@ export function StudioBriefForm() {
         {/* Card Container */}
         <div className="bg-[var(--block-2-bg)] border-2 border-[var(--border)] p-6 sm:p-12 shadow-brutal-xl text-[var(--block-2-fg)]">
           {isSuccess ? (
-            <div className="text-center py-10 space-y-6">
+            <div className="text-center py-10 space-y-6" role="status" aria-live="polite">
               <div className="w-16 h-16 bg-[var(--accent)] border-2 border-[var(--border)] flex items-center justify-center mx-auto shadow-brutal text-[var(--accent-fg)]">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -199,6 +265,7 @@ export function StudioBriefForm() {
                 type="button"
                 onClick={() => {
                   setIsSuccess(false);
+                  mountTimeRef.current = Date.now();
                   setFormData({
                     name: "",
                     email: "",
@@ -206,11 +273,11 @@ export function StudioBriefForm() {
                     websiteUrl: "",
                     productToAdvertise: "",
                     offer: "",
-                    planChosen: "Growth ($799/mo)",
+                    planChosen: "Growth ($799/month)",
                     "bot-field": "",
                   });
                 }}
-                className="btn-squish inline-flex items-center gap-2 px-6 py-3 bg-[var(--block-4-bg)] hover:bg-[var(--accent)] text-[var(--block-4-fg)] hover:text-[var(--accent-fg)] font-display font-black text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all"
+                className="btn-squish inline-flex items-center gap-2 px-6 py-3 bg-[var(--block-4-bg)] hover:bg-[var(--accent)] text-[var(--block-4-fg)] hover:text-[var(--accent-fg)] font-display font-black text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all cursor-pointer"
               >
                 <span>Submit Another Brief</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -223,32 +290,73 @@ export function StudioBriefForm() {
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
+              noValidate
               className="space-y-6"
             >
               {/* Hidden inputs for Netlify Forms */}
               <input type="hidden" name="form-name" value="ad-brief" />
-              <p className="hidden" aria-hidden="true" style={{ display: "none" }}>
-                <label>
-                  Don't fill this out if you're human:{" "}
-                  <input
-                    name="bot-field"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={formData["bot-field"]}
-                    onChange={handleChange}
-                  />
-                </label>
-              </p>
+
+              {/* Spam Honeypot: Hidden from sighted users and screen readers */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  top: "-9999px",
+                  opacity: 0,
+                  height: 0,
+                  width: 0,
+                  overflow: "hidden",
+                  pointerEvents: "none",
+                }}
+              >
+                <label htmlFor="bot-field-department">Department Code</label>
+                <input
+                  id="bot-field-department"
+                  name="bot-field"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData["bot-field"]}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* Submission Error Banner with Retry */}
+              {submitError && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="p-4 bg-red-500/10 border-2 border-red-500 text-red-600 dark:text-red-400 text-xs font-mono font-bold flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white font-mono font-bold uppercase text-[11px] shadow-sm hover:bg-red-700 transition-colors cursor-pointer"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    <span>Retry</span>
+                  </button>
+                </div>
+              )}
 
               {/* Grid Row 1: Name & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                    Your Name *
+                  <label htmlFor="name-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                    Your Name <span className="text-[var(--accent)]">*</span>
                   </label>
                   <input
+                    id="name-input"
                     type="text"
                     name="name"
+                    required
+                    maxLength={100}
+                    aria-required="true"
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? "error-name" : undefined}
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="e.g. Alex Morgan"
@@ -257,20 +365,26 @@ export function StudioBriefForm() {
                     }`}
                   />
                   {errors.name && (
-                    <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p id="error-name" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
                       <span>{errors.name}</span>
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                    Work Email *
+                  <label htmlFor="email-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                    Work Email <span className="text-[var(--accent)]">*</span>
                   </label>
                   <input
+                    id="email-input"
                     type="email"
                     name="email"
+                    required
+                    maxLength={120}
+                    aria-required="true"
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? "error-email" : undefined}
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="alex@yourbrand.com"
@@ -279,8 +393,8 @@ export function StudioBriefForm() {
                     }`}
                   />
                   {errors.email && (
-                    <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p id="error-email" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
                       <span>{errors.email}</span>
                     </p>
                   )}
@@ -290,12 +404,18 @@ export function StudioBriefForm() {
               {/* Grid Row 2: Brand Name & Store URL */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                    Brand Name *
+                  <label htmlFor="brandName-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                    Brand Name <span className="text-[var(--accent)]">*</span>
                   </label>
                   <input
+                    id="brandName-input"
                     type="text"
                     name="brandName"
+                    required
+                    maxLength={100}
+                    aria-required="true"
+                    aria-invalid={Boolean(errors.brandName)}
+                    aria-describedby={errors.brandName ? "error-brandName" : undefined}
                     value={formData.brandName}
                     onChange={handleChange}
                     placeholder="e.g. Luma Glow Skincare"
@@ -304,20 +424,26 @@ export function StudioBriefForm() {
                     }`}
                   />
                   {errors.brandName && (
-                    <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p id="error-brandName" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
                       <span>{errors.brandName}</span>
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                    Website URL *
+                  <label htmlFor="websiteUrl-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                    Website URL <span className="text-[var(--accent)]">*</span>
                   </label>
                   <input
+                    id="websiteUrl-input"
                     type="url"
                     name="websiteUrl"
+                    required
+                    maxLength={200}
+                    aria-required="true"
+                    aria-invalid={Boolean(errors.websiteUrl)}
+                    aria-describedby={errors.websiteUrl ? "error-websiteUrl" : undefined}
                     value={formData.websiteUrl}
                     onChange={handleChange}
                     placeholder="https://lumaglow.com"
@@ -326,8 +452,8 @@ export function StudioBriefForm() {
                     }`}
                   />
                   {errors.websiteUrl && (
-                    <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <p id="error-websiteUrl" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
                       <span>{errors.websiteUrl}</span>
                     </p>
                   )}
@@ -336,12 +462,18 @@ export function StudioBriefForm() {
 
               {/* Row 3: Product to advertise */}
               <div>
-                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                  Product To Advertise *
+                <label htmlFor="product-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                  Product To Advertise <span className="text-[var(--accent)]">*</span>
                 </label>
                 <input
+                  id="product-input"
                   type="text"
                   name="productToAdvertise"
+                  required
+                  maxLength={300}
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.productToAdvertise)}
+                  aria-describedby={errors.productToAdvertise ? "error-product" : undefined}
                   value={formData.productToAdvertise}
                   onChange={handleChange}
                   placeholder="e.g. Barrier Recovery Ceramide Serum (or link to product page)"
@@ -350,8 +482,8 @@ export function StudioBriefForm() {
                   }`}
                 />
                 {errors.productToAdvertise && (
-                  <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                  <p id="error-product" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3 shrink-0" />
                     <span>{errors.productToAdvertise}</span>
                   </p>
                 )}
@@ -359,12 +491,18 @@ export function StudioBriefForm() {
 
               {/* Row 4: Offer Details */}
               <div>
-                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
-                  Core Offer & Campaign Angle *
+                <label htmlFor="offer-input" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--block-2-fg)] mb-2">
+                  Core Offer & Campaign Angle <span className="text-[var(--accent)]">*</span>
                 </label>
                 <textarea
+                  id="offer-input"
                   name="offer"
                   rows={3}
+                  required
+                  maxLength={1500}
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.offer)}
+                  aria-describedby={errors.offer ? "error-offer" : undefined}
                   value={formData.offer}
                   onChange={handleChange}
                   placeholder="e.g. Buy 1 Get 1 Free for first-time buyers with code GLOW50. Target audience: Women 24-40 experiencing winter skin irritation."
@@ -373,8 +511,8 @@ export function StudioBriefForm() {
                   }`}
                 />
                 {errors.offer && (
-                  <p className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                  <p id="error-offer" role="alert" aria-live="polite" className="text-[11px] font-mono text-[var(--sticker-3)] mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3 shrink-0" />
                     <span>{errors.offer}</span>
                   </p>
                 )}

@@ -13,26 +13,26 @@ const breadcrumbData = [
 export const metadata = {
   title: "Privacy Policy | Fernum AdPass",
   description:
-    "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
+    "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our privacy standards.",
   alternates: {
     canonical: "https://fernum.online/privacy",
   },
   openGraph: {
     title: "Privacy Policy | Fernum AdPass",
     description:
-      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
+      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our privacy standards.",
     url: "https://fernum.online/privacy",
     siteName: "Fernum AdPass",
     locale: "en_US",
     type: "website",
-    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
+    images: [{ url: "https://fernum.online/images/og-image.jpg", width: 1200, height: 630, alt: "Fernum AdPass Creative Studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Privacy Policy | Fernum AdPass",
     description:
-      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our strict user data privacy standards.",
-    images: ["https://fernum.online/images/og-image.webp"],
+      "Privacy policy and data handling for Fernum video ad subscriptions. Details on cookieless analytics, Supabase auth, and our privacy standards.",
+    images: ["https://fernum.online/images/og-image.jpg"],
   },
 };
 
@@ -144,11 +144,19 @@ export default function PrivacyPage() {
             {/* Section 7 */}
             <section className="space-y-3">
               <h2 className="font-display font-black text-xl uppercase tracking-wide">
-                Cookies.
+                Cookies & Local Storage.
               </h2>
               <p>
-                We do not use tracking cookies. We use Plausible Analytics, which is completely cookieless and respects visitor privacy.
+                We do not use advertising or cross-site tracking cookies.
               </p>
+              <ul className="list-disc pl-6 space-y-1.5">
+                <li>
+                  <strong>Essential Local Storage:</strong> We use your browser's local storage to preserve your selected interface vibe (<code>fernum_vibe</code>), custom cursor setting (<code>fernum_cursor_enabled</code>), audio sound effects preference (<code>fernum_sound_enabled</code>), and your cookie consent choice (<code>fernum_cookie_consent</code>). These preferences remain on your device and are never sold or sent to third parties.
+                </li>
+                <li>
+                  <strong>Cookieless Analytics:</strong> We use Plausible Analytics to understand traffic trends in aggregate. Plausible is fully GDPR/CCPA compliant, sets zero cookies, and collects no personal data. Analytics scripts are loaded only after you accept our consent banner.
+                </li>
+              </ul>
             </section>
 
             {/* Section 8 */}

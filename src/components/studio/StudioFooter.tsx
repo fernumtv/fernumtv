@@ -143,6 +143,19 @@ export function StudioFooter() {
                   Privacy Policy
                 </Link>
               </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("fernum-open-cookie-settings"));
+                    }
+                  }}
+                  className="hover:text-[var(--accent)] transition-colors block text-left cursor-pointer font-bold"
+                >
+                  Cookie settings
+                </button>
+              </li>
             </ul>
           </div>
         </div>

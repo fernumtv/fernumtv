@@ -4,7 +4,8 @@
   "description": "Fernum - AI-native B2B Virtual Creator Studio",
   "scripts": {
     "dev": "tsx scripts/bootstrap.ts && next dev -H 0.0.0.0 -p 3100",
-    "build": "prisma generate && next build",
+    "check-secrets": "node scripts/check-secrets.js",
+    "build": "node scripts/check-secrets.js && prisma generate && next build",
     "start": "next start -H 0.0.0.0 -p 3100",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",

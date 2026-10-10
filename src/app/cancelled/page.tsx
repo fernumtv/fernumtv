@@ -22,13 +22,13 @@ export const metadata = {
     siteName: "Fernum AdPass",
     locale: "en_US",
     type: "website",
-    images: [{ url: "https://fernum.online/images/og-image.webp", width: 1200, height: 630 }],
+    images: [{ url: "https://fernum.online/images/og-image.jpg", width: 1200, height: 630, alt: "Fernum AdPass Creative Studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Checkout Cancelled | Fernum AdPass",
     description: "Your checkout session was cancelled with zero charges made. Schedule a 30-minute strategy call to discuss custom options for your product ads.",
-    images: ["https://fernum.online/images/og-image.webp"],
+    images: ["https://fernum.online/images/og-image.jpg"],
   },
 };
 
