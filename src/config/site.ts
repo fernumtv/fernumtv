@@ -91,7 +91,7 @@ export const siteConfig = {
   callMinutes: 30,
 
   // Last updated date for legal documents (/terms, /refund, /privacy)
-  lastUpdated: "October 4, 2026",
+  lastUpdated: "October 10, 2026",
 
   // Booking link: Calendly link (opens in modal or new tab) - GDPR banner enabled
   bookingUrl:
@@ -101,8 +101,8 @@ export const siteConfig = {
   // Search indexing toggle (true for production, can be disabled via NEXT_PUBLIC_INDEXING_ENABLED=false)
   indexingEnabled: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "false" ? false : true,
 
-  // Client Portal toggle: Set to false until login is confirmed working end-to-end
-  portalEnabled: process.env.NEXT_PUBLIC_PORTAL_ENABLED === "true" ? true : false,
+  // Client Portal toggle: Disabled - portal and login links hidden and routes redirected
+  portalEnabled: false,
 
   // Return URL after payment
   returnUrl: "/thanks",

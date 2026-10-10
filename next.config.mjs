@@ -8,6 +8,25 @@ const nextConfig = {
   outputFileTracingRoot: __dirname,
   compress: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/login',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/portal',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/portal/:path*',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

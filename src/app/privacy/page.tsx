@@ -154,7 +154,7 @@ export default function PrivacyPage() {
                   <strong>Essential Local Storage:</strong> We use your browser's local storage to preserve your selected interface vibe (<code>fernum_vibe</code>), custom cursor setting (<code>fernum_cursor_enabled</code>), audio sound effects preference (<code>fernum_sound_enabled</code>), and your cookie consent choice (<code>fernum_cookie_consent</code>). These preferences remain on your device and are never sold or sent to third parties.
                 </li>
                 <li>
-                  <strong>Cookieless Analytics:</strong> We use Plausible Analytics to understand traffic trends in aggregate. Plausible is fully GDPR/CCPA compliant, sets zero cookies, and collects no personal data. Analytics scripts are loaded only after you accept our consent banner.
+                  <strong>Cookieless Analytics:</strong> We use Plausible Analytics to understand traffic trends in aggregate. Plausible does not use cookies and does not collect personal data. Analytics scripts are loaded only after you accept our consent banner.
                 </li>
               </ul>
             </section>

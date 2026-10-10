@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://fernum.online";
-  const lastModified = new Date("2026-10-09");
+  const lastModified = new Date("2026-10-10");
 
   return [
     {
