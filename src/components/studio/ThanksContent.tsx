@@ -44,20 +44,15 @@ function ThanksInner() {
             </p>
           </div>
 
-          {/* Dodo Checkout Reference Box (if query param present) */}
-          {paymentId && (
-            <div className="max-w-md mx-auto p-4 bg-[var(--page-bg)] border-2 border-[var(--border)] shadow-brutal text-left text-xs font-mono space-y-1 text-[var(--page-fg)]">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-bold uppercase">Checkout Ref:</span>
-                <span className="font-bold bg-[var(--block-2-bg)] px-2 py-0.5 border border-[var(--border)] truncate">
-                  {paymentId}
-                </span>
-              </div>
-              <div className="text-[11px] opacity-70 pt-1">
-                Official payment confirmation & billing receipts are issued directly via email by Dodo Payments.
-              </div>
+          {/* Official Dodo confirmation notice without leaking payment ID or email */}
+          <div className="max-w-md mx-auto p-4 bg-[var(--page-bg)] border-2 border-[var(--border)] shadow-brutal text-center text-xs font-mono space-y-1 text-[var(--page-fg)]">
+            <div className="font-bold uppercase tracking-wider text-[var(--accent)]">
+              {rawStatus === "succeeded" || rawStatus === "completed" ? "Payment Completed Successfully" : "Checkout Session Confirmed"}
             </div>
-          )}
+            <div className="text-[11px] opacity-75 pt-1">
+              Official payment receipts and subscription invoices are sent directly to your billing email by Dodo Payments.
+            </div>
+          </div>
 
           {/* Primary Action Button: Link to Brief Form */}
           <div className="pt-2">
