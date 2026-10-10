@@ -17,12 +17,18 @@ const CookieConsentBanner = dynamic(
   { ssr: false }
 );
 
+const AchievementsSystem = dynamic(
+  () => import("@/components/studio/AchievementsSystem").then((mod) => mod.AchievementsSystem),
+  { ssr: false }
+);
+
 export function ClientOverlays() {
   return (
     <>
       <CustomCursor />
       <EasterEggOverlay />
       <CookieConsentBanner />
+      <AchievementsSystem />
     </>
   );
 }

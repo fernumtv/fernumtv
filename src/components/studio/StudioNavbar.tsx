@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/supabase/useAuth";
 import { isSoundEnabled, setSoundEnabled, playSuccessSound, playPopSound } from "@/lib/interactive/sound";
+import { unlockAchievement } from "@/lib/interactive/achievements";
 
 type VibeColor = "orange" | "green" | "purple";
 
@@ -24,6 +25,8 @@ export function StudioNavbar() {
   const [announcement, setAnnouncement] = useState<string>("");
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [soundOn, setSoundOn] = useState(false);
+  const logoTapsRef = useRef(0);
+  const logoTapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setSoundOn(isSoundEnabled());
@@ -50,6 +53,18 @@ export function StudioNavbar() {
     playPopSound();
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("fernum-logo-burst"));
+
+      logoTapsRef.current++;
+      if (logoTapTimerRef.current) clearTimeout(logoTapTimerRef.current);
+
+      if (logoTapsRef.current >= 5) {
+        logoTapsRef.current = 0;
+        unlockAchievement("logo_tap");
+      } else {
+        logoTapTimerRef.current = setTimeout(() => {
+          logoTapsRef.current = 0;
+        }, 2000);
+      }
     }
   };
 

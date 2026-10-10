@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ArrowRight, Sparkles, LayoutGrid, Smartphone } from "lucide-react";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { StudioWork } from "@/components/studio/StudioWork";
@@ -10,6 +11,12 @@ import { DirectVideoCard, VideoCardData } from "@/components/studio/DirectVideoC
 import { BackToTop } from "@/components/studio/BackToTop";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBreadcrumbSchema } from "@/lib/seo/schema";
+import { unlockAchievement } from "@/lib/interactive/achievements";
+
+const ShortsFeed = dynamic(
+  () => import("@/components/studio/ShortsFeed").then((mod) => mod.ShortsFeed),
+  { ssr: false }
+);
 
 const DIRECT_FEED_CARDS: VideoCardData[] = [
   {
@@ -61,6 +68,7 @@ const breadcrumbData = [
 
 export default function WorkPage() {
   const [activeUnmutedId, setActiveUnmutedId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "shorts">("grid");
   const breadcrumbSchema = getBreadcrumbSchema(breadcrumbData);
 
   const handleToggleMute = (id: string) => {
@@ -75,39 +83,86 @@ export default function WorkPage() {
       <main className="py-12 sm:py-16">
         {/* Intro Banner */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-brutal">
+          <button
+            type="button"
+            onClick={() => unlockAchievement("work_clapper")}
+            title="Easter Egg Secret Clapperboard"
+            className="group inline-flex items-center gap-2 px-3 py-1 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-brutal hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+          >
             <span>● Creative Portfolio</span>
+            <span className="text-base group-hover:rotate-12 transition-transform select-none">🎬</span>
+          </button>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
+            <div>
+              <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl text-[var(--page-fg)] tracking-tighter uppercase leading-[0.95] mb-4">
+                OUR WORK
+              </h1>
+              <p className="text-lg sm:text-xl opacity-80 font-normal max-w-2xl leading-relaxed">
+                Direct-response video ads, synthetic macro B-roll, 2D character narratives, and 3D product motion. Switch between our classic production grid and full-screen vertical swipe feed.
+              </p>
+            </div>
+
+            {/* View Mode Switcher */}
+            <div className="flex items-center gap-2 p-1.5 bg-[var(--block-2-bg)] border-2 border-[var(--border)] shadow-brutal self-start md:self-auto">
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-2 px-3.5 py-2 text-xs font-display font-black uppercase tracking-wider transition-all ${
+                  viewMode === "grid"
+                    ? "bg-[var(--accent)] text-[var(--accent-fg)] border-2 border-[var(--border)] shadow-brutal"
+                    : "text-[var(--page-fg)] opacity-70 hover:opacity-100"
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Grid View</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("shorts")}
+                className={`flex items-center gap-2 px-3.5 py-2 text-xs font-display font-black uppercase tracking-wider transition-all ${
+                  viewMode === "shorts"
+                    ? "bg-[var(--accent)] text-[var(--accent-fg)] border-2 border-[var(--border)] shadow-brutal"
+                    : "text-[var(--page-fg)] opacity-70 hover:opacity-100"
+                }`}
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>TikTok Feed</span>
+              </button>
+            </div>
           </div>
-          <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl text-[var(--page-fg)] tracking-tighter uppercase leading-[0.95] mb-4">
-            OUR WORK
-          </h1>
-          <p className="text-lg sm:text-xl opacity-80 font-normal max-w-2xl leading-relaxed">
-            Direct-response video ads, synthetic macro B-roll, 2D character narratives, and 3D product motion. All videos autoplay directly inside each card with single-tap audio.
-          </p>
         </div>
 
-        {/* Section 1: 4 Direct Cards Feed */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="w-2.5 h-2.5 bg-[var(--accent)] border border-[var(--border)]" />
-            <h2 className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--page-fg)]">
-              Latest Production Releases (Autoplay & Audio Mute/Unmute)
-            </h2>
+        {viewMode === "shorts" ? (
+          /* Feature: TikTok Style Swipe Feed */
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <ShortsFeed />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
-            {DIRECT_FEED_CARDS.map((card) => (
-              <DirectVideoCard
-                key={card.id}
-                card={card}
-                activeUnmutedId={activeUnmutedId}
-                onToggleMute={handleToggleMute}
-              />
-            ))}
-          </div>
-        </div>
+        ) : (
+          <>
+            {/* Section 1: 4 Direct Cards Feed */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="w-2.5 h-2.5 bg-[var(--accent)] border border-[var(--border)]" />
+                <h2 className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--page-fg)]">
+                  Latest Production Releases (Autoplay & Audio Mute/Unmute)
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+                {DIRECT_FEED_CARDS.map((card) => (
+                  <DirectVideoCard
+                    key={card.id}
+                    card={card}
+                    activeUnmutedId={activeUnmutedId}
+                    onToggleMute={handleToggleMute}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Section 2: Full Master Reel & Concept Ads Carousel */}
-        <StudioWork />
+            {/* Section 2: Full Master Reel & Concept Ads Carousel */}
+            <StudioWork />
+          </>
+        )}
 
         {/* Bottom CTA to Pricing */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">

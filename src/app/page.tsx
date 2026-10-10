@@ -15,6 +15,15 @@ import { siteConfig } from "@/config/site";
 import { ClientPageWidgets } from "@/components/studio/ClientPageWidgets";
 
 // Defer heavy below-the-fold interactive components to keep initial bundle tiny & fast
+const HookRoulette = dynamic(
+  () => import("@/components/studio/HookRoulette").then((mod) => mod.HookRoulette)
+);
+const HookSwipeStack = dynamic(
+  () => import("@/components/studio/HookSwipeStack").then((mod) => mod.HookSwipeStack)
+);
+const BuildAnAdGame = dynamic(
+  () => import("@/components/studio/BuildAnAdGame").then((mod) => mod.BuildAnAdGame)
+);
 const HookBattle = dynamic(
   () => import("@/components/studio/HookBattle").then((mod) => mod.HookBattle)
 );
@@ -88,8 +97,14 @@ export default function FernumLandingPage() {
           ]}
         />
 
+        {/* Creative Upgrade Feature: Hook Roulette Hero Spinner */}
+        <HookRoulette />
+
         {/* 4. "Our work" preview (3 video cards plus format switcher and "See our work" button) */}
         <HomeWorkPreview />
+
+        {/* Creative Upgrade Feature: Hook Swipe Tinder-Style Deck */}
+        <HookSwipeStack />
 
         {/* 5. Hook Battle Interactive Lab: type product, pick vibe, test opening 3 seconds */}
         <HookBattle />
@@ -99,6 +114,9 @@ export default function FernumLandingPage() {
 
         {/* 7. 3-step process teaser with a "See our structure" button */}
         <HomeProcessTeaser />
+
+        {/* Creative Upgrade Feature: Build-An-Ad Interactive Storyboard Game */}
+        <BuildAnAdGame />
 
         {/* 8. Pricing: Launch ($499), Growth ($799), Scale ($1,099) */}
         <StudioPricing />

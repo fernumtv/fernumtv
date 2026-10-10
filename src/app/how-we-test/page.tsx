@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   X,
   ChevronLeft,
@@ -21,6 +22,12 @@ import { HookBattle } from "@/components/studio/HookBattle";
 import { BackToTop } from "@/components/studio/BackToTop";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBreadcrumbSchema } from "@/lib/seo/schema";
+import { unlockAchievement } from "@/lib/interactive/achievements";
+
+const BuildAnAdGame = dynamic(
+  () => import("@/components/studio/BuildAnAdGame").then((mod) => mod.BuildAnAdGame),
+  { ssr: false }
+);
 
 const breadcrumbData = [
   { name: "Home", url: "https://fernum.online" },
@@ -278,7 +285,18 @@ export default function HowWeTestPage() {
 
                   <div className="flex items-center gap-3 mb-3">
                     <div
-                      className={`w-10 h-10 ${topic.color} ${topic.textColor} border-2 border-[var(--border)] flex items-center justify-center shadow-sm shrink-0`}
+                      onClick={(e) => {
+                        if (topic.id === "3-second-rule") {
+                          e.stopPropagation();
+                          unlockAchievement("test_stopwatch");
+                        }
+                      }}
+                      className={`w-10 h-10 ${topic.color} ${topic.textColor} border-2 border-[var(--border)] flex items-center justify-center shadow-sm shrink-0 ${
+                        topic.id === "3-second-rule"
+                          ? "cursor-pointer hover:rotate-12 hover:scale-110 active:scale-90 transition-transform"
+                          : ""
+                      }`}
+                      title={topic.id === "3-second-rule" ? "Secret 3-Second Stopwatch" : undefined}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
@@ -301,6 +319,17 @@ export default function HowWeTestPage() {
               </button>
             );
           })}
+        </div>
+
+        {/* Interactive Storyboard Sandbox */}
+        <div className="mt-20">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="w-2.5 h-2.5 bg-[var(--accent)] border border-[var(--border)]" />
+            <h2 className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--page-fg)]">
+              Interactive Blueprint Sandbox (Drag &amp; Test 15-Second Flow)
+            </h2>
+          </div>
+          <BuildAnAdGame />
         </div>
 
         {/* CTA Bar */}

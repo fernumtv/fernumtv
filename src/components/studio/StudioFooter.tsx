@@ -2,19 +2,33 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Mail, ShieldCheck, ArrowUpRight, Calendar, MousePointer2 } from "lucide-react";
+import { Mail, ShieldCheck, ArrowUpRight, Calendar, MousePointer2, Leaf, Trophy } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+import { isCalmModeActive, setCalmMode } from "@/lib/interactive/calmMode";
+import { getUnlockedAchievements, unlockAchievement } from "@/lib/interactive/achievements";
 
 export function StudioFooter() {
   const [cursorEnabled, setCursorEnabled] = useState(true);
+  const [calmMode, setCalmModeState] = useState(false);
+  const [questCount, setQuestCount] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem("fernum_cursor_enabled");
-        if (saved === "off") setCursorEnabled(false);
+        const savedCursor = localStorage.getItem("fernum_cursor_enabled");
+        if (savedCursor === "off") setCursorEnabled(false);
+        setCalmModeState(isCalmModeActive());
+        setQuestCount(getUnlockedAchievements().length);
       } catch {}
+
+      const handleAchChange = () => {
+        setQuestCount(getUnlockedAchievements().length);
+      };
+      window.addEventListener("fernum-achievement-unlocked" as any, handleAchChange);
+      return () => {
+        window.removeEventListener("fernum-achievement-unlocked" as any, handleAchChange);
+      };
     }
   }, []);
 
@@ -29,6 +43,12 @@ export function StudioFooter() {
         detail: { enabled: next },
       })
     );
+  };
+
+  const toggleCalmMode = () => {
+    const next = !calmMode;
+    setCalmModeState(next);
+    setCalmMode(next);
   };
 
   return (
@@ -162,12 +182,53 @@ export function StudioFooter() {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Compliance + Cursor On/Off Toggle */}
-        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-[var(--block-4-fg)]/80">
+        {/* Bottom Bar: Copyright & Compliance + Calm Mode & Quests */}
+        <div className="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono text-[var(--block-4-fg)]/80">
           <div>
-            © {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.
+            © {new Date().getFullYear()} Fernum (fernum.online)
+            <button
+              type="button"
+              onClick={() => unlockAchievement("footer_secret")}
+              aria-label="Fine print secret"
+              className="hover:text-[var(--accent)] cursor-pointer select-none font-bold"
+            >
+              .
+            </button>{" "}
+            All rights reserved.
           </div>
-          <div className="flex flex-wrap items-center gap-4 text-[var(--block-4-fg)]/70">
+
+          <div className="flex flex-wrap items-center gap-3 text-[var(--block-4-fg)]/70">
+            {/* Studio Quests badge */}
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("fernum-open-quests"));
+                }
+              }}
+              aria-label={`View Studio Quests. Found ${questCount} of 5.`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--block-4-fg)]/10 hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] text-[var(--block-4-fg)] border border-[var(--block-4-fg)]/20 text-[11px] font-mono font-bold uppercase transition-colors cursor-pointer"
+            >
+              <Trophy className="w-3 h-3 text-[var(--accent)]" />
+              <span>Quests: {questCount}/5</span>
+            </button>
+
+            {/* Calm Mode toggle */}
+            <button
+              type="button"
+              onClick={toggleCalmMode}
+              aria-pressed={calmMode}
+              aria-label="Toggle Calm Mode: turns off motion, confetti, and cursor trails"
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 border text-[11px] font-mono font-bold uppercase transition-colors cursor-pointer ${
+                calmMode
+                  ? "bg-emerald-500 text-black border-emerald-400 font-black"
+                  : "bg-[var(--block-4-fg)]/10 hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] text-[var(--block-4-fg)] border-[var(--block-4-fg)]/20"
+              }`}
+            >
+              <Leaf className="w-3 h-3" />
+              <span>Calm: {calmMode ? "ON" : "OFF"}</span>
+            </button>
+
             {/* Cursor On/Off toggle */}
             <button
               type="button"
@@ -179,8 +240,8 @@ export function StudioFooter() {
               <span>Cursor: {cursorEnabled ? "ON" : "OFF"}</span>
             </button>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-[var(--block-4-fg)]/70">
-              <span>Some visuals and voices in our ads are AI-generated.</span>
+            <div className="text-[11px] font-mono opacity-60">
+              Some visuals & voices are AI-generated.
             </div>
           </div>
         </div>

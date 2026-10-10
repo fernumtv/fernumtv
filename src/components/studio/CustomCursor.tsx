@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { isCalmModeActive } from "@/lib/interactive/calmMode";
 
 export function CustomCursor() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -323,6 +324,38 @@ export function CustomCursor() {
       }
     };
 
+    // Sticker collage cursor trail (desktop mouse only)
+    let lastStickerX = -100;
+    let lastStickerY = -100;
+    const stickerIcons = ["★", "🎬", "🔥", "✦", "⚡", "100", "👀", "✨"];
+    let stickerIdx = 0;
+
+    const dropTrailSticker = (x: number, y: number) => {
+      const bursts = burstsContainerRef.current;
+      if (!bursts || isHoveringInput) return;
+      if (isCalmModeActive() || document.documentElement.classList.contains("calm-mode")) return;
+
+      const dist = Math.hypot(x - lastStickerX, y - lastStickerY);
+      if (dist < 46) return; // Drop sticker every ~46px moved
+      lastStickerX = x;
+      lastStickerY = y;
+
+      const sticker = document.createElement("div");
+      sticker.className = "cursor-trail-sticker";
+      sticker.textContent = stickerIcons[stickerIdx % stickerIcons.length];
+      stickerIdx++;
+
+      const rot = (Math.random() - 0.5) * 36;
+      sticker.style.left = `${x}px`;
+      sticker.style.top = `${y}px`;
+      sticker.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(0.9)`;
+
+      bursts.appendChild(sticker);
+      setTimeout(() => {
+        sticker.remove();
+      }, 700);
+    };
+
     // Pointer move listener
     const onPointerMove = (e: PointerEvent) => {
       targetX = e.clientX;
@@ -330,6 +363,7 @@ export function CustomCursor() {
 
       resetIdleTimer();
       handleMagneticPull(e.clientX, e.clientY);
+      dropTrailSticker(e.clientX, e.clientY);
 
       const target = e.target as HTMLElement | null;
       if (!target) return;
