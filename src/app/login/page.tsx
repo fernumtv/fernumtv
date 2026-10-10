@@ -3,8 +3,9 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Sparkles, AlertCircle, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
+import { Mail, Sparkles, AlertCircle, CheckCircle2, ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { siteConfig } from "@/config/site";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 
@@ -19,8 +20,13 @@ function LoginContent() {
   const [sent, setSent] = useState(false);
   const [expiredNotice, setExpiredNotice] = useState(false);
 
-  // Check if user is already signed in, or if link was expired
+  // Check if portal is enabled, if user is already signed in, or if link was expired
   useEffect(() => {
+    if (!siteConfig.portalEnabled) {
+      router.replace("/");
+      return;
+    }
+
     // Check URL parameters or hash for expired link tokens
     const hash = typeof window !== "undefined" ? window.location.hash : "";
     const errorParam = searchParams.get("error");
@@ -57,37 +63,29 @@ function LoginContent() {
     setExpiredNotice(false);
 
     try {
-      // 1. Submit through our rate-limited API endpoint
+      // 1. Submit through our server route handler
       const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
-      if (!res.ok && res.status !== 200) {
-        setError(data.error || "Unable to send sign-in link. Please wait a moment.");
-        setLoading(false);
+      if (!res.ok || !data?.success) {
+        setError(
+          data?.error ||
+            `We couldn't send the link. Try again or email us at ${siteConfig.contactEmail}.`
+        );
         return;
-      }
-
-      // Also call direct supabase browser client if configured
-      const supabase = getSupabaseClient();
-      if (supabase) {
-        const origin = window.location.origin;
-        await supabase.auth.signInWithOtp({
-          email,
-          options: {
-            emailRedirectTo: `${origin}/portal`,
-          },
-        });
       }
 
       setSent(true);
     } catch (err: any) {
-      // Uniform fallback to prevent enumeration
-      setSent(true);
+      console.error("Magic link request error:", err);
+      setError(
+        `We couldn't send the link. Try again or email us at ${siteConfig.contactEmail}.`
+      );
     } finally {
       setLoading(false);
     }
@@ -228,7 +226,10 @@ function LoginContent() {
                 className="btn-squish w-full h-[50px] bg-[var(--block-4-bg)] hover:bg-[var(--accent)] text-[var(--block-4-fg)] hover:text-[var(--accent-fg)] font-display font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
-                  <span>Sending magic link…</span>
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Sending magic link…</span>
+                  </span>
                 ) : (
                   <>
                     <span>Email Me a Sign-In Link</span>

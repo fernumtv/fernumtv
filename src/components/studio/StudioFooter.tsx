@@ -99,11 +99,13 @@ export function StudioFooter() {
                   FAQ (/faq)
                 </Link>
               </li>
-              <li>
-                <Link href="/login" className="hover:text-[var(--accent)] transition-colors block font-mono text-xs uppercase tracking-wider text-[var(--accent)]">
-                  Client login →
-                </Link>
-              </li>
+              {siteConfig.portalEnabled && (
+                <li>
+                  <Link href="/login" className="hover:text-[var(--accent)] transition-colors block font-mono text-xs uppercase tracking-wider text-[var(--accent)]">
+                    Client login →
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/about" className="hover:text-[var(--accent)] transition-colors block">
                   About (/about)

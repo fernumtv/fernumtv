@@ -135,15 +135,19 @@ export default function PortalPage() {
   };
 
   useEffect(() => {
+    if (!siteConfig.portalEnabled) {
+      router.replace("/");
+      return;
+    }
     loadPortalData();
-  }, []);
+  }, [router]);
 
   const handleSignOut = async () => {
     const supabase = getSupabaseClient();
     if (supabase) {
       await supabase.auth.signOut();
     }
-    router.replace("/login");
+    router.replace(siteConfig.portalEnabled ? "/login" : "/");
   };
 
   // Admin: Create new ad slot

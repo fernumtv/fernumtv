@@ -101,6 +101,9 @@ export const siteConfig = {
   // Search indexing toggle (true for production, can be disabled via NEXT_PUBLIC_INDEXING_ENABLED=false)
   indexingEnabled: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "false" ? false : true,
 
+  // Client Portal toggle: Set to false until login is confirmed working end-to-end
+  portalEnabled: process.env.NEXT_PUBLIC_PORTAL_ENABLED === "true" ? true : false,
+
   // Return URL after payment
   returnUrl: "/thanks",
 

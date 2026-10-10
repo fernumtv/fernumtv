@@ -27,8 +27,8 @@ export async function verifyAuthUser(req: Request) {
     return null;
   }
 
-  const token = authHeader.replace("Bearer ", "").trim();
-  const supabase = getSupabaseAdmin() || (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) : null);
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const supabase = getSupabaseAdmin() || (anonKey ? createClient(supabaseUrl, anonKey) : null);
   if (!supabase) return null;
 
   const { data: { user }, error } = await supabase.auth.getUser(token);

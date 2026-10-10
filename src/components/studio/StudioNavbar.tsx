@@ -110,10 +110,14 @@ export function StudioNavbar() {
     { label: "Pricing", href: "/#pricing" },
     { label: "FAQ", href: "/faq" },
     { label: "About", href: "/about" },
-    {
-      label: isAuthenticated ? "Portal" : "Client login",
-      href: isAuthenticated ? "/portal" : "/login",
-    },
+    ...(siteConfig.portalEnabled
+      ? [
+          {
+            label: isAuthenticated ? "Portal" : "Client login",
+            href: isAuthenticated ? "/portal" : "/login",
+          },
+        ]
+      : []),
   ];
 
   return (

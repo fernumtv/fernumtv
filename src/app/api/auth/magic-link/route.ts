@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
     if (!email || !email.includes("@")) {
       return NextResponse.json(
-        { error: "Please enter a valid email address." },
+        { success: false, error: "Please enter a valid email address." },
         { status: 400 }
       );
     }
@@ -41,31 +42,33 @@ export async function POST(req: Request) {
     if (isRateLimited(rateLimitKey)) {
       return NextResponse.json(
         {
+          success: false,
           error: "Too many sign-in attempts. Please wait 5 minutes before requesting another link.",
         },
         { status: 429 }
       );
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    // Fixed uniform message to eliminate any account enumeration vector
-    const uniformResponse = {
-      success: true,
-      message: "We've emailed you a secure sign-in link. Check your inbox and spam folder.",
-    };
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      process.env.SUPABASE_URL;
+    const supabaseAnonKey =
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
       console.warn("Supabase credentials not configured in environment.");
-      // In dev or preview mode when keys aren't set yet, return the uniform success message
-      return NextResponse.json({
-        ...uniformResponse,
-        devNotice: "Supabase keys not yet set in environment. Link will be sent once Supabase URL/Anon key are configured.",
-      });
+      return NextResponse.json(
+        {
+          success: false,
+          error: `We couldn't send the link. Try again or email us at ${siteConfig.contactEmail}.`,
+          reason: "missing_supabase_credentials",
+        },
+        { status: 503 }
+      );
     }
 
-    const origin = req.headers.get("origin") || "https://fernum.online";
+    const origin = req.headers.get("origin") || siteConfig.url || "https://fernum.online";
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { error } = await supabase.auth.signInWithOtp({
@@ -77,24 +80,37 @@ export async function POST(req: Request) {
 
     if (error) {
       console.error("Supabase OTP error:", error);
-      // Even if Supabase returns rate_limit or other auth errors, avoid leaking account existence
       if (error.status === 429) {
         return NextResponse.json(
-          { error: "Too many requests. Please wait a few minutes before trying again." },
+          {
+            success: false,
+            error: "Too many sign-in attempts. Please wait a few minutes before trying again.",
+          },
           { status: 429 }
         );
       }
+      return NextResponse.json(
+        {
+          success: false,
+          error: `We couldn't send the link. Try again or email us at ${siteConfig.contactEmail}.`,
+          details: error.message,
+        },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json(uniformResponse);
+    return NextResponse.json({
+      success: true,
+      message: "We've emailed you a secure sign-in link. Check your inbox and spam folder.",
+    });
   } catch (err: any) {
     console.error("Magic link handler error:", err);
     return NextResponse.json(
       {
-        success: true,
-        message: "We've emailed you a secure sign-in link. Check your inbox and spam folder.",
+        success: false,
+        error: `We couldn't send the link. Try again or email us at ${siteConfig.contactEmail}.`,
       },
-      { status: 200 }
+      { status: 500 }
     );
   }
 }
