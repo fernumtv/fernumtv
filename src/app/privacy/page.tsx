@@ -114,7 +114,7 @@ export default function PrivacyPage() {
                 Who we share it with.
               </h2>
               <p>
-                Only service providers needed to run Fernum: Netlify (hosting and forms), Supabase (client authentication and project status database), Dodo Payments (payment processing), Calendly (call scheduling), Plausible Analytics (cookieless site metrics){siteConfig.aiTools.length > 0 ? `, and the following AI and video production tools: ${siteConfig.aiTools.join(", ")}` : ""}. We do not sell your data. When we use AI tools, we send only what is needed to make your ad, such as your product details and brand assets.
+                Only service providers needed to run Fernum: Vercel (hosting) and Resend (email delivery for client briefs), Supabase (client authentication and project status database), Dodo Payments (payment processing), Calendly (call scheduling), Plausible Analytics (cookieless site metrics){siteConfig.aiTools.length > 0 ? `, and the following AI and video production tools: ${siteConfig.aiTools.join(", ")}` : ""}. We do not sell your data. When we use AI tools, we send only what is needed to make your ad, such as your product details and brand assets.
               </p>
             </section>
 

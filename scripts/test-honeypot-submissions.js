@@ -1,63 +1,47 @@
-const https = require('https');
+const http = require('http');
 
-async function submitForm(formData, label) {
+async function submitToApi(formData, host = 'localhost', port = 3100, label) {
   return new Promise((resolve) => {
     console.log(`\n========================================`);
     console.log(`TEST RUN: ${label}`);
     console.log(`Payload bot-field: "${formData['bot-field'] || ''}"`);
     console.log(`========================================`);
 
-    // Client-side Honeypot Check Simulation:
-    if (formData['bot-field'] && formData['bot-field'].trim() !== '') {
-      console.log('Result: [BLOCKED BY HONEYPOT TRAP]');
-      console.log('Client-side handler intercepted bot-field content.');
-      console.log('Submission aborted before reaching Netlify or database API.');
-      console.log('Error displayed to user / bot: "Automated submission blocked (honeypot triggered)."');
-      return resolve({
-        status: 'BLOCKED',
-        honeypotTriggered: true,
-        message: 'Automated submission blocked (honeypot triggered).'
-      });
-    }
-
-    // When empty, send actual submission to Netlify / site endpoint
-    const postData = new URLSearchParams({
-      'form-name': 'ad-brief',
-      ...formData
-    }).toString();
+    const postData = JSON.stringify({
+      ...formData,
+      timestamp: Date.now() - 5000 // 5 seconds ago to pass time-trap
+    });
 
     const options = {
-      hostname: 'www.fernum.online',
-      port: 443,
-      path: '/',
+      hostname: host,
+      port: port,
+      path: '/api/brief',
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(postData),
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) TestRunner/1.0'
       }
     };
 
-    const req = https.request(options, (res) => {
+    const req = http.request(options, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        console.log('Result: [SUCCESSFULLY RECEIVED & PROCESSED]');
+        let json = {};
+        try { json = JSON.parse(data); } catch {}
         console.log(`HTTP Status: ${res.statusCode}`);
-        console.log(`Submission accepted by endpoint.`);
-        console.log('UI state transition: isSuccess = true -> "BRIEF RECEIVED! Locked in."');
+        console.log(`Response Body:`, json);
         resolve({
-          status: 'SUCCESS',
-          httpStatus: res.statusCode,
-          honeypotTriggered: false,
-          message: 'Order and brief successfully received!'
+          statusCode: res.statusCode,
+          json
         });
       });
     });
 
     req.on('error', (e) => {
       console.error(`Request error: ${e.message}`);
-      resolve({ status: 'ERROR', error: e.message });
+      resolve({ error: e.message });
     });
 
     req.write(postData);
@@ -66,20 +50,22 @@ async function submitForm(formData, label) {
 }
 
 async function run() {
-  // Test 1: Empty honeypot
-  await submitForm({
+  console.log("=== TESTING /api/brief SERVERLESS FUNCTION ===");
+
+  // Test 1: Valid submission with empty honeypot
+  await submitToApi({
     name: 'Alex Rivera',
     email: 'alex.rivera@example.com',
     brandName: 'Aura Skincare',
     websiteUrl: 'https://auraskincare.example.com',
     productToAdvertise: 'Hydra Barrier Glaze Serum',
-    offer: 'Free shipping on orders over $50',
+    offer: 'Free shipping on orders over $50 with code GLOW50',
     planChosen: 'Growth ($799/month)',
     'bot-field': '' // EMPTY HONEYPOT
-  }, 'SUBMISSION 1: HONEYPOT EMPTY (LEGITIMATE USER)');
+  }, 'localhost', 3100, 'TEST 1: VALID SUBMISSION (EMPTY HONEYPOT)');
 
-  // Test 2: Filled honeypot
-  await submitForm({
+  // Test 2: Filled honeypot (Bot attack)
+  await submitToApi({
     name: 'Spam Bot 3000',
     email: 'spambot@marketing-crawler.xyz',
     brandName: 'Spam Brand',
@@ -88,7 +74,19 @@ async function run() {
     offer: 'Spam offer text',
     planChosen: 'Launch ($499/month)',
     'bot-field': 'DEP-99482-BOT' // FILLED HONEYPOT
-  }, 'SUBMISSION 2: HONEYPOT FILLED (AUTOMATED BOT)');
+  }, 'localhost', 3100, 'TEST 2: FILLED HONEYPOT (BOT TRAP)');
+
+  // Test 3: Invalid data (Missing required field & invalid email)
+  await submitToApi({
+    name: '',
+    email: 'not-an-email',
+    brandName: '',
+    websiteUrl: 'invalid-url',
+    productToAdvertise: '',
+    offer: '',
+    planChosen: 'Launch ($499/month)',
+    'bot-field': ''
+  }, 'localhost', 3100, 'TEST 3: INVALID DATA VALIDATION');
 }
 
 run();

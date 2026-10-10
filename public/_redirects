@@ -1,4 +1,0 @@
-# Hostname canonicalization: redirect www and http to https://fernum.online
-https://www.fernum.online/*  https://fernum.online/:splat  301!
-http://www.fernum.online/*   https://fernum.online/:splat  301!
-http://fernum.online/*       https://fernum.online/:splat  301!

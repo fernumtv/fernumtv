@@ -135,13 +135,6 @@ export function StudioBriefForm() {
     e.preventDefault();
     setSubmitError(null);
 
-    // Honeypot check
-    if (formData["bot-field"]) {
-      console.warn("Honeypot filled; aborting submission.");
-      setSubmitError("Automated submission blocked (honeypot triggered).");
-      return;
-    }
-
     // Time trap check: reject submissions under 3 seconds
     const elapsed = Date.now() - mountTimeRef.current;
     if (elapsed < 3000) {
@@ -156,41 +149,24 @@ export function StudioBriefForm() {
     setIsSubmitting(true);
 
     try {
-      // 1. Submit to Netlify Forms endpoint
-      const netlifyBody = new URLSearchParams({
-        "form-name": "ad-brief",
-        ...formData,
-      }).toString();
-
-      const netlifyRes = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: netlifyBody,
-      }).catch((err) => {
-        console.warn("Netlify form post fallback:", err);
-        return { ok: true };
-      });
-
-      // 2. Local database API backup
-      await fetch("/api/orders", {
+      // Submit to Vercel Serverless Function endpoint (/api/brief)
+      const res = await fetch("/api/brief", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          clientName: formData.name,
-          clientEmail: formData.email,
-          brandName: formData.brandName,
-          websiteUrl: formData.websiteUrl,
-          productToAdvertise: formData.productToAdvertise,
-          offer: formData.offer,
-          planSlug: formData.planChosen.toLowerCase().includes("launch")
-            ? "plan_fernum_launch"
-            : formData.planChosen.toLowerCase().includes("scale")
-            ? "plan_fernum_scale"
-            : "plan_fernum_growth",
+          ...formData,
+          timestamp: mountTimeRef.current,
         }),
-      }).catch((err) => {
-        console.warn("Local DB recording fallback:", err);
       });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.success) {
+        setSubmitError(
+          data?.error || "There was an error processing your brief. Please verify your details."
+        );
+        return;
+      }
 
       trackEvent("Brief Form Submitted", {
         brand: formData.brandName,
@@ -286,16 +262,11 @@ export function StudioBriefForm() {
             </div>
           ) : (
             <form
-              name="ad-brief"
-              method="POST"
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
+              id="ad-brief-form"
               onSubmit={handleSubmit}
               noValidate
               className="space-y-6"
             >
-              {/* Hidden inputs for Netlify Forms */}
-              <input type="hidden" name="form-name" value="ad-brief" />
 
               {/* Spam Honeypot: Hidden from sighted users and screen readers */}
               <div
