@@ -35,6 +35,14 @@ export function ReactionCannon() {
 
   useEffect(() => {
     setSoundOn(isSoundEnabled());
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent<{ enabled: boolean }>;
+      if (customEvent.detail && typeof customEvent.detail.enabled === "boolean") {
+        setSoundOn(customEvent.detail.enabled);
+      }
+    };
+    window.addEventListener("fernum-sound-toggle", handleSync);
+    return () => window.removeEventListener("fernum-sound-toggle", handleSync);
   }, []);
 
   const handleToggleSound = () => {
@@ -122,9 +130,10 @@ export function ReactionCannon() {
 
   return (
     <>
-      {/* User-Stamped Graphic Stickers */}
-      {userStickers.map((s) => {
-        const isDragging = activeDragId === s.id;
+      {/* User-Stamped Graphic Stickers (Hidden on screens under 1024px) */}
+      <div className="hidden lg:block">
+        {userStickers.map((s) => {
+          const isDragging = activeDragId === s.id;
 
         return (
           <div
@@ -275,11 +284,12 @@ export function ReactionCannon() {
           </div>
         );
       })}
+      </div>
 
-      {/* Dock Bar */}
+      {/* Dock Bar (Hidden on screens under 1024px to prevent overlapping mobile content) */}
       <aside
         aria-label="Studio Creative Sticker Dock"
-        className="fixed bottom-4 left-4 sm:left-6 z-40 select-none max-w-[calc(100vw-32px)]"
+        className="hidden lg:block fixed bottom-4 left-4 sm:left-6 z-40 select-none max-w-[calc(100vw-32px)]"
       >
         <div className="bg-[var(--block-4-bg)] text-[var(--block-4-fg)] border-2 border-[var(--border)] p-1.5 sm:p-2 shadow-brutal flex items-center gap-1.5 sm:gap-2 text-xs font-mono">
           {/* Label */}

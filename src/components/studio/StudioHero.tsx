@@ -50,14 +50,14 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
       <HeroStickerPack />
 
       {/* Rotating Circular Sticker Badge ("FERNUM ADPASS • MONTHLY ADS THAT SELL •") */}
-      <div className="absolute right-4 top-6 sm:right-12 sm:top-12 z-20 pointer-events-none hidden md:block">
+      <div className="absolute right-4 2xl:right-12 bottom-6 2xl:top-12 2xl:bottom-auto z-0 pointer-events-none opacity-40 xl:opacity-80 hidden lg:block">
         <RotatingBadge text="FERNUM ADPASS • MONTHLY ADS THAT SELL • " />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pointer-events-none">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Main Left Content: Explicit Value Proposition Within 5 Seconds */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+          <div className="lg:col-span-7 space-y-6 sm:space-y-8 pointer-events-auto">
             {/* Small Eyebrow Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--block-2-bg)] border-2 border-[var(--border)] text-[var(--block-2-fg)] text-xs font-mono font-bold uppercase tracking-wider shadow-brutal">
               <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
@@ -129,7 +129,7 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
           </div>
 
           {/* Right Column: 3D Tilt Feature Block Summarizing Subscription Deliverables */}
-          <div className="lg:col-span-5 flex justify-center">
+          <div className="lg:col-span-5 flex justify-center pointer-events-auto relative z-20">
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -138,7 +138,7 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
                 transform: `perspective(1000px) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
                 transition: "transform 0.1s ease-out",
               }}
-              className="tilt-card w-full max-w-md bg-[var(--block-4-bg)] text-[var(--block-4-fg)] border-2 border-[var(--border)] p-7 sm:p-9 shadow-brutal-xl relative"
+              className="tilt-card w-full max-w-md bg-[var(--block-4-bg)] text-[var(--block-4-fg)] border-2 border-[var(--border)] p-7 sm:p-9 shadow-brutal-xl relative z-20"
             >
               {/* Badge */}
               <div className="flex items-center justify-between border-b border-[var(--block-4-fg)]/20 pb-4 mb-6">

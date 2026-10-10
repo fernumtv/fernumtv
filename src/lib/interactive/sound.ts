@@ -12,14 +12,18 @@ export function setSoundEnabled(enabled: boolean) {
     try {
       localStorage.setItem("fernum_sound_enabled", enabled ? "true" : "false");
     } catch {}
+    window.dispatchEvent(new CustomEvent("fernum-sound-toggle", { detail: { enabled } }));
   }
 }
 
 export function isSoundEnabled(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return localStorage.getItem("fernum_sound_enabled") === "true";
+    const val = localStorage.getItem("fernum_sound_enabled");
+    soundEnabled = val === "true"; // Default to false if null/empty
+    return soundEnabled;
   } catch {
+    soundEnabled = false;
     return false;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { playPopSound } from "@/lib/interactive/sound";
 
 interface DraggableStickerProps {
@@ -28,7 +28,11 @@ export function DraggableSticker({
     initialY: 0,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setPosition({ x: initialX, y: initialY });
+  }, [initialX, initialY]);
+
+  useEffect(() => {
     const handleReset = () => {
       setPosition({ x: initialX, y: initialY });
     };
@@ -84,10 +88,10 @@ export function DraggableSticker({
       style={{
         transform: `translate3d(${position.x}px, ${position.y}px, 0px) rotate(${
           isDragging ? rotation + 5 : rotation
-        }deg) scale(${isDragging ? 1.1 : 1})`,
+        }deg) scale(${isDragging ? 1.08 : 1})`,
       }}
-      className={`absolute z-30 select-none cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
-        isDragging ? "shadow-brutal-xl z-40" : "shadow-brutal hover:shadow-brutal-lg"
+      className={`absolute select-none cursor-grab active:cursor-grabbing pointer-events-auto transition-shadow duration-150 ${
+        isDragging ? "shadow-brutal-xl z-40" : "shadow-brutal hover:shadow-brutal-lg z-10"
       } ${className}`}
     >
       {children}
@@ -96,11 +100,54 @@ export function DraggableSticker({
 }
 
 export function HeroStickerPack() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(1216);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth);
+      } else {
+        setContainerWidth(Math.min(window.innerWidth - 64, 1216));
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  const W = Math.max(900, containerWidth);
+
+  // Safe margin coordinates: placed strictly outside the text, buttons, and spec card
+  // Top margins: Y between 12 and 16 (above H1 & spec card, clear of eyebrow)
+  const gaspX = Math.round(W * 0.38);
+  const gaspY = 16; // Top margin to the right of eyebrow, well above H1
+
+  const camX = Math.round(W * 0.58);
+  const camY = 14; // Top margin in column gutter between left column and right card
+
+  const clapperX = Math.min(W - 155, Math.round(W * 0.84));
+  const clapperY = 12; // Top margin directly above the spec card
+
+  // Bottom margins: Y between 745 and 795 (below all checkmarks and below spec card)
+  const founderX = 24;
+  const founderY = 795; // Bottom margin below the 3 checkmarks
+
+  const reticleX = Math.round(W * 0.38);
+  const reticleY = 795; // Bottom margin below left column buttons/checkmarks
+
+  const filmX = Math.min(W - 65, Math.round(W * 0.94));
+  const filmY = 745; // Bottom margin below the spec card
+
   return (
-    <div className="hidden sm:block absolute inset-0 pointer-events-none overflow-hidden select-none">
-      <div className="relative w-full h-full max-w-7xl mx-auto pointer-events-auto">
+    <div className="hidden lg:block absolute inset-0 pointer-events-none overflow-hidden select-none z-10">
+      <div
+        ref={containerRef}
+        className="relative w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-none"
+      >
         {/* Sticker 1: Creator Shock / Gasp Hook Face (Round Die-Cut Badge) */}
-        <DraggableSticker id="gasp-face-sticker" initialX={380} initialY={15} rotation={9}>
+        <DraggableSticker id="gasp-face-sticker" initialX={gaspX} initialY={gaspY} rotation={8}>
           <div className="w-18 h-18 rounded-full bg-[var(--sticker-1)] border-2 border-[var(--border)] shadow-brutal flex flex-col items-center justify-center p-1.5 relative hover:scale-105 transition-transform group">
             <svg viewBox="0 0 64 64" className="w-11 h-11" fill="none" stroke="currentColor">
               <circle cx="32" cy="32" r="27" fill="#FACC15" stroke="#000" strokeWidth="2.5" />
@@ -119,7 +166,7 @@ export function HeroStickerPack() {
         </DraggableSticker>
 
         {/* Sticker 2: 35mm Cinema Camera Graphic (Rectangular Cutout Shape) */}
-        <DraggableSticker id="cinema-cam-sticker" initialX={760} initialY={15} rotation={-6}>
+        <DraggableSticker id="cinema-cam-sticker" initialX={camX} initialY={camY} rotation={-5}>
           <div className="relative bg-[#18181B] text-white border-2 border-[var(--border)] p-2.5 shadow-brutal hover:shadow-brutal-xl transition-all w-[155px] rounded-sm">
             {/* Top Hot Shoe */}
             <div className="absolute -top-2.5 left-4 w-7 h-2.5 bg-[#27272A] border-2 border-b-0 border-[var(--border)] rounded-t-xs" />
@@ -151,7 +198,7 @@ export function HeroStickerPack() {
         </DraggableSticker>
 
         {/* Sticker 3: Director Clapperboard / Film Slate */}
-        <DraggableSticker id="clapper-sticker" initialX={1080} initialY={80} rotation={10}>
+        <DraggableSticker id="clapper-sticker" initialX={clapperX} initialY={clapperY} rotation={9}>
           <div className="relative bg-white text-black border-2 border-[var(--border)] w-[145px] shadow-brutal hover:shadow-brutal-xl transition-all">
             {/* Zebra Clapper Top */}
             <div className="h-5 border-b-2 border-[var(--border)] overflow-hidden flex items-center bg-black">
@@ -180,7 +227,7 @@ export function HeroStickerPack() {
         </DraggableSticker>
 
         {/* Sticker 4: Founder / Creator Winking Face */}
-        <DraggableSticker id="founder-face-sticker" initialX={20} initialY={110} rotation={-12}>
+        <DraggableSticker id="founder-face-sticker" initialX={founderX} initialY={founderY} rotation={-10}>
           <div className="w-18 h-18 rounded-full bg-[var(--sticker-2)] border-2 border-[var(--border)] shadow-brutal flex flex-col items-center justify-center p-1.5 relative hover:scale-105 transition-transform text-white">
             <svg viewBox="0 0 64 64" className="w-11 h-11" fill="none" stroke="currentColor">
               <circle cx="32" cy="32" r="27" fill="var(--sticker-2)" stroke="#000" strokeWidth="2.5" />
@@ -199,7 +246,7 @@ export function HeroStickerPack() {
         </DraggableSticker>
 
         {/* Sticker 5: Camera Viewfinder Safe-Zone Reticle */}
-        <DraggableSticker id="viewfinder-sticker" initialX={500} initialY={460} rotation={4}>
+        <DraggableSticker id="viewfinder-sticker" initialX={reticleX} initialY={reticleY} rotation={3}>
           <div className="w-[145px] h-[78px] bg-black/90 text-white border-2 border-[var(--border)] p-2 relative shadow-brutal flex flex-col justify-between">
             {/* Corner Brackets */}
             <div className="absolute top-1 left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-[var(--accent)]" />
@@ -226,7 +273,7 @@ export function HeroStickerPack() {
         </DraggableSticker>
 
         {/* Sticker 6: 3-Hook Film Strip Negative */}
-        <DraggableSticker id="film-strip-sticker" initialX={1120} initialY={260} rotation={-9}>
+        <DraggableSticker id="film-strip-sticker" initialX={filmX} initialY={filmY} rotation={-8}>
           <div className="w-13 bg-black text-white border-2 border-[var(--border)] p-1 shadow-brutal flex flex-col justify-between h-[155px]">
             <div className="flex justify-between px-0.5 border-b border-white/20 pb-0.5">
               <div className="w-1 h-1 bg-white/70" />
@@ -260,10 +307,10 @@ export function HeroStickerPack() {
 
 export function PricingStickerPack() {
   return (
-    <div className="hidden sm:block absolute inset-0 pointer-events-none overflow-hidden select-none">
-      <div className="relative w-full h-full max-w-7xl mx-auto pointer-events-auto">
+    <div className="hidden lg:block absolute inset-0 pointer-events-none overflow-hidden select-none z-10">
+      <div className="relative w-full h-full max-w-7xl mx-auto pointer-events-none">
         {/* Pricing Sticker 1: Clapperboard Mini */}
-        <DraggableSticker id="pricing-clapper" initialX={80} initialY={80} rotation={-8}>
+        <DraggableSticker id="pricing-clapper" initialX={20} initialY={25} rotation={-8}>
           <div className="bg-white text-black border-2 border-[var(--border)] p-2 shadow-brutal hover:scale-105 transition-transform w-[120px] font-mono">
             <div className="text-[8px] font-black uppercase text-[var(--accent)] border-b border-black/20 pb-0.5">
               SLATE: 1-3 ADS
@@ -275,7 +322,7 @@ export function PricingStickerPack() {
         </DraggableSticker>
 
         {/* Pricing Sticker 2: Camera Lens Circle */}
-        <DraggableSticker id="pricing-lens" initialX={1120} initialY={90} rotation={9}>
+        <DraggableSticker id="pricing-lens" initialX={1160} initialY={25} rotation={9}>
           <div className="w-16 h-16 rounded-full bg-[#18181B] text-white border-2 border-[var(--border)] flex flex-col items-center justify-center shadow-brutal hover:scale-105 transition-transform">
             <span className="text-red-500 text-[8px] font-mono font-black">● 1080p</span>
             <span className="text-[8px] font-mono font-black text-[var(--accent)]">3 HOOKS</span>
@@ -283,7 +330,7 @@ export function PricingStickerPack() {
         </DraggableSticker>
 
         {/* Pricing Sticker 3: Viewfinder Safe Zone */}
-        <DraggableSticker id="pricing-viewfinder" initialX={90} initialY={560} rotation={6}>
+        <DraggableSticker id="pricing-viewfinder" initialX={20} initialY={640} rotation={6}>
           <div className="bg-black text-white border-2 border-[var(--border)] px-2.5 py-1.5 font-mono text-[9px] font-bold shadow-brutal flex items-center gap-1.5 hover:scale-105 transition-transform">
             <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
             <span>9:16 + 1:1 + 16:9</span>

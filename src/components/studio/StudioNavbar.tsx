@@ -27,6 +27,14 @@ export function StudioNavbar() {
 
   useEffect(() => {
     setSoundOn(isSoundEnabled());
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent<{ enabled: boolean }>;
+      if (customEvent.detail && typeof customEvent.detail.enabled === "boolean") {
+        setSoundOn(customEvent.detail.enabled);
+      }
+    };
+    window.addEventListener("fernum-sound-toggle", handleSync);
+    return () => window.removeEventListener("fernum-sound-toggle", handleSync);
   }, []);
 
   const handleToggleSound = () => {
@@ -286,6 +294,25 @@ export function StudioNavbar() {
                 );
               })}
             </div>
+          </div>
+
+          {/* Mobile Sound FX Engine Toggle */}
+          <div className="flex items-center justify-between p-3 bg-[var(--page-bg)] border-2 border-[var(--border)] shadow-brutal-sm">
+            <span className="text-xs font-mono font-bold uppercase text-[var(--page-fg)]">Tactile SFX:</span>
+            <button
+              type="button"
+              onClick={handleToggleSound}
+              title={soundOn ? "Mute UI sounds" : "Enable tactile UI sounds"}
+              aria-label={soundOn ? "Mute UI sounds" : "Enable tactile UI sounds"}
+              className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-[var(--border)] font-mono font-bold uppercase text-xs tracking-wider transition-colors cursor-pointer ${
+                soundOn
+                  ? "bg-[var(--accent)] text-[var(--accent-fg)] shadow-brutal-sm"
+                  : "bg-[var(--page-bg)] text-[var(--page-fg)] hover:bg-[var(--border)]/10"
+              }`}
+            >
+              {soundOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 opacity-60" />}
+              <span>{soundOn ? "SFX: ON" : "SFX: OFF"}</span>
+            </button>
           </div>
 
           <div className="pt-2 flex flex-col gap-2">
