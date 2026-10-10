@@ -135,7 +135,7 @@ export class StorageService {
     // Local signed URL with expiration and HMAC
     const expiresAt = Date.now() + expiresInSec * 1000;
     const sig = this.generateLocalSignature(key, expiresAt);
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fernum.online";
     return `${baseUrl}/api/storage/${key}?expires=${expiresAt}&sig=${sig}`;
   }
 
