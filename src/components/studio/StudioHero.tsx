@@ -1,12 +1,18 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { RotatingBadge } from "./RotatingBadge";
-import { HeroStickerPack } from "./DraggableSticker";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+
+// Defer draggable sticker pack physics until after first paint
+const HeroStickerPack = dynamic(
+  () => import("./DraggableSticker").then((mod) => mod.HeroStickerPack),
+  { ssr: false }
+);
 
 interface StudioHeroProps {
   onScrollToWork?: () => void;

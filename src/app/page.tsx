@@ -1,19 +1,28 @@
 import React from "react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioHero } from "@/components/studio/StudioHero";
 import { MarqueeBand } from "@/components/studio/MarqueeBand";
 import { HomeWorkPreview } from "@/components/studio/HomeWorkPreview";
-import { HookBattle } from "@/components/studio/HookBattle";
-import { AdRoiCalculator } from "@/components/studio/AdRoiCalculator";
 import { HomeProcessTeaser } from "@/components/studio/HomeProcessTeaser";
 import { StudioPricing } from "@/components/studio/StudioPricing";
-import { StudioBriefForm } from "@/components/studio/StudioBriefForm";
 import { StudioFooter } from "@/components/studio/StudioFooter";
-import { BackToTop } from "@/components/studio/BackToTop";
-import { ReactionCannon } from "@/components/studio/ReactionCannon";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomeSchema } from "@/lib/seo/schema";
+
+import { ClientPageWidgets } from "@/components/studio/ClientPageWidgets";
+
+// Defer heavy below-the-fold interactive components to keep initial bundle tiny & fast
+const HookBattle = dynamic(
+  () => import("@/components/studio/HookBattle").then((mod) => mod.HookBattle)
+);
+const AdRoiCalculator = dynamic(
+  () => import("@/components/studio/AdRoiCalculator").then((mod) => mod.AdRoiCalculator)
+);
+const StudioBriefForm = dynamic(
+  () => import("@/components/studio/StudioBriefForm").then((mod) => mod.StudioBriefForm)
+);
 
 export const metadata: Metadata = {
   title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
@@ -100,11 +109,8 @@ export default function FernumLandingPage() {
       {/* 10. Footer */}
       <StudioFooter />
 
-      {/* Floating Reaction Cannon (Gen-Z interactive emoji burst + SFX + sticker reset) */}
-      <ReactionCannon />
-
-      {/* Back to top sticker button */}
-      <BackToTop />
+      {/* Deferred Client Widgets (Reaction Cannon & Back to Top) */}
+      <ClientPageWidgets />
     </div>
   );
 }

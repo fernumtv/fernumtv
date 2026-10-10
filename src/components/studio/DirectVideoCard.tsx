@@ -50,36 +50,38 @@ export function DirectVideoCard({
     }
   }, []);
 
-  // IntersectionObserver to only play when on-screen (saving battery & data)
-  useEffect(() => {
-    const video = videoRef.current;
-    const container = containerRef.current;
-    if (!video || !container) return;
+  // IntersectionObserver to only load and play video when on-screen
+  const [isInView, setIsInView] = useState(false);
 
-    if (prefersReducedMotion || userPaused) {
-      video.pause();
-      setIsPlaying(false);
-      return;
-    }
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {
-                setIsPlaying(false);
-              });
+            setIsInView(true);
+            const video = videoRef.current;
+            if (video && !prefersReducedMotion && !userPaused) {
+              video
+                .play()
+                .then(() => setIsPlaying(true))
+                .catch(() => {
+                  setIsPlaying(false);
+                });
+            }
           } else {
-            video.pause();
+            const video = videoRef.current;
+            if (video) {
+              video.pause();
+            }
             setIsPlaying(false);
           }
         });
       },
       {
-        threshold: 0.35,
+        threshold: 0.2,
       }
     );
 
@@ -145,29 +147,45 @@ export function DirectVideoCard({
           </span>
         </div>
 
-        {/* 9:16 Video Frame with Autoplay */}
+        {/* 9:16 Video Frame with Autoplay on Viewport Entry */}
         <div
           data-cursor="video"
           onClick={toggleManualPlay}
           className="relative aspect-[9/16] overflow-hidden bg-black border-2 border-[var(--border)] mb-3 select-none cursor-pointer"
         >
           {!hasError ? (
-            <video
-              ref={videoRef}
-              aria-label={card.title}
-              autoPlay={!prefersReducedMotion}
-              muted={!isUnmuted}
-              loop
-              playsInline
-              preload={card.adNumber === 1 ? "metadata" : "none"}
-              poster={card.posterSrc}
-              onError={() => setHasError(true)}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              className="w-full h-full object-cover"
-            >
-              <source src={card.videoSrc} type="video/mp4" />
-            </video>
+            <>
+              {/* Show poster image before video enters viewport */}
+              {!isInView && card.posterSrc && (
+                <img
+                  src={card.posterSrc}
+                  alt={card.title}
+                  width={540}
+                  height={960}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                />
+              )}
+              {/* Video only loaded and mounted when entering viewport */}
+              {isInView && (
+                <video
+                  ref={videoRef}
+                  aria-label={card.title}
+                  autoPlay={!prefersReducedMotion}
+                  muted={!isUnmuted}
+                  loop
+                  playsInline
+                  preload="none"
+                  poster={card.posterSrc}
+                  onError={() => setHasError(true)}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  className="w-full h-full object-cover"
+                >
+                  <source src={card.videoSrc} type="video/mp4" />
+                </video>
+              )}
+            </>
           ) : (
             // Missing file fallback notice
             <div className="w-full h-full relative flex flex-col items-center justify-center p-4 text-center bg-black/90 text-white">

@@ -37,6 +37,22 @@
     # TEST MODE noindex header across entire site (toggle in LAUNCH-CHECKLIST.md)
     X-Robots-Tag = "noindex, nofollow"
 
+# Long immutable cache headers for hashed static assets (CSS, JS, fonts)
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/videos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=2592000"
+
 # Permanent Noindex headers for non-indexable routes
 [[headers]]
   for = "/login"

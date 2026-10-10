@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -171,7 +169,7 @@ html {
 body {
   background-color: var(--page-bg);
   color: var(--page-fg);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
@@ -184,7 +182,7 @@ body {
 
 /* Grotesque Display Type */
 .font-display {
-  font-family: 'Bricolage Grotesque', 'Archivo Black', 'Arial Black', sans-serif;
+  font-family: var(--font-bricolage), 'Bricolage Grotesque', 'Archivo Black', 'Arial Black', sans-serif;
   letter-spacing: -0.04em;
 }
 

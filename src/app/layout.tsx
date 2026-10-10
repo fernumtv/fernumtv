@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
-import { CustomCursor } from "@/components/studio/CustomCursor";
 import { TestModeBanner } from "@/components/studio/TestModeBanner";
-import { EasterEggOverlay } from "@/components/studio/EasterEggOverlay";
-import { CookieConsentBanner } from "@/components/studio/CookieConsentBanner";
+
+// Self-host Google Fonts at build time with automatic preloading of critical weights
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-bricolage",
+  weight: ["700", "800"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+});
+
+import { ClientOverlays } from "@/components/studio/ClientOverlays";
 
 export const metadata: Metadata = {
   title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
@@ -63,10 +79,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-vibe="orange" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-vibe="orange"
+      suppressHydrationWarning
+      className={`${bricolage.variable} ${inter.variable}`}
+    >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -81,11 +100,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] antialiased">
+      <body className="min-h-screen bg-[var(--page-bg)] text-[var(--page-fg)] antialiased font-sans">
         <TestModeBanner />
-        <CustomCursor />
-        <EasterEggOverlay />
-        <CookieConsentBanner />
+        <ClientOverlays />
         {children}
       </body>
     </html>

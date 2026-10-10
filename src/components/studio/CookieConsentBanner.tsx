@@ -10,18 +10,19 @@ export function CookieConsentBanner() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Check stored consent choice inside try/catch
-    try {
-      const consent = localStorage.getItem("fernum_cookie_consent");
-      if (!consent) {
-        // First visit: show consent banner
-        setVisible(true);
-      } else if (consent === "accepted") {
-        loadAnalyticsScript();
+    // Check stored consent choice after first paint so hero render is never delayed
+    const timer = setTimeout(() => {
+      try {
+        const consent = localStorage.getItem("fernum_cookie_consent");
+        if (!consent) {
+          setVisible(true);
+        } else if (consent === "accepted") {
+          loadAnalyticsScript();
+        }
+      } catch {
+        // Storage access blocked or restricted
       }
-    } catch {
-      // Storage access blocked or restricted
-    }
+    }, 1500);
 
     // Listen for manual settings open event from footer
     const handleOpenSettings = () => {
