@@ -37,21 +37,21 @@ const TEMPLATES: Record<VibeType, HookTemplate[]> = {
     },
     {
       angle: "Routine Reality Check",
-      template: (p) => `If your morning routine feels sluggish, your ${p} is missing this one compound.`,
+      template: (p) => `Before you overhaul your routine, test this simple adjustment with your ${p}.`,
     },
   ],
   hype: [
     {
-      angle: "Scarcity & Social Proof",
-      template: (p) => `This exact ${p} sold out four times this quarter. Here is what is inside.`,
+      angle: "Insider Insight",
+      template: (p) => `${p}: the thing nobody tells you before you buy.`,
     },
     {
-      angle: "Reverse Psychology Warning",
-      template: (p) => `Do not order this ${p} unless you are ready for everyone to ask where you got it.`,
+      angle: "Curiosity Warning",
+      template: (p) => `Do not order this ${p} until you see how it actually works.`,
     },
     {
-      angle: "Formula Reveal Angle",
-      template: (p) => `The unreleased ${p} formula that sold out its initial batch before paid ads went live.`,
+      angle: "Formula Breakdown",
+      template: (p) => `The breakdown behind this ${p} that everyone is talking about.`,
     },
   ],
 };
@@ -255,6 +255,11 @@ export function HookBattle() {
                 );
               })}
             </div>
+
+            {/* Disclaimer under results */}
+            <p className="mt-4 text-xs font-mono text-[var(--block-2-fg)]/75 text-center">
+              Sample hooks only. Only use claims that are true for your product.
+            </p>
           </div>
 
           {/* Action Bar */}

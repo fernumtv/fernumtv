@@ -138,6 +138,7 @@ export function StudioBriefForm() {
     // Honeypot check
     if (formData["bot-field"]) {
       console.warn("Honeypot filled; aborting submission.");
+      setSubmitError("Automated submission blocked (honeypot triggered).");
       return;
     }
 
@@ -316,6 +317,7 @@ export function StudioBriefForm() {
                   name="bot-field"
                   tabIndex={-1}
                   autoComplete="off"
+                  aria-hidden="true"
                   value={formData["bot-field"]}
                   onChange={handleChange}
                 />
