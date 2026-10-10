@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Client Portal | Fernum AdPass",
     description: "Secure client portal for managing monthly video ad deliverables, revisions, and brand kit.",
     url: "https://fernum.online/portal",
-    images: [{ url: "https://fernum.online/images/og-image.webp" }],
+    images: [{ url: "https://fernum.online/images/og-image.jpg" }],
   },
 };
 

@@ -10,7 +10,7 @@ export function getHomeSchema() {
         "name": siteConfig.businessName,
         "url": "https://fernum.online",
         "email": siteConfig.contactEmail,
-        "logo": "https://fernum.online/images/og-image.webp",
+        "logo": "https://fernum.online/images/og-image.jpg",
         "sameAs": []
       },
       {

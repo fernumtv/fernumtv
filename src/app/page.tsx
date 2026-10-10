@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioHero } from "@/components/studio/StudioHero";

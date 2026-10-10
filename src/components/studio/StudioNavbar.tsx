@@ -99,7 +99,7 @@ export function StudioNavbar() {
     { label: "Work", href: "/work" },
     { label: "Structure", href: "/structure" },
     { label: "How We Test", href: "/how-we-test" },
-    { label: "Pricing", href: pathname === "/" ? "#pricing" : "/#pricing" },
+    { label: "Pricing", href: "/#pricing" },
     { label: "FAQ", href: "/faq" },
     { label: "About", href: "/about" },
     {
