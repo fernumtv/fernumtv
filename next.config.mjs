@@ -8,21 +8,6 @@ const nextConfig = {
   outputFileTracingRoot: __dirname,
   compress: true,
   poweredByHeader: false,
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.fernum.online',
-          },
-        ],
-        destination: 'https://fernum.online/:path*',
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
