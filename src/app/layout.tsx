@@ -7,7 +7,7 @@ import { EasterEggOverlay } from "@/components/studio/EasterEggOverlay";
 import { CookieConsentBanner } from "@/components/studio/CookieConsentBanner";
 
 export const metadata: Metadata = {
-  title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
+  title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
   description:
     "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
   metadataBase: new URL("https://fernum.online"),
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
+    title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
     description:
       "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
     url: "https://fernum.online",
@@ -46,19 +46,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fernum AdPass | Monthly Video Ads for D2C Brands",
+    title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
     description:
       "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
     images: ["https://fernum.online/images/og-image.jpg"],
   },
-  ...(!siteConfig.indexingEnabled
-    ? {
-        robots: {
-          index: false,
-          follow: false,
-        },
-      }
-    : {}),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({

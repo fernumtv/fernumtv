@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import { StudioNavbar } from "@/components/studio/StudioNavbar";
 import { StudioHero } from "@/components/studio/StudioHero";
 import { MarqueeBand } from "@/components/studio/MarqueeBand";
@@ -13,6 +14,43 @@ import { BackToTop } from "@/components/studio/BackToTop";
 import { ReactionCannon } from "@/components/studio/ReactionCannon";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomeSchema } from "@/lib/seo/schema";
+
+export const metadata: Metadata = {
+  title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
+  description:
+    "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
+  alternates: {
+    canonical: "https://fernum.online",
+  },
+  openGraph: {
+    title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
+    description:
+      "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
+    url: "https://fernum.online",
+    siteName: "Fernum AdPass",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://fernum.online/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fernum AdPass Creative Studio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fernum AdPass | Monthly Video Ads for D2C and E-Commerce Brands",
+    description:
+      "Monthly subscription delivering 1 to 3 short-form video ads for Meta and TikTok. 3 alternate hooks per ad, Full HD formats, and team review. From $499/mo.",
+    images: ["https://fernum.online/images/og-image.jpg"],
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function FernumLandingPage() {
   const homeSchema = getHomeSchema();

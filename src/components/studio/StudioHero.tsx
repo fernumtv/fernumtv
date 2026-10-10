@@ -55,7 +55,7 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
             {/* Small Eyebrow Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--block-2-bg)] border-2 border-[var(--border)] text-[var(--block-2-fg)] text-xs font-mono font-bold uppercase tracking-wider shadow-brutal">
               <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
-              <span>For D2C & E-Commerce Brands Running Paid Social</span>
+              <span>For D2C and E-Commerce Brands Running Paid Social</span>
             </div>
 
             {/* Concrete Oversized Headline */}
