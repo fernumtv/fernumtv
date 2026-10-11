@@ -215,19 +215,16 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`;
 
-        const resendResponse = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: fromEmail,
-            to: [toEmail],
-            reply_to: email.trim(),
-            subject: `[Fernum Brief] ${brandName.trim()} • ${planChosen}`,
-            html: emailHtml,
-            text: `New Creative Brief from ${name.trim()} (${brandName.trim()})
+        const { Resend } = await import("resend");
+        const resend = new Resend(resendApiKey);
+
+        const { data: resendData, error: resendError } = await resend.emails.send({
+          from: fromEmail,
+          to: [toEmail],
+          replyTo: email.trim(),
+          subject: `[Fernum Brief] ${brandName.trim()} • ${planChosen}`,
+          html: emailHtml,
+          text: `New Creative Brief from ${name.trim()} (${brandName.trim()})
 Email: ${email.trim()}
 Website: ${websiteUrl.trim()}
 Plan: ${planChosen}
@@ -237,15 +234,13 @@ Offer & Angle:
 ${offer.trim()}
 
 Submitted at: ${new Date().toISOString()} (IP: ${clientIp})`,
-          }),
         });
 
-        if (resendResponse.ok) {
+        if (!resendError && resendData?.id) {
           emailSent = true;
           emailProvider = "resend";
-        } else {
-          const resendErr = await resendResponse.json().catch(() => null);
-          emailError = resendErr?.message || `Resend returned ${resendResponse.status}`;
+        } else if (resendError) {
+          emailError = resendError.message || "Resend email delivery failed";
           console.warn("[Resend Warning]", emailError);
         }
       } catch (err: any) {
