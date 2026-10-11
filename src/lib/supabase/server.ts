@@ -24,6 +24,12 @@ export interface VerifiedAuthUser {
 }
 
 /**
+ * Server-side Supabase Token Verification
+ * Securely extracts and verifies JWT access tokens from Authorization Bearer headers,
+ * session cookies, or direct function arguments.
+ */
+
+/**
  * Extracts a Bearer token or cookie-based Supabase session token from a Request or raw token string.
  */
 function extractToken(reqOrToken: Request | string): string | null {
