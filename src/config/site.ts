@@ -104,6 +104,9 @@ export const siteConfig = {
   // Client Portal toggle: Disabled - portal and login links hidden and routes redirected
   portalEnabled: false,
 
+  // Cursor style configuration: "dot" or "system" (default: "dot")
+  cursorStyle: ((process.env.NEXT_PUBLIC_CURSOR_STYLE as "dot" | "system") || "dot") as "dot" | "system",
+
   // Return URL after payment
   returnUrl: "/thanks",
 

@@ -26,21 +26,20 @@ export function StudioBriefForm() {
   // Time trap: timestamp recorded when form mounts
   const mountTimeRef = useRef<number>(Date.now());
 
-  // Listen to Studio interactive prefill events (Roulette, Swipe, Game, Battle)
+  // Listen to Hook Battle prefill event
   useEffect(() => {
     const handlePrefill = (e: Event) => {
-      const customEvent = e as CustomEvent<{ product?: string; hook?: string; brand?: string; source?: string }>;
+      const customEvent = e as CustomEvent<{ product: string; hook: string }>;
       if (customEvent.detail) {
         setFormData((prev) => ({
           ...prev,
-          brandName: customEvent.detail.brand || prev.brandName,
           productToAdvertise: customEvent.detail.product || prev.productToAdvertise,
           offer: customEvent.detail.hook
-            ? `${customEvent.detail.source ? `[${customEvent.detail.source}]\n` : ""}${customEvent.detail.hook}\n\nAdditional brief notes: `
+            ? `Winning Hook from Hook Battle:\n"${customEvent.detail.hook}"\n\nTarget offer details: `
             : prev.offer,
         }));
         setPrefilledFromBattle(true);
-        setTimeout(() => setPrefilledFromBattle(false), 6000);
+        setTimeout(() => setPrefilledFromBattle(false), 5000);
       }
     };
 
