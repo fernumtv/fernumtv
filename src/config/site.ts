@@ -20,13 +20,21 @@ export interface FernumPlanConfig {
   checkoutEnabled?: boolean;
 }
 
+const liveProductIds = {
+  launch: "pdt_0Npe29hcrKXtZ81zzWcMN",
+  growth: "pdt_0Npe2NgjgJbzip1PTkSKi",
+  scale:  "pdt_0Npe2VxQ8Ve8wLhGAw62n"
+};
+
+const testProductIds = {
+  launch: "pdt_0Np0EXGaTu2UEGkGu0xkl",
+  growth: "pdt_0Np0EpJAh7cZI2hPkksbJ",
+  scale:  "pdt_0Np0EyHDpQJiTsocHDcds"
+};
+
 export const dodo = {
   testMode: process.env.NEXT_PUBLIC_DODO_TEST_MODE === "true" ? true : false,
-  productIds: {
-    launch: "pdt_PASTE",
-    growth: "pdt_PASTE",
-    scale:  "pdt_PASTE"
-  },
+  productIds: process.env.NEXT_PUBLIC_DODO_TEST_MODE === "true" ? testProductIds : liveProductIds,
   checkoutBaseLive: "https://checkout.dodopayments.com/buy/",
   checkoutBaseTest: "https://test.checkout.dodopayments.com/buy/",
   redirectUrl: "https://fernum.online/thanks"
@@ -51,6 +59,10 @@ export function isCheckoutEnabled(plan: string | { slug?: string; name?: string 
  * Returns the full Dodo checkout URL for a given plan slug (launch, growth, scale).
  */
 export function getCheckoutUrl(plan: string | { slug?: string; name?: string }): string {
+  if (!isCheckoutEnabled(plan)) {
+    return "";
+  }
+
   const rawKey = typeof plan === "string" ? plan : (plan?.slug || plan?.name || "");
   const planKey = rawKey.toLowerCase().trim() as keyof typeof dodo.productIds;
   const productId = dodo.productIds[planKey];
