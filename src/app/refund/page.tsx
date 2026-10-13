@@ -52,7 +52,7 @@ export default function RefundPage() {
               REFUND POLICY
             </h1>
             <p className="text-xs font-mono font-bold uppercase tracking-wider opacity-60">
-              Last updated: {siteConfig.lastUpdated}
+              Last updated: October 13, 2026
             </p>
           </div>
 
@@ -126,7 +126,7 @@ export default function RefundPage() {
                 Payment processor.
               </h2>
               <p>
-                Payments are handled by Dodo Payments. Refunds are returned to your original payment method, and timing depends on your bank.
+                Payments are handled by Dodo Payments. Refunds are returned to your original payment method, and timing depends on your bank. Payments are processed by Dodo Payments, which acts as merchant of record. Order inquiries and refunds may also be handled through Dodo&apos;s support.
               </p>
             </section>
           </div>

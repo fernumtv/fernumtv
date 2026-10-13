@@ -325,7 +325,7 @@ export function HookRoulette() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>RESULTING FIRST 3-SECOND SCRIPT HOOK:</span>
           </span>
-          <span className="text-[10px] font-mono opacity-50 uppercase">Tested Pattern</span>
+          <span className="text-[10px] font-mono opacity-50 uppercase">Sample pattern</span>
         </div>
 
         <p className="font-display font-black text-base sm:text-lg text-[var(--page-fg)] leading-snug mb-4">

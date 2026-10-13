@@ -22,8 +22,8 @@ const FEED_ADS: VideoFeedItem[] = [
     handle: "@auraskin",
     hook: "POV: You finally stopped stripping your skin barrier and this happened.",
     aspectRatio: "9:16",
-    videoSrc: "/videos/preview-sample.mp4",
-    posterSrc: "/synthetic-assets/creators/devon-miles-ref.svg",
+    videoSrc: "/videos/ad-1.mp4",
+    posterSrc: "/videos/ad-1.webp",
     tags: ["#SkincareRoutine", "#BeautyUGC", "#HookTested"],
   },
   {
@@ -32,8 +32,8 @@ const FEED_ADS: VideoFeedItem[] = [
     handle: "@coldbrewlab",
     hook: "The reason 90% of founders crash at 2 PM isn't lack of sleep. It's acidic coffee.",
     aspectRatio: "9:16",
-    videoSrc: "/videos/preview-sample.mp4",
-    posterSrc: "/synthetic-assets/creators/kora-vance-ref.svg",
+    videoSrc: "/videos/ad-2.mp4",
+    posterSrc: "/videos/ad-2.webp",
     tags: ["#FounderLife", "#ColdBrew", "#CleanEnergy"],
   },
   {
@@ -42,8 +42,8 @@ const FEED_ADS: VideoFeedItem[] = [
     handle: "@ergoflex",
     hook: "Stop buying lumbar cushions until you test your spine angle in this chair.",
     aspectRatio: "9:16",
-    videoSrc: "/videos/preview-sample.mp4",
-    posterSrc: "/synthetic-assets/creators/devon-miles-ref.svg",
+    videoSrc: "/videos/ad-3.mp4",
+    posterSrc: "/videos/ad-3.webp",
     tags: ["#DeskSetup", "#Ergonomics", "#WorkFromHome"],
   },
   {
@@ -52,8 +52,8 @@ const FEED_ADS: VideoFeedItem[] = [
     handle: "@barkbrite",
     hook: "If your dog hates toothbrushing as much as mine, watch this 10-second hack.",
     aspectRatio: "9:16",
-    videoSrc: "/videos/preview-sample.mp4",
-    posterSrc: "/synthetic-assets/creators/kora-vance-ref.svg",
+    videoSrc: "/videos/ad-animation.mp4",
+    posterSrc: "/videos/ad-animation.webp",
     tags: ["#DogCare", "#PetTok", "#DogHealth"],
   },
 ];
@@ -175,6 +175,7 @@ export function ShortsFeed() {
               muted={isMuted}
               autoPlay={isPlaying}
               playsInline
+              preload="none"
               className="w-full h-full object-cover"
             />
           </div>

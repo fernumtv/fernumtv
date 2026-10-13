@@ -198,6 +198,7 @@ export function StudioPricing() {
                           target="_blank"
                           rel="noopener noreferrer"
                           data-cursor="book"
+                          aria-label={`Book a strategy call for the ${p.name} plan, $${p.price} per month`}
                           className={`btn-squish btn-magnetic w-full h-[50px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal ${
                             p.highlight
                               ? "bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-2-bg)] hover:text-[var(--block-2-fg)]"
@@ -216,6 +217,7 @@ export function StudioPricing() {
                       href={checkoutUrl}
                       target="_self"
                       data-cursor="lets-go"
+                      aria-label={`Subscribe to the ${p.name} plan, $${p.price} per month`}
                       onClick={() => trackEvent("Subscribe Click", { plan: p.slug, price: p.price })}
                       className={`btn-squish btn-magnetic w-full h-[50px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-2 border-[var(--border)] shadow-brutal ${
                         p.highlight
@@ -246,6 +248,7 @@ export function StudioPricing() {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="book"
+            aria-label="Book a 30-minute strategy call with creative direction"
             onClick={() => trackEvent("Book a Call Click", { location: "pricing_bottom" })}
             className="btn-squish btn-magnetic inline-flex items-center justify-center gap-2 px-6 h-[46px] font-display font-black text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer border-2 border-[var(--border)] shadow-brutal bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-4-bg)] hover:text-[var(--block-4-fg)]"
           >

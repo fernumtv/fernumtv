@@ -88,6 +88,7 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="book"
+                  aria-label="Book a 30-minute strategy call with creative direction"
                   onClick={() => trackEvent("Book a Call Click", { location: "hero" })}
                   className="btn-squish btn-magnetic h-[52px] px-8 bg-[var(--accent)] text-[var(--accent-fg)] font-display font-black text-sm uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center gap-2.5 cursor-pointer hover:opacity-95"
                 >

@@ -27,9 +27,9 @@ export function StudioAbout() {
             <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tight leading-[0.95]">
               WHO MAKES THE ADS & WHY
             </h2>
-            {siteConfig.founderName ? (
+            {siteConfig.founderName && siteConfig.founderName.trim().length > 0 ? (
               <div className="text-sm font-mono font-bold uppercase text-[var(--accent)] tracking-wide">
-                Founded & Directed by {siteConfig.founderName}
+                Founded & Directed by {siteConfig.founderName.trim()}
               </div>
             ) : null}
           </div>

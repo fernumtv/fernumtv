@@ -62,12 +62,12 @@ export async function POST(req: NextRequest) {
       departmentCode,
     } = body;
 
-    // 2. Honeypot Verification
+    // 2. Honeypot Verification (Silently reject bot submissions)
     if (botField || departmentCode) {
-      console.warn(`[Security] Honeypot triggered from IP ${clientIp}`);
+      console.warn(`[Security] Honeypot triggered from IP ${clientIp} - silently rejecting bot submission.`);
       return NextResponse.json(
-        { success: false, error: "Automated submission blocked (honeypot triggered)." },
-        { status: 400 }
+        { success: true, message: "Creative brief received." },
+        { status: 200 }
       );
     }
 

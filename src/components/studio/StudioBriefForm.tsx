@@ -283,7 +283,6 @@ export function StudioBriefForm() {
                   pointerEvents: "none",
                 }}
               >
-                <label htmlFor="bot-field-department">Department Code</label>
                 <input
                   id="bot-field-department"
                   name="bot-field"

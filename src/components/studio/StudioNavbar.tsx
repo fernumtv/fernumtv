@@ -241,6 +241,7 @@ export function StudioNavbar() {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="book"
+            aria-label="Book a 30-minute strategy call"
             onClick={() => trackEvent("Book a Call Click", { location: "navbar_desktop" })}
             className="btn-squish btn-magnetic h-[44px] px-5 sm:px-6 font-display font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center gap-2 cursor-pointer bg-[var(--accent)] text-[var(--accent-fg)] hover:opacity-95 focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:outline-none"
           >
@@ -342,6 +343,7 @@ export function StudioNavbar() {
               href={siteConfig.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Book a 30-minute strategy call"
               onClick={() => {
                 trackEvent("Book a Call Click", { location: "navbar_mobile" });
                 setMobileMenuOpen(false);

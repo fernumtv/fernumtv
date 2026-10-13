@@ -13,23 +13,14 @@ import { getHomeSchema } from "@/lib/seo/schema";
 import { siteConfig } from "@/config/site";
 
 import { ClientPageWidgets } from "@/components/studio/ClientPageWidgets";
+import {
+  DeferredHookRoulette,
+  DeferredHookSwipeStack,
+  DeferredHookBattle,
+  DeferredAdRoiCalculator,
+  DeferredBuildAnAdGame,
+} from "@/components/studio/DeferredInteractiveWidgets";
 
-// Defer heavy below-the-fold interactive components to keep initial bundle tiny & fast
-const HookRoulette = dynamic(
-  () => import("@/components/studio/HookRoulette").then((mod) => mod.HookRoulette)
-);
-const HookSwipeStack = dynamic(
-  () => import("@/components/studio/HookSwipeStack").then((mod) => mod.HookSwipeStack)
-);
-const BuildAnAdGame = dynamic(
-  () => import("@/components/studio/BuildAnAdGame").then((mod) => mod.BuildAnAdGame)
-);
-const HookBattle = dynamic(
-  () => import("@/components/studio/HookBattle").then((mod) => mod.HookBattle)
-);
-const AdRoiCalculator = dynamic(
-  () => import("@/components/studio/AdRoiCalculator").then((mod) => mod.AdRoiCalculator)
-);
 const StudioBriefForm = dynamic(
   () => import("@/components/studio/StudioBriefForm").then((mod) => mod.StudioBriefForm)
 );
@@ -98,25 +89,25 @@ export default function FernumLandingPage() {
         />
 
         {/* Creative Upgrade Feature: Hook Roulette Hero Spinner */}
-        <HookRoulette />
+        <DeferredHookRoulette />
 
         {/* 4. "Our work" preview (3 video cards plus format switcher and "See our work" button) */}
         <HomeWorkPreview />
 
         {/* Creative Upgrade Feature: Hook Swipe Tinder-Style Deck */}
-        <HookSwipeStack />
+        <DeferredHookSwipeStack />
 
         {/* 5. Hook Battle Interactive Lab: type product, pick vibe, test opening 3 seconds */}
-        <HookBattle />
+        <DeferredHookBattle />
 
         {/* 6. Hook Wastage & ROI Simulator */}
-        <AdRoiCalculator />
+        <DeferredAdRoiCalculator />
 
         {/* 7. 3-step process teaser with a "See our structure" button */}
         <HomeProcessTeaser />
 
         {/* Creative Upgrade Feature: Build-An-Ad Interactive Storyboard Game */}
-        <BuildAnAdGame />
+        <DeferredBuildAnAdGame />
 
         {/* 8. Pricing: Launch ($499), Growth ($799), Scale ($1,099) */}
         <StudioPricing />

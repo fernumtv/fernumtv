@@ -22,13 +22,39 @@ const AchievementsSystem = dynamic(
   { ssr: false }
 );
 
+import { useState, useEffect } from "react";
+
 export function ClientOverlays() {
+  const [isIdleReady, setIsIdleReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Defer until after first paint and browser is idle
+    if ("requestIdleCallback" in window) {
+      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opts: { timeout: number }) => number }).requestIdleCallback(
+        () => setIsIdleReady(true),
+        { timeout: 1500 }
+      );
+      return () => {
+        (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(handle);
+      };
+    } else {
+      const timer = setTimeout(() => setIsIdleReady(true), 600);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <>
-      <CustomCursor />
-      <EasterEggOverlay />
       <CookieConsentBanner />
-      <AchievementsSystem />
+      {isIdleReady && (
+        <>
+          <CustomCursor />
+          <EasterEggOverlay />
+          <AchievementsSystem />
+        </>
+      )}
     </>
   );
 }

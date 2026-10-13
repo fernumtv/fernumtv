@@ -42,42 +42,49 @@ export function StudioWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMasterPlaying, setIsMasterPlaying] = useState(false);
   const [isMasterAudioOn, setIsMasterAudioOn] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
   const activeReel = SHOWCASE_REELS[selectedReelIndex];
 
-  // IntersectionObserver to only autoplay when video container is visible in viewport
+  // IntersectionObserver to only load and autoplay when video container is visible in viewport
   useEffect(() => {
-    const video = masterVideoRef.current;
     const container = containerRef.current;
-    if (!video || !container) return;
+    if (!container) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video
-              .play()
-              .then(() => setIsMasterPlaying(true))
-              .catch(() => setIsMasterPlaying(false));
+            setIsInView(true);
+            const video = masterVideoRef.current;
+            if (video) {
+              video
+                .play()
+                .then(() => setIsMasterPlaying(true))
+                .catch(() => setIsMasterPlaying(false));
+            }
           } else {
-            video.pause();
+            const video = masterVideoRef.current;
+            if (video) {
+              video.pause();
+            }
             setIsMasterPlaying(false);
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     observer.observe(container);
     return () => observer.disconnect();
   }, [selectedReelIndex]);
 
-  // When switching reels, load and play new video
+  // When switching reels, reload if in view
   useEffect(() => {
-    if (masterVideoRef.current) {
+    if (isInView && masterVideoRef.current) {
       masterVideoRef.current.load();
     }
-  }, [selectedReelIndex]);
+  }, [selectedReelIndex, isInView]);
 
   const toggleMasterPlay = () => {
     if (!masterVideoRef.current) return;
@@ -168,20 +175,31 @@ export function StudioWork() {
             onClick={toggleMasterPlay}
             className="relative aspect-video w-full overflow-hidden bg-black border-2 border-[var(--border)] cursor-pointer select-none"
           >
-            <video
-              ref={masterVideoRef}
-              aria-label={activeReel.title}
-              muted={!isMasterAudioOn}
-              loop
-              playsInline
-              preload="metadata"
-              poster={activeReel.posterSrc}
-              className="w-full h-full object-cover"
-              onPlay={() => setIsMasterPlaying(true)}
-              onPause={() => setIsMasterPlaying(false)}
-            >
-              <source src={activeReel.videoSrc} type="video/mp4" />
-            </video>
+            {!isInView ? (
+              <img
+                src={activeReel.posterSrc}
+                alt={activeReel.title}
+                width={1280}
+                height={720}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                ref={masterVideoRef}
+                aria-label={activeReel.title}
+                muted={!isMasterAudioOn}
+                loop
+                playsInline
+                preload="none"
+                poster={activeReel.posterSrc}
+                className="w-full h-full object-cover"
+                onPlay={() => setIsMasterPlaying(true)}
+                onPause={() => setIsMasterPlaying(false)}
+              >
+                <source src={activeReel.videoSrc} type="video/mp4" />
+              </video>
+            )}
 
             {/* Play/Pause Center Indicator */}
             <div
