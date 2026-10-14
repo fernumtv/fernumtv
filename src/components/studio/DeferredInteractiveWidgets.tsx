@@ -4,10 +4,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { DeferredSection } from "./DeferredSection";
 
-const DynamicHookRoulette = dynamic(
-  () => import("./HookRoulette").then((mod) => mod.HookRoulette),
-  { ssr: false }
-);
+import { HookRoulette } from "./HookRoulette";
 
 const DynamicHookSwipeStack = dynamic(
   () => import("./HookSwipeStack").then((mod) => mod.HookSwipeStack),
@@ -30,11 +27,7 @@ const DynamicBuildAnAdGame = dynamic(
 );
 
 export function DeferredHookRoulette() {
-  return (
-    <DeferredSection minHeight={480}>
-      <DynamicHookRoulette />
-    </DeferredSection>
-  );
+  return <HookRoulette />;
 }
 
 export function DeferredHookSwipeStack() {
