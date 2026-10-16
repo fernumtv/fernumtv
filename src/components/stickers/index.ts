@@ -1,9 +1,6 @@
-export { ClapperSticker } from "./ClapperSticker";
-export { PlaySticker } from "./PlaySticker";
-export { LightningSticker } from "./LightningSticker";
-export { StarburstSticker } from "./StarburstSticker";
-export { ThumbsUpSticker } from "./ThumbsUpSticker";
-export { HookBubbleSticker } from "./HookBubbleSticker";
 export { LipsLightningSticker } from "./LipsLightningSticker";
 export { MeltingSmileySticker } from "./MeltingSmileySticker";
 export { CoolSunSticker } from "./CoolSunSticker";
+export { LightningSticker } from "./LightningSticker";
+export { HookBubbleSticker } from "./HookBubbleSticker";
+export { StarburstSticker } from "./StarburstSticker";
