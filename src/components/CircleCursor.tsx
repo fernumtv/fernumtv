@@ -146,13 +146,13 @@ export function CircleCursor() {
             marginTop: `-${size / 2}px`,
             marginLeft: `-${size / 2}px`,
             transform: `scale(${scale})`,
-            backgroundColor: isHovered ? "rgba(241, 74, 10, 0.18)" : "#F14A0A",
-            border: isHovered ? "2px solid #F14A0A" : "2px solid #111111",
+            backgroundColor: isHovered ? "rgba(241, 74, 10, 0.2)" : "#F14A0A",
+            border: "2px solid #F14A0A",
             boxShadow: isSleeping
               ? "none"
               : isHovered
-              ? "0 0 16px rgba(241, 74, 10, 0.45)"
-              : "0 2px 8px rgba(241, 74, 10, 0.5)",
+              ? "0 0 16px rgba(241, 74, 10, 0.6)"
+              : "0 0 12px rgba(241, 74, 10, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2)",
           }}
         >
           {/* Floating "z z" sleep animation */}
