@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { ThreadChartStickers } from "@/components/SiteStickers";
 
 interface ThreadConnection {
   id: string;
@@ -448,6 +449,9 @@ export function ThreadChartSection() {
           <path d="M0,0 Q15,12 30,0 Q45,12 60,0 Q75,12 90,0 Q105,12 120,0 Q135,12 150,0 Q165,12 180,0 Q195,12 210,0 Q225,12 240,0 Q255,12 270,0 Q285,12 300,0 Q315,12 330,0 Q345,12 360,0 Q375,12 390,0 Q405,12 420,0 Q435,12 450,0 Q465,12 480,0 Q495,12 510,0 Q525,12 540,0 Q555,12 570,0 Q585,12 600,0 Q615,12 630,0 Q645,12 660,0 Q675,12 690,0 Q705,12 720,0 Q735,12 750,0 Q765,12 780,0 Q795,12 810,0 Q825,12 840,0 Q855,12 870,0 Q885,12 900,0 Q915,12 930,0 Q945,12 960,0 Q975,12 990,0 Q1005,12 1020,0 Q1035,12 1050,0 Q1065,12 1080,0 Q1095,12 1110,0 Q1125,12 1140,0 Q1155,12 1170,0 Q1185,12 1200,0 L1200,12 L0,12 Z" />
         </svg>
       </div>
+
+      {/* Draggable Die-Cut Stickers */}
+      <ThreadChartStickers />
     </section>
   );
 }

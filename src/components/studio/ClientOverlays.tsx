@@ -7,6 +7,16 @@ const CookieConsentBanner = dynamic(
   { ssr: false }
 );
 
+const CircleCursor = dynamic(
+  () => import("@/components/CircleCursor").then((mod) => mod.CircleCursor),
+  { ssr: false }
+);
+
 export function ClientOverlays() {
-  return <CookieConsentBanner />;
+  return (
+    <>
+      <CircleCursor />
+      <CookieConsentBanner />
+    </>
+  );
 }

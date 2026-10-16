@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, PhoneCall, Check } from "lucide-react";
 import { siteConfig, getCheckoutUrl, isCheckoutEnabled } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+import { PricingStickers } from "@/components/SiteStickers";
 
 export function StudioPricing() {
   const plans = [
@@ -273,6 +274,9 @@ export function StudioPricing() {
           </p>
         </div>
       </div>
+
+      {/* Draggable Die-Cut Stickers */}
+      <PricingStickers />
     </section>
   );
 }

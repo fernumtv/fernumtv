@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Mail, ArrowUpRight, Calendar } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+import { Wordmark } from "@/components/Wordmark";
 
 export function StudioFooter() {
   return (
@@ -13,9 +14,12 @@ export function StudioFooter() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-[var(--block-4-fg)]/20">
           {/* Brand Info */}
           <div className="md:col-span-6 space-y-4">
-            <span className="font-display font-black text-3xl sm:text-4xl text-[var(--block-4-fg)] tracking-tighter uppercase block">
-              FERNUM <span className="text-[var(--accent)]">ADPASS</span>
-            </span>
+            <div className="flex items-center gap-3">
+              <Wordmark size="lg" />
+              <span className="font-display font-black text-2xl sm:text-3xl text-[var(--accent)] tracking-tighter uppercase">
+                ADPASS
+              </span>
+            </div>
             <p className="text-sm text-[var(--block-4-fg)]/80 max-w-sm leading-relaxed font-medium">
               We make video ads that sell for D2C brands. Delivered every month with 3 alternate hooks, planned and reviewed by our team.
             </p>

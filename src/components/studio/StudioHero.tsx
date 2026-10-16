@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+import { HeroStickers } from "@/components/SiteStickers";
 
 interface StudioHeroProps {
   onScrollToWork?: () => void;
@@ -179,6 +180,9 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
           </div>
         </div>
       </div>
+
+      {/* Draggable Die-Cut Stickers */}
+      <HeroStickers />
     </section>
   );
 }

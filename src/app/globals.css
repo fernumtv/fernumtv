@@ -328,3 +328,23 @@ body {
   transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* Die-cut Sticker hover idle wiggle */
+@keyframes stickerWiggle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-3deg) scale(1.02);
+  }
+  75% {
+    transform: rotate(3deg) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sticker-hover-wiggle:hover {
+    animation: stickerWiggle 0.45s ease-in-out;
+  }
+}
+
+

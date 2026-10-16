@@ -8,6 +8,8 @@ import { trackEvent } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/supabase/useAuth";
 
+import { Wordmark } from "@/components/Wordmark";
+
 export function StudioNavbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,12 +39,10 @@ export function StudioNavbar() {
         <div className="flex items-center gap-2 select-none">
           <Link
             href="/"
-            aria-label="FERNUM AdPass"
-            className="flex items-center gap-2 group text-left focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:outline-none"
+            aria-label="Fernum AdPass"
+            className="flex items-center gap-2.5 group text-left focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:outline-none"
           >
-            <span className="font-display font-black text-2xl sm:text-3xl text-[var(--page-fg)] tracking-tight uppercase group-hover:text-[var(--accent)] transition-colors">
-              FERNUM
-            </span>
+            <Wordmark size="md" />
             <span
               className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 border border-[var(--border)] shadow-sm bg-[var(--accent)] text-[var(--accent-fg)] transition-colors"
             >
