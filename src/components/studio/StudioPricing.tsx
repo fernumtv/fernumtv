@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ArrowRight, PhoneCall, Check } from "lucide-react";
 import { siteConfig, getCheckoutUrl, isCheckoutEnabled } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
-import { PricingStickerPack } from "./DraggableSticker";
 
 export function StudioPricing() {
   const plans = [
@@ -30,8 +29,7 @@ export function StudioPricing() {
 
   return (
     <section id="pricing" className="relative overflow-hidden py-24 sm:py-36 bg-[var(--page-bg)] border-t-2 border-[var(--border)] text-[var(--page-fg)]">
-      {/* Draggable Pricing Stickers */}
-      <PricingStickerPack />
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         {/* Header */}

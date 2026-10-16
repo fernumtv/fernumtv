@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Heart, X, Copy, Check, Sparkles, RotateCcw, ArrowDownRight } from "lucide-react";
+import { Copy, Check, RotateCcw, ArrowDownRight } from "lucide-react";
 
 interface HookCard {
   id: string;
@@ -50,7 +50,7 @@ const SAMPLE_HOOKS_DECK: HookCard[] = [
 ];
 
 export function HookSwipeStack() {
-  const [deck, setDeck] = useState<HookCard[]>(SAMPLE_HOOKS_DECK);
+  const [deck] = useState<HookCard[]>(SAMPLE_HOOKS_DECK);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedHooks, setSavedHooks] = useState<HookCard[]>([]);
   const [copied, setCopied] = useState(false);
@@ -144,7 +144,7 @@ export function HookSwipeStack() {
             HOOK SWIPE // CURATE YOUR ANGLE
           </h3>
           <p className="text-xs sm:text-sm font-medium opacity-75 mt-1">
-            Swipe Right (or click Keep) to collect hooks. Swipe Left to pass.
+            Swipe Right (or click KEEP) to collect hooks. Swipe Left (or click PASS) to skip.
           </p>
         </div>
 
@@ -199,11 +199,11 @@ export function HookSwipeStack() {
             </div>
           ) : (
             <div className="p-8 bg-[var(--page-bg)] text-[var(--page-fg)] border-4 border-[var(--border)] shadow-brutal text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] flex items-center justify-center mx-auto shadow-brutal">
-                <Sparkles className="w-6 h-6" />
+              <div className="text-xs font-mono font-bold uppercase px-3 py-1 bg-[var(--accent)] text-[var(--accent-fg)] inline-block border border-[var(--border)]">
+                DECK COMPLETED
               </div>
               <h4 className="font-display font-black text-xl uppercase tracking-tight">
-                Deck Completed!
+                Review Finished
               </h4>
               <p className="text-xs font-mono opacity-80">
                 You saved {savedHooks.length} tested creative angles to your tray.
@@ -218,25 +218,25 @@ export function HookSwipeStack() {
             </div>
           )}
 
-          {/* Swipe Buttons Row */}
+          {/* Swipe Buttons Row (Clean Brutalist Text Buttons) */}
           {!isFinished && (
             <div className="flex items-center justify-center gap-4 mt-6">
               <button
                 type="button"
                 onClick={handleSkip}
-                aria-label="Skip hook"
-                className="btn-squish w-14 h-14 rounded-full bg-zinc-800 text-white hover:bg-zinc-700 border-2 border-[var(--border)] shadow-brutal flex items-center justify-center cursor-pointer transition-transform active:scale-95"
+                aria-label="Pass on hook"
+                className="btn-squish px-6 py-3 bg-[var(--page-bg)] hover:bg-[var(--border)]/10 text-[var(--page-fg)] border-2 border-[var(--border)] shadow-brutal font-display font-black text-xs uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
               >
-                <X className="w-6 h-6" />
+                PASS (SKIP)
               </button>
 
               <button
                 type="button"
                 onClick={handleKeep}
-                aria-label="Keep hook"
-                className="btn-squish w-14 h-14 rounded-full bg-red-500 text-white hover:bg-red-600 border-2 border-[var(--border)] shadow-brutal flex items-center justify-center cursor-pointer transition-transform active:scale-95"
+                aria-label="Keep hook in saved angles"
+                className="btn-squish px-6 py-3 bg-[var(--accent)] hover:bg-[var(--block-4-bg)] text-[var(--accent-fg)] hover:text-[var(--block-4-fg)] border-2 border-[var(--border)] shadow-brutal font-display font-black text-xs uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
               >
-                <Heart className="w-6 h-6 fill-white" />
+                KEEP (SAVE)
               </button>
             </div>
           )}
@@ -245,8 +245,7 @@ export function HookSwipeStack() {
         {/* Right Column: "My Hooks" Tray */}
         <div className="bg-[var(--page-bg)] border-2 border-[var(--border)] p-5 sm:p-6 shadow-brutal text-[var(--page-fg)] space-y-4">
           <div className="flex items-center justify-between border-b border-[var(--border)]/30 pb-3">
-            <div className="font-display font-black text-lg uppercase tracking-tight flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+            <div className="font-display font-black text-lg uppercase tracking-tight">
               <span>MY SAVED HOOKS ({savedHooks.length})</span>
             </div>
 
@@ -264,7 +263,7 @@ export function HookSwipeStack() {
 
           {savedHooks.length === 0 ? (
             <div className="py-8 text-center text-xs font-mono opacity-60">
-              No hooks saved yet. Swipe right or click ❤️ on the cards to save your favorite angles.
+              No hooks saved yet. Click KEEP (or press right arrow) on the cards to save your favorite angles.
             </div>
           ) : (
             <div className="space-y-2.5 max-h-[260px] overflow-y-auto pr-1">

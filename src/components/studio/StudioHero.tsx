@@ -1,18 +1,10 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
-import { RotatingBadge } from "./RotatingBadge";
+import { ArrowRight, Check } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
-
-// Defer draggable sticker pack physics until after first paint
-const HeroStickerPack = dynamic(
-  () => import("./DraggableSticker").then((mod) => mod.HeroStickerPack),
-  { ssr: false }
-);
 
 interface StudioHeroProps {
   onScrollToWork?: () => void;
@@ -46,13 +38,7 @@ export function StudioHero({ onScrollToWork }: StudioHeroProps) {
       {/* Background Halftone Texture */}
       <div className="absolute inset-0 bg-halftone opacity-10 pointer-events-none z-0" />
 
-      {/* Draggable Editorial Badges Pack */}
-      <HeroStickerPack />
 
-      {/* Rotating Circular Sticker Badge ("FERNUM ADPASS • MONTHLY ADS THAT SELL •") */}
-      <div className="absolute right-4 2xl:right-12 bottom-6 2xl:top-12 2xl:bottom-auto z-0 pointer-events-none opacity-40 xl:opacity-80 hidden lg:block">
-        <RotatingBadge text="FERNUM ADPASS • MONTHLY ADS THAT SELL • " />
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pointer-events-none">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">

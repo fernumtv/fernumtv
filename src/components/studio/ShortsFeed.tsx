@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX, ChevronUp, ChevronDown, Heart, Sparkles, Share2 } from "lucide-react";
-import { isCalmModeActive } from "@/lib/interactive/calmMode";
 
 interface VideoFeedItem {
   id: string;
@@ -111,8 +110,6 @@ export function ShortsFeed() {
   }, [currentIndex]);
 
   const triggerHeartBurst = (clientX: number, clientY: number, targetRect: DOMRect) => {
-    if (isCalmModeActive()) return;
-
     const relX = clientX - targetRect.left;
     const relY = clientY - targetRect.top;
 
@@ -153,7 +150,7 @@ export function ShortsFeed() {
           <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-ping" />
           <span>SNAP SHORT FEED • {currentIndex + 1} / {FEED_ADS.length}</span>
         </div>
-        <span className="text-[11px] font-mono opacity-60">Double-tap to react ❤️</span>
+        <span className="text-[11px] font-mono opacity-60">Double-tap to react</span>
       </div>
 
       {/* Smartphone Frame Container */}

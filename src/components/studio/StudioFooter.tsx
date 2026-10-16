@@ -1,56 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { Mail, ShieldCheck, ArrowUpRight, Calendar, MousePointer2, Leaf, Trophy } from "lucide-react";
+import { Mail, ArrowUpRight, Calendar } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
-import { isCalmModeActive, setCalmMode } from "@/lib/interactive/calmMode";
-import { getUnlockedAchievements, unlockAchievement } from "@/lib/interactive/achievements";
 
 export function StudioFooter() {
-  const [cursorEnabled, setCursorEnabled] = useState(true);
-  const [calmMode, setCalmModeState] = useState(false);
-  const [questCount, setQuestCount] = useState(0);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const savedCursor = localStorage.getItem("fernum_cursor_enabled");
-        if (savedCursor === "off") setCursorEnabled(false);
-        setCalmModeState(isCalmModeActive());
-        setQuestCount(getUnlockedAchievements().length);
-      } catch {}
-
-      const handleAchChange = () => {
-        setQuestCount(getUnlockedAchievements().length);
-      };
-      window.addEventListener("fernum-achievement-unlocked" as any, handleAchChange);
-      return () => {
-        window.removeEventListener("fernum-achievement-unlocked" as any, handleAchChange);
-      };
-    }
-  }, []);
-
-  const toggleCursor = () => {
-    const next = !cursorEnabled;
-    setCursorEnabled(next);
-    try {
-      localStorage.setItem("fernum_cursor_enabled", next ? "on" : "off");
-    } catch {}
-    window.dispatchEvent(
-      new CustomEvent("fernum-cursor-toggle", {
-        detail: { enabled: next },
-      })
-    );
-  };
-
-  const toggleCalmMode = () => {
-    const next = !calmMode;
-    setCalmModeState(next);
-    setCalmMode(next);
-  };
-
   return (
     <footer className="bg-[var(--block-4-bg)] text-[var(--block-4-fg)] border-t-4 border-[var(--accent)] py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,7 +33,6 @@ export function StudioFooter() {
                 href={siteConfig.bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-cursor="book"
                 onClick={() => trackEvent("Book a Call Click", { location: "footer" })}
                 className="btn-magnetic inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] hover:bg-[var(--block-4-fg)] hover:text-[var(--block-4-bg)] text-xs font-mono font-bold uppercase tracking-wider transition-colors border-2 border-[var(--border)] shadow-brutal-sm"
               >
@@ -182,67 +137,14 @@ export function StudioFooter() {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Compliance + Calm Mode & Quests */}
+        {/* Bottom Bar: Copyright & Compliance */}
         <div className="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono text-[var(--block-4-fg)]/80">
           <div>
-            © {new Date().getFullYear()} Fernum (fernum.online)
-            <button
-              type="button"
-              onClick={() => unlockAchievement("footer_secret")}
-              aria-label="Fine print secret"
-              className="hover:text-[var(--accent)] cursor-pointer select-none font-bold"
-            >
-              .
-            </button>{" "}
-            All rights reserved.
+            © {new Date().getFullYear()} Fernum (fernum.online). All rights reserved.
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-[var(--block-4-fg)]/70">
-            {/* Studio Quests badge */}
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new CustomEvent("fernum-open-quests"));
-                }
-              }}
-              aria-label={`View Studio Quests. Found ${questCount} of 5.`}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--block-4-fg)]/10 hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] text-[var(--block-4-fg)] border border-[var(--block-4-fg)]/20 text-[11px] font-mono font-bold uppercase transition-colors cursor-pointer"
-            >
-              <Trophy className="w-3 h-3 text-[var(--accent)]" />
-              <span>Quests: {questCount}/5</span>
-            </button>
-
-            {/* Calm Mode toggle */}
-            <button
-              type="button"
-              onClick={toggleCalmMode}
-              aria-pressed={calmMode}
-              aria-label="Toggle Calm Mode: turns off motion, confetti, and cursor trails"
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 border text-[11px] font-mono font-bold uppercase transition-colors cursor-pointer ${
-                calmMode
-                  ? "bg-emerald-500 text-black border-emerald-400 font-black"
-                  : "bg-[var(--block-4-fg)]/10 hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] text-[var(--block-4-fg)] border-[var(--block-4-fg)]/20"
-              }`}
-            >
-              <Leaf className="w-3 h-3" />
-              <span>Calm: {calmMode ? "ON" : "OFF"}</span>
-            </button>
-
-            {/* Cursor On/Off toggle */}
-            <button
-              type="button"
-              onClick={toggleCursor}
-              aria-label="Toggle custom cursor on or off"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--block-4-fg)]/10 hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] text-[var(--block-4-fg)] border border-[var(--block-4-fg)]/20 text-[11px] font-mono font-bold uppercase transition-colors cursor-pointer"
-            >
-              <MousePointer2 className="w-3 h-3 text-[var(--accent)]" />
-              <span>Cursor: {cursorEnabled ? "ON" : "OFF"}</span>
-            </button>
-
-            <div className="text-[11px] font-mono opacity-60">
-              Some visuals & voices are AI-generated.
-            </div>
+          <div className="text-[11px] font-mono opacity-60">
+            Some visuals & voices are AI-generated.
           </div>
         </div>
       </div>
