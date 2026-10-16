@@ -1,207 +1,512 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export function CircleCursor() {
-  const [enabled, setEnabled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
-  const [isSleeping, setIsSleeping] = useState(false);
-  const [isTextInput, setIsTextInput] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const trailContainerRef = useRef<HTMLDivElement>(null);
+  const burstsContainerRef = useRef<HTMLDivElement>(null);
 
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const posRef = useRef({ targetX: -100, targetY: -100, currentX: -100, currentY: -100 });
-  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const animFrameRef = useRef<number | null>(null);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Only enable if pointer: fine and not prefers-reduced-motion
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Check: desktop only with mouse or fine pointer, and no reduced motion
+    const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (!finePointer || reducedMotion) {
+    if (!isFinePointer || prefersReducedMotion) {
+      document.body.classList.remove("has-custom-cursor");
       return;
     }
 
-    setEnabled(true);
-    document.body.classList.add("has-circle-cursor");
+    setIsActive(true);
+    document.body.classList.add("has-custom-cursor");
+
+    // Cursor state variables (pure JS, 0 React re-renders)
+    let targetX = -100;
+    let targetY = -100;
+    let currentX = -100;
+    let currentY = -100;
+    let isHoveringInput = false;
+    let isSquished = false;
+    let isIdle = false;
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // Trail dots (5 dots)
+    const trailLength = 5;
+    const trailPositions = Array.from({ length: trailLength }, () => ({ x: -100, y: -100 }));
+    let trailEnabled = true;
+
+    // Performance FPS tracking
+    let fpsFrames = 0;
+    let fpsStartTime = performance.now();
+
+    // Context states: 'base' | 'video-play' | 'video-pause' | 'vote' | 'lets-go' | 'book' | 'drag' | 'marquee' | 'link' | 'idle'
+    let cursorState = "base";
+
+    const getVibeTokens = () => {
+      const computed = getComputedStyle(document.documentElement);
+      const cursor = computed.getPropertyValue("--cursor-color").trim() || "#F14A0A";
+      const accent = computed.getPropertyValue("--accent").trim() || "#F14A0A";
+      const accentFg = computed.getPropertyValue("--accent-fg").trim() || "#FFFFFF";
+      const pfg = computed.getPropertyValue("--page-fg").trim() || "#111111";
+      return {
+        cursor: cursor || "#F14A0A",
+        accent: accent || "#F14A0A",
+        accentFg: accentFg || "#FFFFFF",
+        palette: ["#FFD000", "#FF0854", "#16C846", accent || "#F14A0A", pfg],
+      };
+    };
+
+    let tokens = getVibeTokens();
+
+    // Create 5 trail dot elements
+    const trailDots: HTMLDivElement[] = [];
+    if (trailContainerRef.current) {
+      trailContainerRef.current.innerHTML = "";
+      const sizes = [9, 7.5, 6, 4.5, 3];
+      const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+
+      for (let i = 0; i < trailLength; i++) {
+        const dot = document.createElement("div");
+        dot.style.position = "fixed";
+        dot.style.width = `${sizes[i]}px`;
+        dot.style.height = `${sizes[i]}px`;
+        dot.style.borderRadius = "9999px";
+        dot.style.backgroundColor = tokens.cursor;
+        dot.style.border = "1px solid var(--border)";
+        dot.style.opacity = `${opacities[i]}`;
+        dot.style.pointerEvents = "none";
+        dot.style.zIndex = "999998";
+        dot.style.willChange = "transform, opacity";
+        dot.style.transform = "translate3d(-100px, -100px, 0)";
+        trailContainerRef.current.appendChild(dot);
+        trailDots.push(dot);
+      }
+    }
 
     const resetIdleTimer = () => {
-      setIsSleeping(false);
-      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = setTimeout(() => {
-        setIsSleeping(true);
-      }, 3000); // Sleep after 3s of inactivity
+      if (idleTimer) clearTimeout(idleTimer);
+      if (isIdle) {
+        isIdle = false;
+        updateCursorAppearance();
+      }
+      idleTimer = setTimeout(() => {
+        if (!isHoveringInput && cursorState === "base") {
+          isIdle = true;
+          updateCursorAppearance();
+        }
+      }, 3000); // Sleeps after 3s of inactivity
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      posRef.current.targetX = e.clientX;
-      posRef.current.targetY = e.clientY;
-      if (!isVisible) setIsVisible(true);
-      resetIdleTimer();
+    const updateCursorAppearance = () => {
+      const main = mainRef.current;
+      const content = contentRef.current;
+      if (!main || !content) return;
 
-      // Check target element
+      const { cursor, accent, accentFg } = tokens;
+
+      // Update trail dot colors
+      trailDots.forEach((dot) => {
+        dot.style.backgroundColor = cursor;
+      });
+
+      if (isHoveringInput) {
+        main.style.opacity = "0";
+        trailDots.forEach((d) => (d.style.opacity = "0"));
+        return;
+      }
+
+      main.style.opacity = "1";
+      if (trailEnabled) {
+        const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+        trailDots.forEach((d, idx) => (d.style.opacity = `${opacities[idx]}`));
+      }
+
+      if (isIdle) {
+        main.style.width = "48px";
+        main.style.height = "32px";
+        main.style.borderRadius = "16px";
+        main.style.backgroundColor = cursor;
+        main.style.boxShadow = "2px 2px 0px var(--shadow-color)";
+        content.innerHTML = `<span class="font-mono text-[10px] font-bold text-[var(--accent-fg)] flex items-center gap-1"><span>-.-</span><span class="text-[9px] animate-pulse">zzz</span></span>`;
+        return;
+      }
+
+      switch (cursorState) {
+        case "video-play":
+          main.style.width = "80px";
+          main.style.height = "80px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "4px 4px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-xs uppercase tracking-wider text-[var(--accent-fg)] flex items-center gap-1">▶ PLAY</span>`;
+          break;
+
+        case "video-pause":
+          main.style.width = "80px";
+          main.style.height = "80px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "4px 4px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-xs uppercase tracking-wider text-[var(--accent-fg)] flex items-center gap-1">❚❚ PAUSE</span>`;
+          break;
+
+        case "vote":
+          main.style.width = "58px";
+          main.style.height = "58px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "3px 3px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[11px] uppercase tracking-wider text-[var(--accent-fg)]">VOTE</span>`;
+          break;
+
+        case "lets-go":
+          main.style.width = "76px";
+          main.style.height = "76px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "4px 4px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[10px] uppercase tracking-wider text-[var(--accent-fg)] text-center leading-tight">LET'S<br/>GO</span>`;
+          break;
+
+        case "book":
+          main.style.width = "60px";
+          main.style.height = "60px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = accent;
+          main.style.boxShadow = "3px 3px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[11px] uppercase tracking-wider text-[var(--accent-fg)]">BOOK</span>`;
+          break;
+
+        case "drag":
+          main.style.width = "64px";
+          main.style.height = "64px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "3px 3px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[10px] uppercase tracking-wider text-[var(--accent-fg)] flex flex-col items-center leading-none gap-0.5"><span class="text-sm">✋</span><span>DRAG</span></span>`;
+          break;
+
+        case "link":
+          main.style.width = "40px";
+          main.style.height = "40px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "2.5px 2.5px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="text-xs font-bold text-[var(--accent-fg)]">↗</span>`;
+          break;
+
+        case "base":
+        default:
+          main.style.width = "18px";
+          main.style.height = "18px";
+          main.style.borderRadius = "9999px";
+          main.style.backgroundColor = cursor;
+          main.style.boxShadow = "2px 2px 0px var(--shadow-color)";
+          content.innerHTML = "";
+          break;
+      }
+    };
+
+    // Particle burst on click (little stars, circles, squares)
+    const triggerBurst = (x: number, y: number) => {
+      const bursts = burstsContainerRef.current;
+      if (!bursts) return;
+
+      const count = 7;
+      const palette = tokens.palette;
+      const shapes = ["★", "●", "■", "✦", "▲", "◆"];
+
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement("div");
+        particle.className = "cursor-burst-shape";
+        particle.textContent = shapes[i % shapes.length];
+
+        const angle = (i / count) * 2 * Math.PI + (Math.random() - 0.5) * 0.5;
+        const dist = 32 + Math.random() * 26;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+        const rot = (Math.random() - 0.5) * 360;
+        const color = palette[i % palette.length];
+
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        particle.style.color = color;
+        particle.style.fontSize = `${12 + Math.random() * 4}px`;
+        particle.style.lineHeight = "1";
+        particle.style.setProperty("--dx", `${dx}px`);
+        particle.style.setProperty("--dy", `${dy}px`);
+        particle.style.setProperty("--rot", `${rot}deg`);
+
+        bursts.appendChild(particle);
+        setTimeout(() => {
+          particle.remove();
+        }, 520);
+      }
+    };
+
+    // Magnetic buttons handling
+    let magnetizedEl: HTMLElement | null = null;
+
+    const handleMagneticPull = (x: number, y: number) => {
+      const magneticButtons = document.querySelectorAll<HTMLElement>(".btn-magnetic");
+      let closestBtn: HTMLElement | null = null;
+      const maxDistance = 60; // within 60px
+      let pullX = 0;
+      let pullY = 0;
+
+      for (let i = 0; i < magneticButtons.length; i++) {
+        const btn = magneticButtons[i];
+        const rect = btn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < maxDistance) {
+          closestBtn = btn;
+          const factor = (1 - dist / 60) * 10;
+          pullX = (dx / dist) * factor;
+          pullY = (dy / dist) * factor;
+          break;
+        }
+      }
+
+      if (closestBtn) {
+        magnetizedEl = closestBtn;
+        closestBtn.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+      } else if (magnetizedEl) {
+        magnetizedEl.style.transform = "translate3d(0, 0, 0)";
+        magnetizedEl = null;
+      }
+    };
+
+    // Pointer move listener
+    const onPointerMove = (e: PointerEvent) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+
+      resetIdleTimer();
+      handleMagneticPull(e.clientX, e.clientY);
+
       const target = e.target as HTMLElement | null;
-      if (target) {
-        // Native text cursor for inputs/textareas
-        const isInput =
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT" ||
-          target.isContentEditable ||
-          target.closest("input, textarea, select, [contenteditable='true']");
-        setIsTextInput(Boolean(isInput));
+      if (!target) return;
 
-        // Grow over interactive elements
-        const isInteractive =
-          target.tagName === "A" ||
-          target.tagName === "BUTTON" ||
-          target.getAttribute("role") === "button" ||
-          target.getAttribute("data-cursor") === "grow" ||
-          target.closest("a, button, [role='button'], [data-cursor='grow']");
-        setIsHovered(Boolean(isInteractive));
+      // Keep native system cursor and text caret for inputs/textareas/selects/calendly
+      const isInput =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.isContentEditable ||
+        Boolean(target.closest("input, textarea, select, [contenteditable='true'], .calendly-inline-widget, iframe"));
+
+      isHoveringInput = isInput;
+
+      // Determine context state
+      let newState = "base";
+
+      const videoCard = target.closest('[data-cursor="video"], [data-cursor-label="play"]');
+      const hookCard = target.closest('[data-cursor="vote"]');
+      const subscribeBtn = target.closest('[data-cursor="lets-go"]');
+      const bookBtn = target.closest('[data-cursor="book"]');
+      const dragEl = target.closest('[data-cursor="drag"]');
+      const marqueeEl = target.closest('[data-cursor="marquee"]');
+      const interactiveEl = target.closest("a, button, [role='button'], summary");
+
+      if (videoCard) {
+        const video = videoCard.querySelector("video");
+        const isPlaying = video && !video.paused;
+        newState = isPlaying ? "video-pause" : "video-play";
+      } else if (hookCard) {
+        newState = "vote";
+      } else if (subscribeBtn) {
+        newState = "lets-go";
+      } else if (bookBtn) {
+        newState = "book";
+      } else if (dragEl) {
+        newState = "drag";
+      } else if (marqueeEl) {
+        newState = "marquee";
+      } else if (interactiveEl) {
+        const text = (interactiveEl.textContent || "").toLowerCase();
+        if (text.includes("book") || text.includes("schedule")) {
+          newState = "book";
+        } else if (text.includes("subscribe") || text.includes("get the pass")) {
+          newState = "lets-go";
+        } else {
+          newState = "link";
+        }
+      }
+
+      if (newState !== cursorState) {
+        cursorState = newState;
+        updateCursorAppearance();
       }
     };
 
-    const handleMouseDown = () => {
-      setIsPressed(true);
-      resetIdleTimer();
+    const onPointerDown = (e: PointerEvent) => {
+      if (isHoveringInput) return;
+      isSquished = true;
+      triggerBurst(e.clientX, e.clientY);
     };
 
-    const handleMouseUp = () => {
-      setIsPressed(false);
-      resetIdleTimer();
+    const onPointerUp = () => {
+      isSquished = false;
     };
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-      setIsSleeping(false);
+    const onPointerLeave = () => {
+      targetX = -100;
+      targetY = -100;
+      if (mainRef.current) mainRef.current.style.opacity = "0";
+      trailDots.forEach((d) => (d.style.opacity = "0"));
+      if (magnetizedEl) {
+        magnetizedEl.style.transform = "translate3d(0, 0, 0)";
+        magnetizedEl = null;
+      }
     };
 
-    // RAF loop with lerp 0.18
-    const animate = () => {
-      const pos = posRef.current;
-      pos.currentX += (pos.targetX - pos.currentX) * 0.18;
-      pos.currentY += (pos.targetY - pos.currentY) * 0.18;
+    // Animation frame loop using transform translate3d only
+    let animationFrameId: number;
 
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${pos.currentX}px, ${pos.currentY}px, 0)`;
+    const renderLoop = (now: number) => {
+      fpsFrames++;
+      const elapsed = now - fpsStartTime;
+      if (elapsed >= 1000) {
+        const fps = (fpsFrames * 1000) / elapsed;
+        if (fps < 40 && trailEnabled) {
+          trailEnabled = false;
+          trailDots.forEach((d) => (d.style.display = "none"));
+        }
+        fpsFrames = 0;
+        fpsStartTime = now;
       }
 
-      animFrameRef.current = requestAnimationFrame(animate);
+      const ease = 0.28;
+      currentX += (targetX - currentX) * ease;
+      currentY += (targetY - currentY) * ease;
+
+      // Update trail positions
+      if (trailEnabled && trailDots.length > 0) {
+        trailPositions[0].x += (currentX - trailPositions[0].x) * 0.45;
+        trailPositions[0].y += (currentY - trailPositions[0].y) * 0.45;
+
+        for (let i = 1; i < trailLength; i++) {
+          trailPositions[i].x += (trailPositions[i - 1].x - trailPositions[i].x) * 0.45;
+          trailPositions[i].y += (trailPositions[i - 1].y - trailPositions[i].y) * 0.45;
+        }
+
+        trailDots.forEach((dot, idx) => {
+          dot.style.transform = `translate3d(${trailPositions[idx].x}px, ${trailPositions[idx].y}px, 0) translate(-50%, -50%)`;
+        });
+      }
+
+      // Update main cursor transform
+      if (mainRef.current) {
+        const scale = isSquished ? "scale(1.28, 0.72)" : "scale(1, 1)";
+        mainRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ${scale}`;
+      }
+
+      animationFrameId = requestAnimationFrame(renderLoop);
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    window.addEventListener("pointerup", onPointerUp, { passive: true });
+    document.addEventListener("mouseleave", onPointerLeave);
 
-    animFrameRef.current = requestAnimationFrame(animate);
     resetIdleTimer();
+    animationFrameId = requestAnimationFrame(renderLoop);
+    updateCursorAppearance();
 
     return () => {
-      document.body.classList.remove("has-circle-cursor");
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("mouseleave", onPointerLeave);
+      if (idleTimer) clearTimeout(idleTimer);
+      cancelAnimationFrame(animationFrameId);
+      document.body.classList.remove("has-custom-cursor");
+      if (magnetizedEl) magnetizedEl.style.transform = "translate3d(0, 0, 0)";
     };
   }, []);
 
-  if (!enabled) return null;
-
-  // Base sizing
-  // Default: 18px, Hovered: 44px, Sleeping: 10px
-  let size = 18;
-  if (isSleeping) {
-    size = 10;
-  } else if (isHovered) {
-    size = 44;
-  }
-
-  const opacity = !isVisible || isTextInput ? 0 : isSleeping ? 0.4 : 1;
-  const scale = isPressed ? 0.85 : 1;
+  if (!isActive) return null;
 
   return (
     <>
       <div
-        ref={cursorRef}
+        ref={rootRef}
+        id="genz-custom-cursor-root"
         aria-hidden="true"
-        className="fixed top-0 left-0 pointer-events-none z-[999999] will-change-transform"
-        style={{
-          opacity,
-          transition: "opacity 0.2s ease",
-        }}
+        className="pointer-events-none fixed inset-0 z-[999999] overflow-hidden select-none"
       >
+        {/* 5 Smooth Trail Dots */}
+        <div ref={trailContainerRef} />
+
+        {/* Main Cursor Element */}
         <div
-          className="relative rounded-full flex items-center justify-center transition-all duration-200"
+          ref={mainRef}
+          id="genz-custom-cursor-main"
+          className="fixed top-0 left-0 pointer-events-none flex items-center justify-center border-2 border-[var(--border)] transition-[width,height,background-color,border-radius,box-shadow] duration-150 ease-out select-none will-change-transform"
           style={{
-            width: `${size}px`,
-            height: `${size}px`,
-            marginTop: `-${size / 2}px`,
-            marginLeft: `-${size / 2}px`,
-            transform: `scale(${scale})`,
-            backgroundColor: isHovered ? "rgba(241, 74, 10, 0.2)" : "#F14A0A",
-            border: "2px solid #F14A0A",
-            boxShadow: isSleeping
-              ? "none"
-              : isHovered
-              ? "0 0 16px rgba(241, 74, 10, 0.6)"
-              : "0 0 12px rgba(241, 74, 10, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2)",
+            width: "18px",
+            height: "18px",
+            borderRadius: "9999px",
+            backgroundColor: "var(--cursor-color)",
+            boxShadow: "2px 2px 0px var(--shadow-color)",
+            transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)",
           }}
         >
-          {/* Floating "z z" sleep animation */}
-          {isSleeping && (
-            <span
-              className="absolute font-mono font-black text-[11px] text-[#F14A0A] select-none pointer-events-none animate-cursor-sleep-z whitespace-nowrap drop-shadow-sm"
-              style={{
-                left: "110%",
-                bottom: "40%",
-              }}
-            >
-              z z
-            </span>
-          )}
+          <div ref={contentRef} className="pointer-events-none select-none" />
         </div>
+
+        {/* Particle Bursts Container */}
+        <div ref={burstsContainerRef} className="pointer-events-none" />
       </div>
 
       <style jsx global>{`
-        @keyframes cursorSleepZ {
-          0% {
-            opacity: 0;
-            transform: translate(2px, 0px) scale(0.7);
-          }
-          40% {
-            opacity: 0.85;
-            transform: translate(6px, -6px) scale(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(12px, -14px) scale(1.15);
-          }
-        }
-        .animate-cursor-sleep-z {
-          animation: cursorSleepZ 2s ease-in-out infinite;
-        }
-        @media (pointer: fine) {
-          body.has-circle-cursor,
-          body.has-circle-cursor a,
-          body.has-circle-cursor button,
-          body.has-circle-cursor [role="button"],
-          body.has-circle-cursor [data-cursor="grow"] {
+        @media (pointer: fine) and (hover: hover) {
+          body.has-custom-cursor,
+          body.has-custom-cursor a,
+          body.has-custom-cursor button,
+          body.has-custom-cursor [role="button"],
+          body.has-custom-cursor summary,
+          body.has-custom-cursor .cursor-pointer {
             cursor: none !important;
           }
-          body.has-circle-cursor input,
-          body.has-circle-cursor textarea,
-          body.has-circle-cursor select,
-          body.has-circle-cursor [contenteditable="true"] {
+          body.has-custom-cursor input,
+          body.has-custom-cursor textarea,
+          body.has-custom-cursor select,
+          body.has-custom-cursor [contenteditable="true"],
+          body.has-custom-cursor .calendly-inline-widget,
+          body.has-custom-cursor iframe {
             cursor: auto !important;
           }
+        }
+
+        @keyframes cursor-burst-particle {
+          0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0);
+            opacity: 0;
+          }
+        }
+
+        .cursor-burst-shape {
+          position: fixed;
+          pointer-events: none;
+          z-index: 999999;
+          border-radius: 9999px;
+          animation: cursor-burst-particle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
       `}</style>
     </>
