@@ -7,7 +7,6 @@ export function LightningSticker({ className = "" }: { className?: string }) {
       className={`w-full h-full overflow-visible select-none pointer-events-none ${className}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ filter: "drop-shadow(2px 5px 8px rgba(0,0,0,0.25))" }}
     >
       {/* Outer Bolt with Die-cut White Border */}
       <polygon

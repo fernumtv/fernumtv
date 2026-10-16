@@ -36,7 +36,7 @@ export function CircleCursor() {
     let isIdle = false;
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Trail dots (5 dots)
+    // Trail dots (5 smooth physics dots)
     const trailLength = 5;
     const trailPositions = Array.from({ length: trailLength }, () => ({ x: -100, y: -100 }));
     let trailEnabled = true;
@@ -53,12 +53,11 @@ export function CircleCursor() {
       const cursor = computed.getPropertyValue("--cursor-color").trim() || "#F14A0A";
       const accent = computed.getPropertyValue("--accent").trim() || "#F14A0A";
       const accentFg = computed.getPropertyValue("--accent-fg").trim() || "#FFFFFF";
-      const pfg = computed.getPropertyValue("--page-fg").trim() || "#111111";
       return {
         cursor: cursor || "#F14A0A",
         accent: accent || "#F14A0A",
         accentFg: accentFg || "#FFFFFF",
-        palette: ["#FFD000", "#FF0854", "#16C846", accent || "#F14A0A", pfg],
+        palette: ["#FFD000", "#FF0055", "#F14A0A", "#00F0FF", "#16C846", "#FFFFFF"],
       };
     };
 
@@ -68,8 +67,8 @@ export function CircleCursor() {
     const trailDots: HTMLDivElement[] = [];
     if (trailContainerRef.current) {
       trailContainerRef.current.innerHTML = "";
-      const sizes = [9, 7.5, 6, 4.5, 3];
-      const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+      const sizes = [10, 8, 6.5, 5, 3.5];
+      const opacities = [0.75, 0.55, 0.38, 0.24, 0.14];
 
       for (let i = 0; i < trailLength; i++) {
         const dot = document.createElement("div");
@@ -78,7 +77,8 @@ export function CircleCursor() {
         dot.style.height = `${sizes[i]}px`;
         dot.style.borderRadius = "9999px";
         dot.style.backgroundColor = tokens.cursor;
-        dot.style.border = "1px solid var(--border)";
+        dot.style.border = "1.5px solid #111111";
+        dot.style.boxShadow = "1px 1px 0px rgba(0,0,0,0.3)";
         dot.style.opacity = `${opacities[i]}`;
         dot.style.pointerEvents = "none";
         dot.style.zIndex = "999998";
@@ -100,7 +100,7 @@ export function CircleCursor() {
           isIdle = true;
           updateCursorAppearance();
         }
-      }, 3000); // Sleeps after 3s of inactivity
+      }, 3000); // 3s sleep
     };
 
     const updateCursorAppearance = () => {
@@ -108,7 +108,7 @@ export function CircleCursor() {
       const content = contentRef.current;
       if (!main || !content) return;
 
-      const { cursor, accent, accentFg } = tokens;
+      const { cursor, accent } = tokens;
 
       // Update trail dot colors
       trailDots.forEach((dot) => {
@@ -123,7 +123,7 @@ export function CircleCursor() {
 
       main.style.opacity = "1";
       if (trailEnabled) {
-        const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+        const opacities = [0.75, 0.55, 0.38, 0.24, 0.14];
         trailDots.forEach((d, idx) => (d.style.opacity = `${opacities[idx]}`));
       }
 
@@ -213,22 +213,31 @@ export function CircleCursor() {
       }
     };
 
-    // Particle burst on click (little stars, circles, squares)
-    const triggerBurst = (x: number, y: number) => {
+    // Click Effects: Expanding Shockwave Ripple + Particle Explosion
+    const triggerClickEffect = (x: number, y: number) => {
       const bursts = burstsContainerRef.current;
       if (!bursts) return;
 
-      const count = 7;
+      // 1. Shockwave Ripple
+      const ripple = document.createElement("div");
+      ripple.className = "cursor-click-ripple";
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      bursts.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 450);
+
+      // 2. Exploding Shape Particles
+      const count = 9;
       const palette = tokens.palette;
-      const shapes = ["★", "●", "■", "✦", "▲", "◆"];
+      const shapes = ["★", "●", "■", "✦", "▲", "◆", "★", "●", "✦"];
 
       for (let i = 0; i < count; i++) {
         const particle = document.createElement("div");
         particle.className = "cursor-burst-shape";
         particle.textContent = shapes[i % shapes.length];
 
-        const angle = (i / count) * 2 * Math.PI + (Math.random() - 0.5) * 0.5;
-        const dist = 32 + Math.random() * 26;
+        const angle = (i / count) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
+        const dist = 38 + Math.random() * 32;
         const dx = Math.cos(angle) * dist;
         const dy = Math.sin(angle) * dist;
         const rot = (Math.random() - 0.5) * 360;
@@ -237,50 +246,62 @@ export function CircleCursor() {
         particle.style.left = `${x}px`;
         particle.style.top = `${y}px`;
         particle.style.color = color;
-        particle.style.fontSize = `${12 + Math.random() * 4}px`;
-        particle.style.lineHeight = "1";
+        particle.style.fontSize = `${13 + Math.random() * 5}px`;
         particle.style.setProperty("--dx", `${dx}px`);
         particle.style.setProperty("--dy", `${dy}px`);
         particle.style.setProperty("--rot", `${rot}deg`);
 
         bursts.appendChild(particle);
-        setTimeout(() => {
-          particle.remove();
-        }, 520);
+        setTimeout(() => particle.remove(), 520);
       }
     };
 
-    // Magnetic buttons handling
+    // Enhanced Magnetic Pull: Pulls cursor AND tilts button
     let magnetizedEl: HTMLElement | null = null;
 
     const handleMagneticPull = (x: number, y: number) => {
-      const magneticButtons = document.querySelectorAll<HTMLElement>(".btn-magnetic");
-      let closestBtn: HTMLElement | null = null;
-      const maxDistance = 60; // within 60px
+      const magneticTargets = document.querySelectorAll<HTMLElement>(
+        ".btn-magnetic, button, a.btn-squish, a[href*='calendly'], a[href*='dodopayments'], .group"
+      );
+      let closestEl: HTMLElement | null = null;
+      const maxDistance = 85; // 85px range
       let pullX = 0;
       let pullY = 0;
+      let targetCenterX = 0;
+      let targetCenterY = 0;
+      let closestDist = Infinity;
 
-      for (let i = 0; i < magneticButtons.length; i++) {
-        const btn = magneticButtons[i];
-        const rect = btn.getBoundingClientRect();
+      for (let i = 0; i < magneticTargets.length; i++) {
+        const el = magneticTargets[i];
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const dx = x - centerX;
         const dy = y - centerY;
         const dist = Math.hypot(dx, dy);
 
-        if (dist < maxDistance) {
-          closestBtn = btn;
-          const factor = (1 - dist / 60) * 10;
-          pullX = (dx / dist) * factor;
-          pullY = (dy / dist) * factor;
-          break;
+        if (dist < maxDistance && dist < closestDist) {
+          closestDist = dist;
+          closestEl = el;
+          targetCenterX = centerX;
+          targetCenterY = centerY;
+          const factor = (1 - dist / maxDistance);
+          pullX = (dx / dist) * factor * 14;
+          pullY = (dy / dist) * factor * 14;
         }
       }
 
-      if (closestBtn) {
-        magnetizedEl = closestBtn;
-        closestBtn.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+      if (closestEl) {
+        magnetizedEl = closestEl;
+        closestEl.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+        closestEl.style.transition = "transform 0.12s ease-out";
+
+        // Magnetically snap the cursor toward button center
+        const cursorPullFactor = Math.max(0, 1 - closestDist / maxDistance) * 0.42;
+        targetX += (targetCenterX - targetX) * cursorPullFactor;
+        targetY += (targetCenterY - targetY) * cursorPullFactor;
       } else if (magnetizedEl) {
         magnetizedEl.style.transform = "translate3d(0, 0, 0)";
         magnetizedEl = null;
@@ -298,7 +319,6 @@ export function CircleCursor() {
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      // Keep native system cursor and text caret for inputs/textareas/selects/calendly
       const isInput =
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
@@ -308,7 +328,6 @@ export function CircleCursor() {
 
       isHoveringInput = isInput;
 
-      // Determine context state
       let newState = "base";
 
       const videoCard = target.closest('[data-cursor="video"], [data-cursor-label="play"]');
@@ -353,7 +372,7 @@ export function CircleCursor() {
     const onPointerDown = (e: PointerEvent) => {
       if (isHoveringInput) return;
       isSquished = true;
-      triggerBurst(e.clientX, e.clientY);
+      triggerClickEffect(e.clientX, e.clientY);
     };
 
     const onPointerUp = () => {
@@ -371,7 +390,6 @@ export function CircleCursor() {
       }
     };
 
-    // Animation frame loop using transform translate3d only
     let animationFrameId: number;
 
     const renderLoop = (now: number) => {
@@ -406,9 +424,9 @@ export function CircleCursor() {
         });
       }
 
-      // Update main cursor transform
+      // Update main cursor transform with squish
       if (mainRef.current) {
-        const scale = isSquished ? "scale(1.28, 0.72)" : "scale(1, 1)";
+        const scale = isSquished ? "scale(1.35, 0.65)" : "scale(1, 1)";
         mainRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ${scale}`;
       }
 
@@ -416,8 +434,8 @@ export function CircleCursor() {
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    window.addEventListener("pointerup", onPointerUp, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { capture: true });
+    window.addEventListener("pointerup", onPointerUp, { capture: true });
     document.addEventListener("mouseleave", onPointerLeave);
 
     resetIdleTimer();
@@ -426,8 +444,8 @@ export function CircleCursor() {
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointerdown", onPointerDown, { capture: true } as any);
+      window.removeEventListener("pointerup", onPointerUp, { capture: true } as any);
       document.removeEventListener("mouseleave", onPointerLeave);
       if (idleTimer) clearTimeout(idleTimer);
       cancelAnimationFrame(animationFrameId);
@@ -466,7 +484,7 @@ export function CircleCursor() {
           <div ref={contentRef} className="pointer-events-none select-none" />
         </div>
 
-        {/* Particle Bursts Container */}
+        {/* Particle Bursts & Ripple Container */}
         <div ref={burstsContainerRef} className="pointer-events-none" />
       </div>
 
@@ -490,13 +508,39 @@ export function CircleCursor() {
           }
         }
 
+        /* Shockwave Ripple on Click */
+        @keyframes cursorClickRipple {
+          0% {
+            transform: translate(-50%, -50%) scale(0.25);
+            opacity: 1;
+            border-width: 3.5px;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(2.8);
+            opacity: 0;
+            border-width: 1px;
+          }
+        }
+
+        .cursor-click-ripple {
+          position: fixed;
+          pointer-events: none;
+          z-index: 999999;
+          width: 38px;
+          height: 38px;
+          border-radius: 9999px;
+          border: 3px solid #F14A0A;
+          animation: cursorClickRipple 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        /* Particle Burst on Click */
         @keyframes cursor-burst-particle {
           0% {
-            transform: translate(0, 0) scale(1);
+            transform: translate(-50%, -50%) translate(0, 0) scale(1.3);
             opacity: 1;
           }
           100% {
-            transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0);
+            transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0);
             opacity: 0;
           }
         }
@@ -505,7 +549,9 @@ export function CircleCursor() {
           position: fixed;
           pointer-events: none;
           z-index: 999999;
-          border-radius: 9999px;
+          line-height: 1;
+          user-select: none;
+          font-weight: 900;
           animation: cursor-burst-particle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
       `}</style>
