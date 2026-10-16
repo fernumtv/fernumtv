@@ -7,28 +7,33 @@ export function LightningSticker({ className = "" }: { className?: string }) {
       className={`w-full h-full overflow-visible select-none pointer-events-none ${className}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ filter: "drop-shadow(2px 4px 0px rgba(0,0,0,0.4))" }}
+      style={{ filter: "drop-shadow(2px 5px 8px rgba(0,0,0,0.25))" }}
     >
-      {/* Outer Bolt with Die-cut border */}
+      {/* Outer Bolt with Die-cut White Border */}
       <polygon
         points="42,4 12,54 36,54 22,96 62,42 38,42"
-        fill="#FFD400"
+        fill="#FFD700"
         stroke="#FFFFFF"
-        strokeWidth="6"
+        strokeWidth="7"
         strokeLinejoin="round"
         strokeLinecap="round"
         style={{ paintOrder: "stroke fill" }}
       />
+      {/* Bold Black Outline */}
       <polygon
         points="42,4 12,54 36,54 22,96 62,42 38,42"
-        fill="#FFD400"
+        fill="#FFDF00"
         stroke="#111111"
         strokeWidth="2.5"
         strokeLinejoin="round"
+        strokeLinecap="round"
       />
-
-      {/* Internal Shadow / Facet */}
-      <polygon points="36,4 12,54 36,54 22,96 34,54" fill="#F14A0A" opacity="0.85" />
+      {/* Crisp Top Highlight Glare */}
+      <polygon
+        points="40,8 18,50 34,50 38,44 40,8"
+        fill="#FFF7A1"
+        opacity="0.9"
+      />
     </svg>
   );
 }

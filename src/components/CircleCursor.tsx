@@ -139,22 +139,29 @@ export function CircleCursor() {
         }}
       >
         <div
-          className="relative rounded-full border-2 border-[var(--page-fg)] flex items-center justify-center transition-all duration-200"
+          className="relative rounded-full flex items-center justify-center transition-all duration-200"
           style={{
             width: `${size}px`,
             height: `${size}px`,
             marginTop: `-${size / 2}px`,
             marginLeft: `-${size / 2}px`,
             transform: `scale(${scale})`,
+            backgroundColor: isHovered ? "rgba(241, 74, 10, 0.18)" : "#F14A0A",
+            border: isHovered ? "2px solid #F14A0A" : "2px solid #111111",
+            boxShadow: isSleeping
+              ? "none"
+              : isHovered
+              ? "0 0 16px rgba(241, 74, 10, 0.45)"
+              : "0 2px 8px rgba(241, 74, 10, 0.5)",
           }}
         >
           {/* Floating "z z" sleep animation */}
           {isSleeping && (
             <span
-              className="absolute font-mono font-bold text-[10px] text-[var(--page-fg)] select-none pointer-events-none animate-cursor-sleep-z whitespace-nowrap"
+              className="absolute font-mono font-black text-[11px] text-[#F14A0A] select-none pointer-events-none animate-cursor-sleep-z whitespace-nowrap drop-shadow-sm"
               style={{
-                left: "100%",
-                bottom: "50%",
+                left: "110%",
+                bottom: "40%",
               }}
             >
               z z
