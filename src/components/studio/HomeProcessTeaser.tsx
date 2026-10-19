@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Lightbulb, Video, CheckCircle2 } from "lucide-react";
+import { ProcessStickers } from "@/components/SiteStickers";
 
 export function HomeProcessTeaser() {
   const steps = [
@@ -98,6 +99,9 @@ export function HomeProcessTeaser() {
           </Link>
         </div>
       </div>
+
+      {/* Draggable Die-Cut Stickers */}
+      <ProcessStickers />
     </section>
   );
 }

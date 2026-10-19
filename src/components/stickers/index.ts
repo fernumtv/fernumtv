@@ -3,3 +3,7 @@ export { BatmanLogoSticker } from "./BatmanLogoSticker";
 export { BatCatSticker } from "./BatCatSticker";
 export { AlienSticker } from "./AlienSticker";
 export { SpiderWebSticker } from "./SpiderWebSticker";
+export { CurseTongueSticker } from "./CurseTongueSticker";
+export { SpidermanSenseSticker } from "./SpidermanSenseSticker";
+export { MewingEmojiSticker } from "./MewingEmojiSticker";
+export { AuraSticker } from "./AuraSticker";

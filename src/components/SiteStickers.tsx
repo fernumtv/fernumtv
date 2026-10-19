@@ -8,6 +8,10 @@ import {
   BatCatSticker,
   AlienSticker,
   SpiderWebSticker,
+  CurseTongueSticker,
+  SpidermanSenseSticker,
+  MewingEmojiSticker,
+  AuraSticker,
 } from "./stickers";
 
 export function HeroStickers() {
@@ -42,6 +46,16 @@ export function HeroStickers() {
       >
         <BoxingCatSticker />
       </Sticker>
+
+      {/* 4. +1000 AURA 8-bit Pixel Badge - Lower-left of hero */}
+      <Sticker
+        id="hero-aura"
+        rotation={-6}
+        width={125}
+        className="hidden sm:block bottom-8 left-6 sm:left-12 lg:left-20"
+      >
+        <AuraSticker />
+      </Sticker>
     </div>
   );
 }
@@ -49,7 +63,7 @@ export function HeroStickers() {
 export function ThreadChartStickers() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
-      {/* 4. Batcat in Batman cowl - Top-right of Thread Chart */}
+      {/* 5. Batcat in Batman cowl - Top-right of Thread Chart */}
       <Sticker
         id="thread-bat-cat"
         rotation={6}
@@ -68,6 +82,26 @@ export function ThreadChartStickers() {
       >
         <SpiderWebSticker />
       </Sticker>
+
+      {/* 6. Spider-Man Miles Morales Spider-Sense Alert - Lower-left of Thread Chart */}
+      <Sticker
+        id="thread-spiderman-sense"
+        rotation={-7}
+        width={100}
+        className="hidden md:block bottom-8 left-6 sm:left-12 lg:left-20"
+      >
+        <SpidermanSenseSticker />
+      </Sticker>
+
+      {/* 7. Anime Curse Tongue - Top right near header */}
+      <Sticker
+        id="thread-curse-tongue"
+        rotation={8}
+        width={95}
+        className="hidden sm:block top-6 right-28 sm:right-36 lg:right-48"
+      >
+        <CurseTongueSticker />
+      </Sticker>
     </div>
   );
 }
@@ -75,7 +109,7 @@ export function ThreadChartStickers() {
 export function PricingStickers() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
-      {/* 5. Green Alien Head - Top-right edge of pricing */}
+      {/* 8. Green Alien Head - Top-right edge of pricing */}
       <Sticker
         id="pricing-alien"
         rotation={9}
@@ -93,6 +127,42 @@ export function PricingStickers() {
         className="hidden sm:block top-6 left-4 sm:top-10 sm:left-10 lg:left-20"
       >
         <BoxingCatSticker />
+      </Sticker>
+
+      {/* 9. Mewing Chad Emoji (Shh / Quiet Confidence) - Lower-right of pricing */}
+      <Sticker
+        id="pricing-mewing-emoji"
+        rotation={-6}
+        width={95}
+        className="hidden md:block bottom-8 right-8 sm:bottom-12 sm:right-16 lg:right-24"
+      >
+        <MewingEmojiSticker />
+      </Sticker>
+    </div>
+  );
+}
+
+export function ProcessStickers() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
+      {/* Anime Curse Tongue - Top-right edge of Process section */}
+      <Sticker
+        id="process-curse-tongue"
+        rotation={-8}
+        width={100}
+        className="hidden sm:block top-6 right-6 sm:right-16 lg:right-24"
+      >
+        <CurseTongueSticker />
+      </Sticker>
+
+      {/* Mewing Emoji - Lower-left edge of Process section */}
+      <Sticker
+        id="process-mewing-emoji"
+        rotation={6}
+        width={90}
+        className="hidden md:block bottom-6 left-6 sm:left-12 lg:left-20"
+      >
+        <MewingEmojiSticker />
       </Sticker>
     </div>
   );
