@@ -1,6 +1,5 @@
-export { LipsLightningSticker } from "./LipsLightningSticker";
-export { MeltingSmileySticker } from "./MeltingSmileySticker";
-export { CoolSunSticker } from "./CoolSunSticker";
-export { LightningSticker } from "./LightningSticker";
-export { HookBubbleSticker } from "./HookBubbleSticker";
-export { StarburstSticker } from "./StarburstSticker";
+export { BoxingCatSticker } from "./BoxingCatSticker";
+export { BatmanLogoSticker } from "./BatmanLogoSticker";
+export { BatCatSticker } from "./BatCatSticker";
+export { AlienSticker } from "./AlienSticker";
+export { SpiderWebSticker } from "./SpiderWebSticker";

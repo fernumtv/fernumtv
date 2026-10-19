@@ -3,45 +3,44 @@
 import React from "react";
 import { Sticker } from "./Sticker";
 import {
-  LightningSticker,
-  StarburstSticker,
-  HookBubbleSticker,
-  LipsLightningSticker,
-  MeltingSmileySticker,
-  CoolSunSticker,
+  BoxingCatSticker,
+  BatmanLogoSticker,
+  BatCatSticker,
+  AlienSticker,
+  SpiderWebSticker,
 } from "./stickers";
 
 export function HeroStickers() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
-      {/* 1. Pop Art Lips with Lightning Tongue - Top right of hero (Desktop & Mobile) */}
+      {/* 1. Spider Web with hanging spider - Top-right corner of hero */}
       <Sticker
-        id="hero-lips"
-        rotation={-6}
-        width={95}
-        className="top-6 right-4 sm:top-10 sm:right-12 lg:right-20"
-      >
-        <LipsLightningSticker />
-      </Sticker>
-
-      {/* 2. Cool Sun with Sunglasses - Left edge of hero (Desktop only) */}
-      <Sticker
-        id="hero-sun"
-        rotation={10}
+        id="hero-spider-web"
+        rotation={0}
         width={85}
-        className="hidden sm:block top-20 left-6 lg:left-14"
+        className="top-0 right-4 sm:top-0 sm:right-12 lg:right-20"
       >
-        <CoolSunSticker />
+        <SpiderWebSticker />
       </Sticker>
 
-      {/* 3. Clean Electric Yellow Spike - Lower right of hero (Desktop only) */}
+      {/* 2. Batman Batarang Logo - Top-left of hero */}
       <Sticker
-        id="hero-lightning"
-        rotation={-12}
-        width={65}
-        className="hidden md:block bottom-16 right-12 lg:right-24"
+        id="hero-batman-logo"
+        rotation={-8}
+        width={115}
+        className="hidden sm:block top-16 left-6 lg:left-14"
       >
-        <LightningSticker />
+        <BatmanLogoSticker />
+      </Sticker>
+
+      {/* 3. Boxing Kitten with cap and red gloves - Lower-right of hero */}
+      <Sticker
+        id="hero-boxing-cat"
+        rotation={-5}
+        width={100}
+        className="hidden md:block bottom-12 right-12 lg:right-24"
+      >
+        <BoxingCatSticker />
       </Sticker>
     </div>
   );
@@ -50,24 +49,24 @@ export function HeroStickers() {
 export function ThreadChartStickers() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
-      {/* 4. Melting Acid Smiley Face - Right edge near thread chart (Desktop & Mobile) */}
+      {/* 4. Batcat in Batman cowl - Top-right of Thread Chart */}
       <Sticker
-        id="thread-melting-smiley"
-        rotation={8}
+        id="thread-bat-cat"
+        rotation={6}
         width={85}
-        className="top-6 right-4 sm:top-10 sm:right-10 lg:right-16"
+        className="top-6 right-4 sm:top-8 sm:right-10 lg:right-16"
       >
-        <MeltingSmileySticker />
+        <BatCatSticker />
       </Sticker>
 
-      {/* 5. Hook Comic Bubble - Left edge near thread chart (Desktop only) */}
+      {/* Spider Web - Hanging in top-left corner of orange section */}
       <Sticker
-        id="thread-hook"
-        rotation={-7}
-        width={85}
-        className="hidden sm:block top-8 left-4 lg:left-12"
+        id="thread-spider-web"
+        rotation={0}
+        width={75}
+        className="hidden sm:block top-0 left-4 lg:left-10"
       >
-        <HookBubbleSticker />
+        <SpiderWebSticker />
       </Sticker>
     </div>
   );
@@ -76,24 +75,24 @@ export function ThreadChartStickers() {
 export function PricingStickers() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
-      {/* 6. Hook Bubble - Top-left edge of pricing (Desktop & Mobile) */}
+      {/* 5. Green Alien Head - Top-right edge of pricing */}
       <Sticker
-        id="pricing-hook"
-        rotation={6}
-        width={90}
-        className="top-6 left-4 sm:top-12 sm:left-10 lg:left-20"
+        id="pricing-alien"
+        rotation={9}
+        width={85}
+        className="top-8 right-6 sm:top-12 sm:right-12 lg:right-24"
       >
-        <HookBubbleSticker />
+        <AlienSticker />
       </Sticker>
 
-      {/* 7. Starburst - Top-right edge of pricing (Desktop only) */}
+      {/* Boxing Cat - Top-left edge of pricing */}
       <Sticker
-        id="pricing-starburst"
-        rotation={-8}
-        width={80}
-        className="hidden sm:block top-10 right-6 sm:top-14 sm:right-12 lg:right-24"
+        id="pricing-boxing-cat"
+        rotation={-7}
+        width={95}
+        className="hidden sm:block top-6 left-4 sm:top-10 sm:left-10 lg:left-20"
       >
-        <StarburstSticker />
+        <BoxingCatSticker />
       </Sticker>
     </div>
   );

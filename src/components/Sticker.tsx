@@ -98,6 +98,7 @@ export function Sticker({
 
   return (
     <div
+      id={id}
       ref={stickerRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
