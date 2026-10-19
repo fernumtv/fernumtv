@@ -193,12 +193,12 @@ export function CircleCursor() {
           break;
 
         case "link":
-          main.style.width = "40px";
-          main.style.height = "40px";
+          main.style.width = "46px";
+          main.style.height = "46px";
           main.style.borderRadius = "9999px";
           main.style.backgroundColor = cursor;
           main.style.boxShadow = "2.5px 2.5px 0px var(--shadow-color)";
-          content.innerHTML = `<span class="text-xs font-bold text-[var(--accent-fg)]">↗</span>`;
+          content.innerHTML = `<svg class="cursor-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>`;
           break;
 
         case "base":
@@ -573,6 +573,24 @@ export function CircleCursor() {
           user-select: none;
           font-weight: 900;
           animation: cursor-burst-particle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .cursor-arrow-icon {
+          width: 22px;
+          height: 22px;
+          color: #FFFFFF;
+          display: block;
+          filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.45));
+          animation: cursorArrowPulse 1.1s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+        }
+
+        @keyframes cursorArrowPulse {
+          0% {
+            transform: translate(0, 0) scale(0.94);
+          }
+          100% {
+            transform: translate(1.5px, -1.5px) scale(1.08);
+          }
         }
       `}</style>
     </>
