@@ -335,7 +335,7 @@ async function runPhase5TestSuite() {
       },
     });
     assert(Boolean(auditRecord), "Quality Gate override permanently logged to immutable AuditLog");
-    assert(auditRecord?.metadata?.includes("Client legal counsel"), "Audit record metadata contains written justification");
+    assert(Boolean(auditRecord?.metadata?.includes("Client legal counsel")), "Audit record metadata contains written justification");
 
     // Now, approval succeeds because of the verified override!
     // (Note: clean the blocking compliance flags on item directly so we test quality gate override path)
