@@ -184,12 +184,12 @@ export function CircleCursor() {
           break;
 
         case "drag":
-          main.style.width = "64px";
-          main.style.height = "64px";
+          main.style.width = "48px";
+          main.style.height = "48px";
           main.style.borderRadius = "9999px";
           main.style.backgroundColor = cursor;
-          main.style.boxShadow = "3px 3px 0px var(--shadow-color)";
-          content.innerHTML = `<span class="font-display font-black text-[10px] uppercase tracking-wider text-[var(--accent-fg)] flex flex-col items-center leading-none gap-0.5"><span class="text-sm">✋</span><span>DRAG</span></span>`;
+          main.style.boxShadow = "2.5px 2.5px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[11px] uppercase tracking-wider text-[var(--accent-fg)] select-none">DRAG</span>`;
           break;
 
         case "link":
@@ -260,6 +260,15 @@ export function CircleCursor() {
     let magnetizedEl: HTMLElement | null = null;
 
     const handleMagneticPull = (x: number, y: number) => {
+      // If actively dragging a sticker, disable magnetic pull completely so cursor stays 1:1 on pointer
+      if (document.body.classList.contains("is-dragging-sticker")) {
+        if (magnetizedEl) {
+          magnetizedEl.style.transform = "translate3d(0, 0, 0)";
+          magnetizedEl = null;
+        }
+        return;
+      }
+
       const magneticTargets = document.querySelectorAll<HTMLElement>(
         ".btn-magnetic, button, a.btn-squish, a[href*='calendly'], a[href*='dodopayments'], .group"
       );
@@ -330,15 +339,18 @@ export function CircleCursor() {
 
       let newState = "base";
 
+      const isDraggingSticker = document.body.classList.contains("is-dragging-sticker");
+      const dragEl = target.closest('[data-cursor="drag"], [data-cursor="sticker"], [data-sticker="true"]');
       const videoCard = target.closest('[data-cursor="video"], [data-cursor-label="play"]');
       const hookCard = target.closest('[data-cursor="vote"]');
       const subscribeBtn = target.closest('[data-cursor="lets-go"]');
       const bookBtn = target.closest('[data-cursor="book"]');
-      const dragEl = target.closest('[data-cursor="drag"]');
       const marqueeEl = target.closest('[data-cursor="marquee"]');
       const interactiveEl = target.closest("a, button, [role='button'], summary");
 
-      if (videoCard) {
+      if (isDraggingSticker || dragEl) {
+        newState = "drag";
+      } else if (videoCard) {
         const video = videoCard.querySelector("video");
         const isPlaying = video && !video.paused;
         newState = isPlaying ? "video-pause" : "video-play";
@@ -348,8 +360,6 @@ export function CircleCursor() {
         newState = "lets-go";
       } else if (bookBtn) {
         newState = "book";
-      } else if (dragEl) {
-        newState = "drag";
       } else if (marqueeEl) {
         newState = "marquee";
       } else if (interactiveEl) {
@@ -405,18 +415,20 @@ export function CircleCursor() {
         fpsStartTime = now;
       }
 
-      const ease = 0.28;
+      const isDraggingSticker = document.body.classList.contains("is-dragging-sticker");
+      const ease = isDraggingSticker ? 0.75 : 0.28;
       currentX += (targetX - currentX) * ease;
       currentY += (targetY - currentY) * ease;
 
       // Update trail positions
       if (trailEnabled && trailDots.length > 0) {
-        trailPositions[0].x += (currentX - trailPositions[0].x) * 0.45;
-        trailPositions[0].y += (currentY - trailPositions[0].y) * 0.45;
+        const trailEase = isDraggingSticker ? 0.65 : 0.45;
+        trailPositions[0].x += (currentX - trailPositions[0].x) * trailEase;
+        trailPositions[0].y += (currentY - trailPositions[0].y) * trailEase;
 
         for (let i = 1; i < trailLength; i++) {
-          trailPositions[i].x += (trailPositions[i - 1].x - trailPositions[i].x) * 0.45;
-          trailPositions[i].y += (trailPositions[i - 1].y - trailPositions[i].y) * 0.45;
+          trailPositions[i].x += (trailPositions[i - 1].x - trailPositions[i].x) * trailEase;
+          trailPositions[i].y += (trailPositions[i - 1].y - trailPositions[i].y) * trailEase;
         }
 
         trailDots.forEach((dot, idx) => {
@@ -424,16 +436,16 @@ export function CircleCursor() {
         });
       }
 
-      // Update main cursor transform with squish
+      // Update main cursor transform with squish (keep perfectly round circle when on sticker / dragging)
       if (mainRef.current) {
-        const scale = isSquished ? "scale(1.35, 0.65)" : "scale(1, 1)";
+        const scale = isSquished && !isDraggingSticker && cursorState !== "drag" ? "scale(1.35, 0.65)" : "scale(1, 1)";
         mainRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ${scale}`;
       }
 
       animationFrameId = requestAnimationFrame(renderLoop);
     };
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { capture: true, passive: true });
     window.addEventListener("pointerdown", onPointerDown, { capture: true });
     window.addEventListener("pointerup", onPointerUp, { capture: true });
     document.addEventListener("mouseleave", onPointerLeave);
@@ -443,7 +455,7 @@ export function CircleCursor() {
     updateCursorAppearance();
 
     return () => {
-      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointermove", onPointerMove, { capture: true } as any);
       window.removeEventListener("pointerdown", onPointerDown, { capture: true } as any);
       window.removeEventListener("pointerup", onPointerUp, { capture: true } as any);
       document.removeEventListener("mouseleave", onPointerLeave);
@@ -495,7 +507,15 @@ export function CircleCursor() {
           body.has-custom-cursor button,
           body.has-custom-cursor [role="button"],
           body.has-custom-cursor summary,
-          body.has-custom-cursor .cursor-pointer {
+          body.has-custom-cursor .cursor-pointer,
+          body.has-custom-cursor [data-cursor="drag"],
+          body.has-custom-cursor [data-cursor="drag"] *,
+          body.has-custom-cursor [data-cursor="sticker"],
+          body.has-custom-cursor [data-cursor="sticker"] *,
+          body.has-custom-cursor [data-sticker],
+          body.has-custom-cursor [data-sticker] *,
+          body.has-custom-cursor.is-dragging-sticker,
+          body.has-custom-cursor.is-dragging-sticker * {
             cursor: none !important;
           }
           body.has-custom-cursor input,

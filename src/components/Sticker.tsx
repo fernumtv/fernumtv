@@ -82,6 +82,7 @@ export function Sticker({
 
     window.addEventListener(STICKER_RESET_EVENT, handleReset);
     return () => {
+      document.body.classList.remove("is-dragging-sticker");
       window.removeEventListener(STICKER_RESET_EVENT, handleReset);
     };
   }, [id, initialX, initialY]);
@@ -91,7 +92,6 @@ export function Sticker({
     if (e.button !== 0) return;
 
     e.preventDefault();
-    e.stopPropagation();
 
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -107,13 +107,13 @@ export function Sticker({
     globalStickerZ += 1;
     setZIndex(globalStickerZ);
     setIsDragging(true);
+    document.body.classList.add("is-dragging-sticker");
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return;
 
     e.preventDefault();
-    e.stopPropagation();
 
     const deltaX = e.clientX - dragStartRef.current.pointerX;
     const deltaY = e.clientY - dragStartRef.current.pointerY;
@@ -133,6 +133,7 @@ export function Sticker({
     } catch {}
 
     setIsDragging(false);
+    document.body.classList.remove("is-dragging-sticker");
 
     // Save final dropped position so it remains locked there until user moves it again
     try {
@@ -144,6 +145,8 @@ export function Sticker({
     <div
       id={id}
       ref={stickerRef}
+      data-cursor="drag"
+      data-sticker="true"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
