@@ -2,18 +2,27 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Menu, X, Calendar } from "lucide-react";
+import { ArrowRight, Menu, X, Calendar, RotateCcw } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/supabase/useAuth";
+import { resetAllStickers } from "@/components/Sticker";
 
 import { Wordmark } from "@/components/Wordmark";
 
 export function StudioNavbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const { isAuthenticated } = useAuth();
+
+  const handleResetStickers = () => {
+    setIsResetting(true);
+    resetAllStickers();
+    trackEvent("Reset Stickers Click", { location: "navbar" });
+    setTimeout(() => setIsResetting(false), 500);
+  };
 
   const navLinks = [
     { label: "Work", href: "/work" },
@@ -71,8 +80,26 @@ export function StudioNavbar() {
           })}
         </nav>
 
-        {/* Right Controls: Book a Call CTA + Mobile Hamburger */}
-        <div className="flex items-center gap-3">
+        {/* Right Controls: Reset Stickers + Book a Call CTA + Mobile Hamburger */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Reset Stickers Button */}
+          <button
+            type="button"
+            id="reset-stickers-btn"
+            onClick={handleResetStickers}
+            title="Reset all stickers to original positions"
+            aria-label="Reset all stickers to original positions"
+            className="btn-squish group inline-flex items-center gap-1.5 h-[44px] px-3 sm:px-4 font-mono font-bold text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all cursor-pointer bg-[var(--page-bg)] hover:bg-[var(--block-4-bg)] text-[var(--page-fg)] hover:text-[var(--block-4-fg)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:outline-none"
+          >
+            <RotateCcw
+              className={`w-3.5 h-3.5 transition-transform duration-500 text-[var(--accent)] group-hover:text-[var(--accent)] ${
+                isResetting ? "-rotate-180" : "group-hover:-rotate-45"
+              }`}
+            />
+            <span className="hidden sm:inline">Reset</span>
+            <span className="hidden md:inline">Stickers</span>
+          </button>
+
           {/* Book a Call Button */}
           <a
             href={siteConfig.bookingUrl}
@@ -124,6 +151,17 @@ export function StudioNavbar() {
           </nav>
 
           <div className="pt-2 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                handleResetStickers();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full h-11 bg-[var(--page-bg)] hover:bg-[var(--block-4-bg)] text-[var(--page-fg)] hover:text-[var(--block-4-fg)] font-mono font-bold text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4 text-[var(--accent)]" />
+              <span>Reset All Stickers</span>
+            </button>
             <p className="text-[11px] font-mono text-center text-[var(--page-fg)]/70 font-bold uppercase">
               {siteConfig.callMinutes}-minute call. Bring your product and your current ads.
             </p>

@@ -16,7 +16,7 @@ import {
 
 export function HeroStickers() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-20" aria-hidden="true">
       {/* 1. Spider Web with hanging spider - Top-right corner of hero */}
       <Sticker
         id="hero-spider-web"
@@ -62,7 +62,7 @@ export function HeroStickers() {
 
 export function ThreadChartStickers() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-20" aria-hidden="true">
       {/* 5. Batcat in Batman cowl - Top-right of Thread Chart */}
       <Sticker
         id="thread-bat-cat"
@@ -108,7 +108,7 @@ export function ThreadChartStickers() {
 
 export function PricingStickers() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-20" aria-hidden="true">
       {/* 8. Green Alien Head - Top-right edge of pricing */}
       <Sticker
         id="pricing-alien"
@@ -144,7 +144,7 @@ export function PricingStickers() {
 
 export function ProcessStickers() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-20" aria-hidden="true">
       {/* Anime Curse Tongue - Top-right edge of Process section */}
       <Sticker
         id="process-curse-tongue"
