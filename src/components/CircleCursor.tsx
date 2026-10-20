@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { isCalmModeActive } from "@/lib/interactive/calmMode";
 
-export function CustomCursor() {
+export function CircleCursor() {
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -24,18 +23,6 @@ export function CustomCursor() {
       return;
     }
 
-    // Check localStorage preference
-    let isCursorEnabled = true;
-    try {
-      const stored = localStorage.getItem("fernum_cursor_enabled");
-      if (stored === "off") isCursorEnabled = false;
-    } catch {}
-
-    if (!isCursorEnabled) {
-      document.body.classList.remove("has-custom-cursor");
-      return;
-    }
-
     setIsActive(true);
     document.body.classList.add("has-custom-cursor");
 
@@ -49,7 +36,7 @@ export function CustomCursor() {
     let isIdle = false;
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Trail dots (5 dots)
+    // Trail dots (5 smooth physics dots)
     const trailLength = 5;
     const trailPositions = Array.from({ length: trailLength }, () => ({ x: -100, y: -100 }));
     let trailEnabled = true;
@@ -63,41 +50,25 @@ export function CustomCursor() {
 
     const getVibeTokens = () => {
       const computed = getComputedStyle(document.documentElement);
-      const cursor = computed.getPropertyValue("--cursor-color").trim() || "var(--cursor-color)";
-      const fg = computed.getPropertyValue("--accent-fg").trim() || "var(--accent-fg)";
-      const accent = computed.getPropertyValue("--accent").trim() || "var(--accent)";
-      const accentFg = computed.getPropertyValue("--accent-fg").trim() || "var(--accent-fg)";
-      const s1 = computed.getPropertyValue("--sticker-1").trim() || "var(--sticker-1)";
-      const s2 = computed.getPropertyValue("--sticker-2").trim() || "var(--sticker-2)";
-      const s3 = computed.getPropertyValue("--sticker-3").trim() || "var(--sticker-3)";
-      const pfg = computed.getPropertyValue("--page-fg").trim() || "var(--page-fg)";
+      const cursor = computed.getPropertyValue("--cursor-color").trim() || "#F14A0A";
+      const accent = computed.getPropertyValue("--accent").trim() || "#F14A0A";
+      const accentFg = computed.getPropertyValue("--accent-fg").trim() || "#FFFFFF";
       return {
-        cursor,
-        fg,
-        accent,
-        accentFg,
-        palette: [s1, s2, s3, accent, pfg],
+        cursor: cursor || "#F14A0A",
+        accent: accent || "#F14A0A",
+        accentFg: accentFg || "#FFFFFF",
+        palette: ["#FFD000", "#FF0055", "#F14A0A", "#00F0FF", "#16C846", "#FFFFFF"],
       };
     };
 
     let tokens = getVibeTokens();
 
-    // Listen to vibe mutations
-    const vibeObserver = new MutationObserver(() => {
-      tokens = getVibeTokens();
-      updateCursorAppearance();
-    });
-    vibeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-vibe"],
-    });
-
     // Create 5 trail dot elements
     const trailDots: HTMLDivElement[] = [];
     if (trailContainerRef.current) {
       trailContainerRef.current.innerHTML = "";
-      const sizes = [9, 7.5, 6, 4.5, 3];
-      const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+      const sizes = [10, 8, 6.5, 5, 3.5];
+      const opacities = [0.75, 0.55, 0.38, 0.24, 0.14];
 
       for (let i = 0; i < trailLength; i++) {
         const dot = document.createElement("div");
@@ -106,7 +77,8 @@ export function CustomCursor() {
         dot.style.height = `${sizes[i]}px`;
         dot.style.borderRadius = "9999px";
         dot.style.backgroundColor = tokens.cursor;
-        dot.style.border = "1px solid var(--border)";
+        dot.style.border = "1.5px solid #111111";
+        dot.style.boxShadow = "1px 1px 0px rgba(0,0,0,0.3)";
         dot.style.opacity = `${opacities[i]}`;
         dot.style.pointerEvents = "none";
         dot.style.zIndex = "999998";
@@ -128,7 +100,7 @@ export function CustomCursor() {
           isIdle = true;
           updateCursorAppearance();
         }
-      }, 5000);
+      }, 3000); // 3s sleep
     };
 
     const updateCursorAppearance = () => {
@@ -136,7 +108,7 @@ export function CustomCursor() {
       const content = contentRef.current;
       if (!main || !content) return;
 
-      const { cursor, fg, accent, accentFg } = tokens;
+      const { cursor, accent } = tokens;
 
       // Update trail dot colors
       trailDots.forEach((dot) => {
@@ -151,7 +123,7 @@ export function CustomCursor() {
 
       main.style.opacity = "1";
       if (trailEnabled) {
-        const opacities = [0.65, 0.5, 0.35, 0.22, 0.12];
+        const opacities = [0.75, 0.55, 0.38, 0.24, 0.14];
         trailDots.forEach((d, idx) => (d.style.opacity = `${opacities[idx]}`));
       }
 
@@ -179,9 +151,9 @@ export function CustomCursor() {
           main.style.width = "80px";
           main.style.height = "80px";
           main.style.borderRadius = "9999px";
-          main.style.backgroundColor = "var(--sticker-3)";
+          main.style.backgroundColor = cursor;
           main.style.boxShadow = "4px 4px 0px var(--shadow-color)";
-          content.innerHTML = `<span class="font-display font-black text-xs uppercase tracking-wider text-[var(--border)] flex items-center gap-1">❚❚ PAUSE</span>`;
+          content.innerHTML = `<span class="font-display font-black text-xs uppercase tracking-wider text-[var(--accent-fg)] flex items-center gap-1">❚❚ PAUSE</span>`;
           break;
 
         case "vote":
@@ -212,30 +184,21 @@ export function CustomCursor() {
           break;
 
         case "drag":
-          main.style.width = "64px";
-          main.style.height = "64px";
+          main.style.width = "48px";
+          main.style.height = "48px";
           main.style.borderRadius = "9999px";
           main.style.backgroundColor = cursor;
-          main.style.boxShadow = "3px 3px 0px var(--shadow-color)";
-          content.innerHTML = `<span class="font-display font-black text-[10px] uppercase tracking-wider text-[var(--accent-fg)] flex flex-col items-center leading-none gap-0.5"><span class="text-sm">✋</span><span>DRAG</span></span>`;
-          break;
-
-        case "marquee":
-          main.style.width = "38px";
-          main.style.height = "38px";
-          main.style.borderRadius = "9999px";
-          main.style.backgroundColor = cursor;
-          main.style.boxShadow = "2px 2px 0px var(--shadow-color)";
-          content.innerHTML = `<span class="text-base font-bold text-[var(--accent-fg)] leading-none">➔</span>`;
+          main.style.boxShadow = "2.5px 2.5px 0px var(--shadow-color)";
+          content.innerHTML = `<span class="font-display font-black text-[11px] uppercase tracking-wider text-[var(--accent-fg)] select-none">DRAG</span>`;
           break;
 
         case "link":
-          main.style.width = "40px";
-          main.style.height = "40px";
+          main.style.width = "46px";
+          main.style.height = "46px";
           main.style.borderRadius = "9999px";
-          main.style.backgroundColor = "var(--sticker-3)";
+          main.style.backgroundColor = cursor;
           main.style.boxShadow = "2.5px 2.5px 0px var(--shadow-color)";
-          content.innerHTML = "";
+          content.innerHTML = `<svg class="cursor-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>`;
           break;
 
         case "base":
@@ -250,22 +213,31 @@ export function CustomCursor() {
       }
     };
 
-    // Particle burst on click (6 to 8 colored stars, circles, squares)
-    const triggerBurst = (x: number, y: number) => {
+    // Click Effects: Expanding Shockwave Ripple + Particle Explosion
+    const triggerClickEffect = (x: number, y: number) => {
       const bursts = burstsContainerRef.current;
       if (!bursts) return;
 
-      const count = 7;
+      // 1. Shockwave Ripple
+      const ripple = document.createElement("div");
+      ripple.className = "cursor-click-ripple";
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      bursts.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 450);
+
+      // 2. Exploding Shape Particles
+      const count = 9;
       const palette = tokens.palette;
-      const shapes = ["★", "●", "■", "✦", "▲", "◆"];
+      const shapes = ["★", "●", "■", "✦", "▲", "◆", "★", "●", "✦"];
 
       for (let i = 0; i < count; i++) {
         const particle = document.createElement("div");
         particle.className = "cursor-burst-shape";
         particle.textContent = shapes[i % shapes.length];
 
-        const angle = (i / count) * 2 * Math.PI + (Math.random() - 0.5) * 0.5;
-        const dist = 32 + Math.random() * 26;
+        const angle = (i / count) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
+        const dist = 38 + Math.random() * 32;
         const dx = Math.cos(angle) * dist;
         const dy = Math.sin(angle) * dist;
         const rot = (Math.random() - 0.5) * 360;
@@ -274,86 +246,75 @@ export function CustomCursor() {
         particle.style.left = `${x}px`;
         particle.style.top = `${y}px`;
         particle.style.color = color;
-        particle.style.fontSize = `${12 + Math.random() * 4}px`;
-        particle.style.lineHeight = "1";
+        particle.style.fontSize = `${13 + Math.random() * 5}px`;
         particle.style.setProperty("--dx", `${dx}px`);
         particle.style.setProperty("--dy", `${dy}px`);
         particle.style.setProperty("--rot", `${rot}deg`);
 
         bursts.appendChild(particle);
-        setTimeout(() => {
-          particle.remove();
-        }, 520);
+        setTimeout(() => particle.remove(), 520);
       }
     };
 
-    // Magnetic buttons handling
+    // Enhanced Magnetic Pull: Pulls cursor AND tilts button
     let magnetizedEl: HTMLElement | null = null;
 
     const handleMagneticPull = (x: number, y: number) => {
-      const magneticButtons = document.querySelectorAll<HTMLElement>(".btn-magnetic");
-      let closestBtn: HTMLElement | null = null;
-      const maxDistance = 60; // within 60px
+      // If actively dragging a sticker, disable magnetic pull completely so cursor stays 1:1 on pointer
+      if (document.body.classList.contains("is-dragging-sticker")) {
+        if (magnetizedEl) {
+          magnetizedEl.style.transform = "translate3d(0, 0, 0)";
+          magnetizedEl = null;
+        }
+        return;
+      }
+
+      const magneticTargets = document.querySelectorAll<HTMLElement>(
+        ".btn-magnetic, button, a.btn-squish, a[href*='calendly'], a[href*='dodopayments'], .group"
+      );
+      let closestEl: HTMLElement | null = null;
+      const maxDistance = 85; // 85px range
       let pullX = 0;
       let pullY = 0;
+      let targetCenterX = 0;
+      let targetCenterY = 0;
+      let closestDist = Infinity;
 
-      for (let i = 0; i < magneticButtons.length; i++) {
-        const btn = magneticButtons[i];
-        const rect = btn.getBoundingClientRect();
+      for (let i = 0; i < magneticTargets.length; i++) {
+        const el = magneticTargets[i];
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const dx = x - centerX;
         const dy = y - centerY;
         const dist = Math.hypot(dx, dy);
 
-        if (dist < maxDistance) {
-          closestBtn = btn;
-          const factor = (1 - dist / 60) * 10;
-          pullX = (dx / dist) * factor;
-          pullY = (dy / dist) * factor;
-          break;
+        if (dist < maxDistance && dist < closestDist) {
+          closestDist = dist;
+          closestEl = el;
+          targetCenterX = centerX;
+          targetCenterY = centerY;
+          const factor = (1 - dist / maxDistance);
+          pullX = (dx / dist) * factor * 14;
+          pullY = (dy / dist) * factor * 14;
         }
       }
 
-      if (closestBtn) {
-        magnetizedEl = closestBtn;
-        closestBtn.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+      if (closestEl) {
+        magnetizedEl = closestEl;
+        closestEl.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+        closestEl.style.transition = "transform 0.12s ease-out";
+
+        // Magnetically snap the cursor toward button center
+        const cursorPullFactor = Math.max(0, 1 - closestDist / maxDistance) * 0.42;
+        targetX += (targetCenterX - targetX) * cursorPullFactor;
+        targetY += (targetCenterY - targetY) * cursorPullFactor;
       } else if (magnetizedEl) {
         magnetizedEl.style.transform = "translate3d(0, 0, 0)";
         magnetizedEl = null;
       }
-    };
-
-    // Sticker collage cursor trail (desktop mouse only)
-    let lastStickerX = -100;
-    let lastStickerY = -100;
-    const stickerIcons = ["★", "🎬", "🔥", "✦", "⚡", "100", "👀", "✨"];
-    let stickerIdx = 0;
-
-    const dropTrailSticker = (x: number, y: number) => {
-      const bursts = burstsContainerRef.current;
-      if (!bursts || isHoveringInput) return;
-      if (isCalmModeActive() || document.documentElement.classList.contains("calm-mode")) return;
-
-      const dist = Math.hypot(x - lastStickerX, y - lastStickerY);
-      if (dist < 46) return; // Drop sticker every ~46px moved
-      lastStickerX = x;
-      lastStickerY = y;
-
-      const sticker = document.createElement("div");
-      sticker.className = "cursor-trail-sticker";
-      sticker.textContent = stickerIcons[stickerIdx % stickerIcons.length];
-      stickerIdx++;
-
-      const rot = (Math.random() - 0.5) * 36;
-      sticker.style.left = `${x}px`;
-      sticker.style.top = `${y}px`;
-      sticker.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(0.9)`;
-
-      bursts.appendChild(sticker);
-      setTimeout(() => {
-        sticker.remove();
-      }, 700);
     };
 
     // Pointer move listener
@@ -363,12 +324,10 @@ export function CustomCursor() {
 
       resetIdleTimer();
       handleMagneticPull(e.clientX, e.clientY);
-      dropTrailSticker(e.clientX, e.clientY);
 
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      // Keep native system cursor and text caret for inputs/textareas/selects/calendly
       const isInput =
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
@@ -378,18 +337,20 @@ export function CustomCursor() {
 
       isHoveringInput = isInput;
 
-      // Determine context state
       let newState = "base";
 
+      const isDraggingSticker = document.body.classList.contains("is-dragging-sticker");
+      const dragEl = target.closest('[data-cursor="drag"], [data-cursor="sticker"], [data-sticker="true"]');
       const videoCard = target.closest('[data-cursor="video"], [data-cursor-label="play"]');
       const hookCard = target.closest('[data-cursor="vote"]');
       const subscribeBtn = target.closest('[data-cursor="lets-go"]');
       const bookBtn = target.closest('[data-cursor="book"]');
-      const dragEl = target.closest('[data-cursor="drag"]');
       const marqueeEl = target.closest('[data-cursor="marquee"]');
       const interactiveEl = target.closest("a, button, [role='button'], summary");
 
-      if (videoCard) {
+      if (isDraggingSticker || dragEl) {
+        newState = "drag";
+      } else if (videoCard) {
         const video = videoCard.querySelector("video");
         const isPlaying = video && !video.paused;
         newState = isPlaying ? "video-pause" : "video-play";
@@ -399,12 +360,9 @@ export function CustomCursor() {
         newState = "lets-go";
       } else if (bookBtn) {
         newState = "book";
-      } else if (dragEl) {
-        newState = "drag";
       } else if (marqueeEl) {
         newState = "marquee";
       } else if (interactiveEl) {
-        // Check if button text matches "Book a Call"
         const text = (interactiveEl.textContent || "").toLowerCase();
         if (text.includes("book") || text.includes("schedule")) {
           newState = "book";
@@ -424,7 +382,7 @@ export function CustomCursor() {
     const onPointerDown = (e: PointerEvent) => {
       if (isHoveringInput) return;
       isSquished = true;
-      triggerBurst(e.clientX, e.clientY);
+      triggerClickEffect(e.clientX, e.clientY);
     };
 
     const onPointerUp = () => {
@@ -442,27 +400,9 @@ export function CustomCursor() {
       }
     };
 
-    // Toggle event listener from footer
-    const onCursorToggle = (e: Event) => {
-      const customEvent = e as CustomEvent<{ enabled: boolean }>;
-      const shouldEnable = customEvent.detail?.enabled;
-      if (!shouldEnable) {
-        document.body.classList.remove("has-custom-cursor");
-        if (mainRef.current) mainRef.current.style.opacity = "0";
-        trailDots.forEach((d) => (d.style.opacity = "0"));
-        setIsActive(false);
-      } else {
-        document.body.classList.add("has-custom-cursor");
-        setIsActive(true);
-        updateCursorAppearance();
-      }
-    };
-
-    // Animation frame loop using transform translate3d only (0 layout shifts)
     let animationFrameId: number;
 
     const renderLoop = (now: number) => {
-      // FPS check over 60 frames
       fpsFrames++;
       const elapsed = now - fpsStartTime;
       if (elapsed >= 1000) {
@@ -475,19 +415,20 @@ export function CustomCursor() {
         fpsStartTime = now;
       }
 
-      // Springy easing factor (0.28 feels light and springy, not laggy)
-      const ease = 0.28;
+      const isDraggingSticker = document.body.classList.contains("is-dragging-sticker");
+      const ease = isDraggingSticker ? 0.75 : 0.28;
       currentX += (targetX - currentX) * ease;
       currentY += (targetY - currentY) * ease;
 
       // Update trail positions
       if (trailEnabled && trailDots.length > 0) {
-        trailPositions[0].x += (currentX - trailPositions[0].x) * 0.45;
-        trailPositions[0].y += (currentY - trailPositions[0].y) * 0.45;
+        const trailEase = isDraggingSticker ? 0.65 : 0.45;
+        trailPositions[0].x += (currentX - trailPositions[0].x) * trailEase;
+        trailPositions[0].y += (currentY - trailPositions[0].y) * trailEase;
 
         for (let i = 1; i < trailLength; i++) {
-          trailPositions[i].x += (trailPositions[i - 1].x - trailPositions[i].x) * 0.45;
-          trailPositions[i].y += (trailPositions[i - 1].y - trailPositions[i].y) * 0.45;
+          trailPositions[i].x += (trailPositions[i - 1].x - trailPositions[i].x) * trailEase;
+          trailPositions[i].y += (trailPositions[i - 1].y - trailPositions[i].y) * trailEase;
         }
 
         trailDots.forEach((dot, idx) => {
@@ -495,33 +436,29 @@ export function CustomCursor() {
         });
       }
 
-      // Update main cursor transform
+      // Update main cursor transform with squish (keep perfectly round circle when on sticker / dragging)
       if (mainRef.current) {
-        const scale = isSquished ? "scale(1.28, 0.72)" : "scale(1, 1)";
+        const scale = isSquished && !isDraggingSticker && cursorState !== "drag" ? "scale(1.35, 0.65)" : "scale(1, 1)";
         mainRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ${scale}`;
       }
 
       animationFrameId = requestAnimationFrame(renderLoop);
     };
 
-    // Bind events
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    window.addEventListener("pointerup", onPointerUp, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { capture: true, passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { capture: true });
+    window.addEventListener("pointerup", onPointerUp, { capture: true });
     document.addEventListener("mouseleave", onPointerLeave);
-    window.addEventListener("fernum-cursor-toggle", onCursorToggle);
 
     resetIdleTimer();
     animationFrameId = requestAnimationFrame(renderLoop);
     updateCursorAppearance();
 
     return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointermove", onPointerMove, { capture: true } as any);
+      window.removeEventListener("pointerdown", onPointerDown, { capture: true } as any);
+      window.removeEventListener("pointerup", onPointerUp, { capture: true } as any);
       document.removeEventListener("mouseleave", onPointerLeave);
-      window.removeEventListener("fernum-cursor-toggle", onCursorToggle);
-      vibeObserver.disconnect();
       if (idleTimer) clearTimeout(idleTimer);
       cancelAnimationFrame(animationFrameId);
       document.body.classList.remove("has-custom-cursor");
@@ -532,34 +469,130 @@ export function CustomCursor() {
   if (!isActive) return null;
 
   return (
-    <div
-      ref={rootRef}
-      id="genz-custom-cursor-root"
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[999999] overflow-hidden select-none"
-    >
-      {/* 5 Trail Dots Container */}
-      <div ref={trailContainerRef} />
-
-      {/* Main Cursor Element */}
+    <>
       <div
-        ref={mainRef}
-        id="genz-custom-cursor-main"
-        className="fixed top-0 left-0 pointer-events-none flex items-center justify-center border-2 border-[var(--border)] transition-[width,height,background-color,border-radius,box-shadow] duration-150 ease-out select-none will-change-transform"
-        style={{
-          width: "18px",
-          height: "18px",
-          borderRadius: "9999px",
-          backgroundColor: "var(--cursor-color)",
-          boxShadow: "2px 2px 0px var(--shadow-color)",
-          transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)",
-        }}
+        ref={rootRef}
+        id="genz-custom-cursor-root"
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-[999999] overflow-hidden select-none"
       >
-        <div ref={contentRef} className="pointer-events-none select-none" />
+        {/* 5 Smooth Trail Dots */}
+        <div ref={trailContainerRef} />
+
+        {/* Main Cursor Element */}
+        <div
+          ref={mainRef}
+          id="genz-custom-cursor-main"
+          className="fixed top-0 left-0 pointer-events-none flex items-center justify-center border-2 border-[var(--border)] transition-[width,height,background-color,border-radius,box-shadow] duration-150 ease-out select-none will-change-transform"
+          style={{
+            width: "18px",
+            height: "18px",
+            borderRadius: "9999px",
+            backgroundColor: "var(--cursor-color)",
+            boxShadow: "2px 2px 0px var(--shadow-color)",
+            transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)",
+          }}
+        >
+          <div ref={contentRef} className="pointer-events-none select-none" />
+        </div>
+
+        {/* Particle Bursts & Ripple Container */}
+        <div ref={burstsContainerRef} className="pointer-events-none" />
       </div>
 
-      {/* Particle Bursts Container */}
-      <div ref={burstsContainerRef} className="pointer-events-none" />
-    </div>
+      <style jsx global>{`
+        @media (pointer: fine) and (hover: hover) {
+          body.has-custom-cursor,
+          body.has-custom-cursor a,
+          body.has-custom-cursor button,
+          body.has-custom-cursor [role="button"],
+          body.has-custom-cursor summary,
+          body.has-custom-cursor .cursor-pointer,
+          body.has-custom-cursor [data-cursor="drag"],
+          body.has-custom-cursor [data-cursor="drag"] *,
+          body.has-custom-cursor [data-cursor="sticker"],
+          body.has-custom-cursor [data-cursor="sticker"] *,
+          body.has-custom-cursor [data-sticker],
+          body.has-custom-cursor [data-sticker] *,
+          body.has-custom-cursor.is-dragging-sticker,
+          body.has-custom-cursor.is-dragging-sticker * {
+            cursor: none !important;
+          }
+          body.has-custom-cursor input,
+          body.has-custom-cursor textarea,
+          body.has-custom-cursor select,
+          body.has-custom-cursor [contenteditable="true"],
+          body.has-custom-cursor .calendly-inline-widget,
+          body.has-custom-cursor iframe {
+            cursor: auto !important;
+          }
+        }
+
+        /* Shockwave Ripple on Click */
+        @keyframes cursorClickRipple {
+          0% {
+            transform: translate(-50%, -50%) scale(0.25);
+            opacity: 1;
+            border-width: 3.5px;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(2.8);
+            opacity: 0;
+            border-width: 1px;
+          }
+        }
+
+        .cursor-click-ripple {
+          position: fixed;
+          pointer-events: none;
+          z-index: 999999;
+          width: 38px;
+          height: 38px;
+          border-radius: 9999px;
+          border: 3px solid #F14A0A;
+          animation: cursorClickRipple 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        /* Particle Burst on Click */
+        @keyframes cursor-burst-particle {
+          0% {
+            transform: translate(-50%, -50%) translate(0, 0) scale(1.3);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0);
+            opacity: 0;
+          }
+        }
+
+        .cursor-burst-shape {
+          position: fixed;
+          pointer-events: none;
+          z-index: 999999;
+          line-height: 1;
+          user-select: none;
+          font-weight: 900;
+          animation: cursor-burst-particle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .cursor-arrow-icon {
+          width: 22px;
+          height: 22px;
+          color: #FFFFFF;
+          display: block;
+          filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.45));
+          animation: cursorArrowPulse 1.1s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+        }
+
+        @keyframes cursorArrowPulse {
+          0% {
+            transform: translate(0, 0) scale(0.94);
+          }
+          100% {
+            transform: translate(1.5px, -1.5px) scale(1.08);
+          }
+        }
+      `}</style>
+    </>
   );
 }

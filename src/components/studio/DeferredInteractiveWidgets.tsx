@@ -21,11 +21,6 @@ const DynamicAdRoiCalculator = dynamic(
   { ssr: false }
 );
 
-const DynamicBuildAnAdGame = dynamic(
-  () => import("./BuildAnAdGame").then((mod) => mod.BuildAnAdGame),
-  { ssr: false }
-);
-
 export function DeferredHookRoulette() {
   return <HookRoulette />;
 }
@@ -50,14 +45,6 @@ export function DeferredAdRoiCalculator() {
   return (
     <DeferredSection minHeight={450}>
       <DynamicAdRoiCalculator />
-    </DeferredSection>
-  );
-}
-
-export function DeferredBuildAnAdGame() {
-  return (
-    <DeferredSection minHeight={550}>
-      <DynamicBuildAnAdGame />
     </DeferredSection>
   );
 }

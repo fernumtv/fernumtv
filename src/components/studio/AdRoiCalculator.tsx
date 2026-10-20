@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Zap, HelpCircle } from "lucide-react";
-import { playClickSound, playPopSound } from "@/lib/interactive/sound";
 
 export function AdRoiCalculator() {
   const [adSpend, setAdSpend] = useState<number>(10000);
@@ -24,12 +23,10 @@ export function AdRoiCalculator() {
 
   const handleSpendChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAdSpend(Number(e.target.value));
-    playClickSound();
   };
 
   const handleHookChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentHookRate(Number(e.target.value));
-    playClickSound();
   };
 
   return (
@@ -188,7 +185,6 @@ export function AdRoiCalculator() {
 
                 <Link
                   href="/#pricing"
-                  onClick={playPopSound}
                   className="w-full sm:w-auto h-12 px-6 bg-[var(--accent)] hover:bg-[var(--block-4-bg)] text-[var(--accent-fg)] hover:text-[var(--block-4-fg)] font-display font-black text-xs uppercase tracking-wider border-2 border-[var(--border)] shadow-brutal transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
                 >
                   <span>View Pricing Plans →</span>

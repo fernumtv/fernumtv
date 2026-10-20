@@ -13,12 +13,12 @@ import { getHomeSchema } from "@/lib/seo/schema";
 import { siteConfig } from "@/config/site";
 
 import { ClientPageWidgets } from "@/components/studio/ClientPageWidgets";
+import { ThreadChartSection } from "@/components/studio/ThreadChartSection";
 import {
   DeferredHookRoulette,
   DeferredHookSwipeStack,
   DeferredHookBattle,
   DeferredAdRoiCalculator,
-  DeferredBuildAnAdGame,
 } from "@/components/studio/DeferredInteractiveWidgets";
 
 const StudioBriefForm = dynamic(
@@ -88,6 +88,9 @@ export default function FernumLandingPage() {
           ]}
         />
 
+        {/* Thread Chart: One Weak Hook. Everything Else Pays For It. */}
+        <ThreadChartSection />
+
         {/* Creative Upgrade Feature: Hook Roulette Hero Spinner */}
         <DeferredHookRoulette />
 
@@ -105,9 +108,6 @@ export default function FernumLandingPage() {
 
         {/* 7. 3-step process teaser with a "See our structure" button */}
         <HomeProcessTeaser />
-
-        {/* Creative Upgrade Feature: Build-An-Ad Interactive Storyboard Game */}
-        <DeferredBuildAnAdGame />
 
         {/* 8. Pricing: Launch ($499), Growth ($799), Scale ($1,099) */}
         <StudioPricing />

@@ -22,12 +22,6 @@ import { HookBattle } from "@/components/studio/HookBattle";
 import { BackToTop } from "@/components/studio/BackToTop";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getBreadcrumbSchema } from "@/lib/seo/schema";
-import { unlockAchievement } from "@/lib/interactive/achievements";
-
-const BuildAnAdGame = dynamic(
-  () => import("@/components/studio/BuildAnAdGame").then((mod) => mod.BuildAnAdGame),
-  { ssr: false }
-);
 
 const breadcrumbData = [
   { name: "Home", url: "https://fernum.online" },
@@ -42,7 +36,6 @@ interface TestTopic {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   textColor: string;
-  emoji: string;
   detailedTitle: string;
   detailedSubtitle: string;
   intro: string;
@@ -60,7 +53,6 @@ const TOPICS: TestTopic[] = [
     icon: Flame,
     color: "bg-[var(--accent)]",
     textColor: "text-[var(--accent-fg)]",
-    emoji: "🎯",
     detailedTitle: "The 3-Hook Method",
     detailedSubtitle: "Test 3 psychology angles without paying for 3 separate full shoots.",
     intro:
@@ -79,7 +71,6 @@ const TOPICS: TestTopic[] = [
     icon: Zap,
     color: "bg-[var(--block-1-bg)]",
     textColor: "text-[var(--block-1-fg)]",
-    emoji: "⚡",
     detailedTitle: "Hook Battle Mini-Tool",
     detailedSubtitle: "Generate direct-response opening hooks live in your browser.",
     intro:
@@ -94,7 +85,6 @@ const TOPICS: TestTopic[] = [
     icon: Clock,
     color: "bg-[var(--block-3-bg)]",
     textColor: "text-[var(--block-3-fg)]",
-    emoji: "⏱️",
     detailedTitle: "The 3-Second Rule",
     detailedSubtitle: "The first 3 seconds dictate your CPM, hold rate, and ad spend efficiency.",
     intro:
@@ -113,7 +103,6 @@ const TOPICS: TestTopic[] = [
     icon: BarChart3,
     color: "bg-[var(--sticker-1)]",
     textColor: "text-[var(--page-fg)]",
-    emoji: "📊",
     detailedTitle: "Metrics, Decoded",
     detailedSubtitle: "No confusing agency jargon. Here are the 4 numbers that actually matter.",
     intro:
@@ -132,7 +121,6 @@ const TOPICS: TestTopic[] = [
     icon: RefreshCw,
     color: "bg-[var(--accent)]",
     textColor: "text-[var(--accent-fg)]",
-    emoji: "🔄",
     detailedTitle: "The Test Loop",
     detailedSubtitle: "How monthly ad subscriptions turn paid traffic into compounding learnings.",
     intro:
@@ -152,7 +140,6 @@ const TOPICS: TestTopic[] = [
     icon: ShieldAlert,
     color: "bg-[var(--block-4-bg)]",
     textColor: "text-[var(--block-4-fg)]",
-    emoji: "🛡️",
     detailedTitle: "What We Won't Promise",
     detailedSubtitle: "Clear boundaries and direct honesty about what creative can and cannot do.",
     intro:
@@ -285,18 +272,7 @@ export default function HowWeTestPage() {
 
                   <div className="flex items-center gap-3 mb-3">
                     <div
-                      onClick={(e) => {
-                        if (topic.id === "3-second-rule") {
-                          e.stopPropagation();
-                          unlockAchievement("test_stopwatch");
-                        }
-                      }}
-                      className={`w-10 h-10 ${topic.color} ${topic.textColor} border-2 border-[var(--border)] flex items-center justify-center shadow-sm shrink-0 ${
-                        topic.id === "3-second-rule"
-                          ? "cursor-pointer hover:rotate-12 hover:scale-110 active:scale-90 transition-transform"
-                          : ""
-                      }`}
-                      title={topic.id === "3-second-rule" ? "Secret 3-Second Stopwatch" : undefined}
+                      className={`w-10 h-10 ${topic.color} ${topic.textColor} border-2 border-[var(--border)] flex items-center justify-center shadow-sm shrink-0`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
@@ -321,16 +297,7 @@ export default function HowWeTestPage() {
           })}
         </div>
 
-        {/* Interactive Storyboard Sandbox */}
-        <div className="mt-20">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="w-2.5 h-2.5 bg-[var(--accent)] border border-[var(--border)]" />
-            <h2 className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--page-fg)]">
-              Interactive Blueprint Sandbox (Drag &amp; Test 15-Second Flow)
-            </h2>
-          </div>
-          <BuildAnAdGame />
-        </div>
+
 
         {/* CTA Bar */}
         <div className="mt-16 p-8 bg-[var(--block-2-bg)] text-[var(--block-2-fg)] border-2 border-[var(--border)] shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-6">

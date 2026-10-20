@@ -93,10 +93,10 @@ export default function RootLayout({
         {!siteConfig.indexingEnabled && (
           <meta name="robots" content="noindex, nofollow" />
         )}
-        {/* Force HTTPS and apply saved vibe before first paint */}
+        {/* Force HTTPS */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(window.location.protocol==="http:"&&!window.location.hostname.includes("localhost")&&!window.location.hostname.includes("127.0.0.1")){window.location.replace(window.location.href.replace(/^http:/,"https:"));return;}var s=localStorage.getItem("fernum_vibe");var v=(s==="green"||s==="purple")?s:"orange";document.documentElement.setAttribute("data-vibe",v);var tc={orange:"#F14A0A",green:"#16C846",purple:"#6C3BF5"};var m=document.getElementById("fernum-theme-color");if(m)m.setAttribute("content",tc[v]);}catch(e){}})();`,
+            __html: `(function(){try{if(window.location.protocol==="http:"&&!window.location.hostname.includes("localhost")&&!window.location.hostname.includes("127.0.0.1")){window.location.replace(window.location.href.replace(/^http:/,"https:"));}}catch(e){}})();`,
           }}
         />
       </head>
